@@ -464,6 +464,7 @@ body {
 #message {
     background:#f1f1f1;
     padding-top:10px;
+    height: 59px;
 }
     
     #message-emoticons {

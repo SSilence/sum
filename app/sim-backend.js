@@ -67,7 +67,7 @@ sim.backend = {
 
         // give it a menu
         var menu = new gui.Menu();
-        menu.append(new gui.MenuItem({ type: 'checkbox', label: 'exit', click: function() {
+        menu.append(new gui.MenuItem({ type: 'normal', label: 'exit', click: function() {
             gui.App.quit();  
         } }));
         tray.menu = menu;
