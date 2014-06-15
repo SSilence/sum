@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Desktop Notification</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<style type="text/css">
+			body {
+				font-family : Helvetica, Arial, sans-serif;
+				background-color: #31322E;
+				color: #C9D1D5;
+				margin: none;
+				padding: none;
+				overflow: hidden;
+				-webkit-app-region: no-drag;
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+			}
+			#notifications {
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				overflow: hidden;
+				list-style: none;
+				margin: 0px;
+				padding: 10px 10px 10px 10px;
+				width: 290px;
+				-webkit-app-region: no-drag;
+			}
+			#notifications li {
+				overflow: hidden;
+				margin: 0px;
+				display: none;
+				cursor: pointer;
+			}
+			#notifications .icon img {
+				width: 30px;
+				float: left;
+			}
+			#notifications .title,
+			#notifications .description {
+				margin-left: 40px;
+				font-size: 12px;
+			}
+			#notifications .title {
+				font-weight: bold;
+				font-size: 13px;
+			}
+			#shouldstart {
+				display:none;
+			}
+
+			#closer {
+				border-radius: 3px;
+				text-align: center;
+				position: fixed;
+				right: 7px;
+				top: 4px;
+				font-size: 9px;
+				padding: 3px;
+				z-index: 10;
+				-webkit-app-region: no-drag;
+			}
+
+			#closer:hover {
+				border: 1px solid #ccc;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body style="-webkit-app-region: no-drag;">
+		<div id="closer">X</div>
+		<ul id='notifications'>
+		</ul>
+		<div id='shouldstart'>false</div>
+		<script type="text/javascript">
+			var LIMIT_FOR_TRUNKATING_MESSAGES = 5;
+			function processNotifications(){
+				var nlist = $('#notifications');
+				var n = $('#notifications > li');
+				var continuation = function(){
+					n = $('#notifications > li');
+					if(n.length === 0){
+						//lets close the window
+						$('#closer').click();
+						$('#shouldstart').text('false');
+						waitForKickoff();
+						return;
+					}
+					else if(n.length > LIMIT_FOR_TRUNKATING_MESSAGES){
+						var toinsert = "<li>"+
+							"<div class='icon'>" +
+								"<img src='desktop-notify.png' />" +
+							"</div>" +
+							"<div class='title'>Application Name Here</div>" +
+							"<div class='description'>"+n.length+" new cards.</div>" +
+							"</li>";
+						nlist.html(toinsert);
+					}
+					n = $('#notifications > li');
+					n.first().fadeIn('fast');
+					setTimeout(processNotifications, 4000);
+				}
+				if(n.first().is(':visible')){
+					n.first().fadeOut('fast', function(){
+						n.first().remove();
+						continuation();
+					});
+				}
+				else{
+					continuation();
+				}
+			}
+			
+			function waitForKickoff(){
+				if($('#shouldstart').text() === 'true'){
+					processNotifications();
+				}
+				else{
+					setTimeout(waitForKickoff,40);
+				}
+			}
+			waitForKickoff();
+		</script>
+	</body>
+</html>

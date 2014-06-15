@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>S ultimate messenger</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="libs/ionicons/ionicons.min.css">
+        <link rel="stylesheet" href="libs/jquery-custom-content-scroller/jquery.mCustomScrollbar.css">
+        <link rel="stylesheet" href="libs/alertify/alertify.core.css">
+        <link rel="stylesheet" href="libs/alertify/alertify.default.css">
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+    
+        <!-- left menue -->
+        <div id="nav">
+            
+            <!-- header -->
+            <div class="heading" href="#"><span class="ion-speakerphone"></span>SUM Messenger</div>
+            
+            <!-- contact list -->
+            <div id="contacts-wrapper">
+                <ul class="contacts">
+                    
+                </ul>
+            </div>
+            
+            <!-- rooms -->
+            <div id="rooms">
+                <h1>R&auml;ume</h1>
+                
+                <div id="rooms-wrapper">
+                    <ul class="rooms">
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- chat area -->
+        <div id="main">
+            <!-- chat header -->
+            <div id="main-header">
+                <div id="main-metadata">
+                    <img src="" class="avatar" />
+                    <span>Name</span>
+                    <span class="online"></span>
+                </div>
+                <div id="main-close" class="ion-close-round"></div>
+            </div>
+
+            <!-- chat conversation -->
+            <div id="content-wrapper">
+                <ul id="content">
+                    
+                </ul>
+            </div>
+            
+            <!-- input area for new messages -->
+            <div id="message">
+                <div id="message-emoticons"></div>
+                <div id="message-input">
+                    <input type="text" id="message-input-textfield" placeholder="schreibe eine Nachricht..." />
+                    <div id="message-toggleemots"></div>
+                    <div id="message-send" class="ion-paper-airplane"></div>
+                </div>
+            </div>
+        </div>
+
+        
+        <!-- javascripts -->
+        <script src="config.js"></script>
+        
+        <script src="nw-desktop-notifications.js"></script>
+        <script src="libs/jquery-2.1.0.min.js"></script>
+        <script src="libs/jquery-custom-content-scroller/jquery.mousewheel.min.js"></script>
+        <script src="libs/jquery-custom-content-scroller/jquery.mCustomScrollbar.min.js"></script>
+        <script src="libs/alertify/alertify.min.js"></script>
+        <script src="libs/cryptojs/md5.js"></script>
+        
+        <script src="sim-init.js"></script>
+        <script src="sim-emoticons.js"></script>
+        <script src="sim-backend.js"></script>
+        <script src="sim-backend-helpers.js"></script>
+        <script src="sim-frontend.js"></script>
+        <script src="sim-frontend-helpers.js"></script>
+    </body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "single-instance": false,
+  "name": "SUM",
+  "description": "S Ultimate Messenger",
+  "version": "0.1",
+  "main": "app/index.html",
+  "window": {
+    "icon": "app/favicon.png",
+    "toolbar": false,
+    "width": 900,
+    "height": 600,
+    "frame": false
+  }
+}

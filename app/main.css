@@ -1,0 +1,547 @@
+/* 
+
+main style file
+
+color scheme
+
+blue: #54728c
+red: #e45857
+red border: #14142
+button bg: #f7f7f7
+button frame: #dadada
+button foreground: #aaaaaa
+marked right: #8abfeb
+highlight: #f1f1f1
+button green bg: #68b54d
+button green border: #519339
+
+*/
+
+/***************/
+/* node-webkit */
+/***************/
+
+#main-header,
+.heading {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+}
+
+
+/*********/
+/* fonts */
+/*********/
+
+@font-face {
+    font-family: 'oswaldbold';
+    src: url('fonts/oswald-bold-webfont.eot');
+    src: url('fonts/oswald-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/oswald-bold-webfont.woff') format('woff'),
+         url('fonts/oswald-bold-webfont.ttf') format('truetype'),
+         url('fonts/oswald-bold-webfont.svg#oswaldbold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'oswaldlight';
+    src: url('fonts/oswald-light-webfont.eot');
+    src: url('fonts/oswald-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/oswald-light-webfont.woff') format('woff'),
+         url('fonts/oswald-light-webfont.ttf') format('truetype'),
+         url('fonts/oswald-light-webfont.svg#oswaldlight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'oswaldbook';
+    src: url('fonts/oswald-regular-webfont.eot');
+    src: url('fonts/oswald-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/oswald-regular-webfont.woff') format('woff'),
+         url('fonts/oswald-regular-webfont.ttf') format('truetype'),
+         url('fonts/oswald-regular-webfont.svg#oswaldbook') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'oswald_stencilregular';
+    src: url('fonts/oswald-stencil-webfont.eot');
+    src: url('fonts/oswald-stencil-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/oswald-stencil-webfont.woff') format('woff'),
+         url('fonts/oswald-stencil-webfont.ttf') format('truetype'),
+         url('fonts/oswald-stencil-webfont.svg#oswald_stencilregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+/**********/
+/* layout */
+/**********/
+
+body {
+    margin:0;
+    font-family: Verdana, 'Lucida Sans Unicode', sans-serif;
+}
+
+#nav {
+    width:25%;
+    position: fixed;
+    overflow: hidden;
+    height:100%;
+}
+
+#main {
+    margin-left:25%;
+    padding:10px;
+}
+
+#message {
+    position:absolute;
+    top:100%;
+    left:25%;
+    height:20px;
+    margin-top:-70px;
+    width:75%;
+    z-index:9;
+    border-top:1px solid #dadada;
+}
+
+    
+
+/*****************/
+/* global styles */
+/*****************/
+
+.online,
+.offline,
+.notavailable {
+    border-radius:3px;
+    width:6px;
+    height:6px;
+    display:inline-block;
+}
+
+    .online {
+        background:#68b54d;
+    }
+    
+    .offline {
+        background:#e45857;
+    }
+    
+    .notavailable {
+        background:#FFBF3C;
+    }
+    
+
+.avatar {
+    border-radius: 3px;
+    width:32px;
+    height:32px;
+}
+
+
+/**************/
+/* left menue */
+/**************/
+
+/* header */
+#nav {
+    background:#f1f1f1;
+}
+
+#nav .heading {
+    color:#ffffff;
+    background:#54728c;
+    height:40px;
+    padding:5px;
+    font-size:1.3em;
+    font-family: 'oswaldbook';
+    padding-left:15px;
+    padding-top:12px;
+}
+
+#nav .heading span {
+    padding-right:10px;
+}
+
+
+/* contact list */
+
+.mCSB_container {
+    margin-right:0;
+}
+
+    .mCSB_scrollTools .mCSB_draggerContainer {
+        margin-top:10px;
+        margin-bottom:10px;
+    }
+
+    .mCSB_scrollTools .mCSB_draggerRail {
+        background:transparent;
+    }
+
+    .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
+        background:rgba(102, 102, 102, 0.20);
+    }
+    
+    .mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar,
+    .mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar {
+        background:#666;
+    }
+    
+    .mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{
+        background:#666;
+    }
+    
+    .mCSB_scrollTools {
+        z-index:20;
+    }
+
+.contacts,
+.contacts li {
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+.contacts li {
+    position:relative;
+    height:50px;
+    cursor:pointer;
+    background:#f1f1f1;
+    margin:0;
+    padding:0;
+    border-right:1px solid #dadada;
+    
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    
+    z-index:10;
+}
+
+    .contacts li.active {
+        background:#f9f9f9;
+        border-right:0;
+        border-bottom:1px solid #dadada;
+        border-top:1px solid #dadada;
+        box-shadow: 0px 5px 7px -4px #ccc;
+        z-index:11;
+    }
+
+    .contacts-state {
+        margin:0 5px 0 5px;
+    }
+    
+    .contacts-avatar {
+        margin-right:5px;
+    }
+
+    .contacts-name {
+        -webkit-box-flex: 1;
+        box-flex: 1;
+        flex:1;
+        font-size:0.8em;
+        color:#5d5d5d;
+        overflow:hidden;
+        word-wrap:break-word;
+        text-overflow:ellipsis;
+        white-space: nowrap; 
+    }
+    
+    .contacts-unread {
+        background:#e45857;
+        color:#ffffff;
+        padding:7px;
+        padding-top:2px;
+        padding-bottom:2px;
+        border-radius: 3px;
+        font-size:0.8em;
+        font-weight:bold;
+        margin-right:15px;
+    }
+    
+
+/* room list */    
+    
+#rooms {
+    height:200px;
+    border-top:1px solid #dadada;
+}
+
+    #rooms h1 {
+        font-size:0.95em;
+        margin-top:20px;
+        margin-left:10px;
+        color:#aaaaaa;
+    }
+
+    #rooms-wrapper {
+        height:150px;
+    }
+
+    .rooms,
+    .rooms li {
+        margin:0;
+        padding:0;
+    }
+
+    .rooms li {
+        font-size:0.9em;
+        padding:10px;
+        position:relative;
+        background:#f1f1f1;
+        border-right:1px solid #dadada;
+        cursor:pointer;
+        
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        
+        z-index:10;
+    }    
+
+        .rooms li.active {
+            background:#f9f9f9;
+            border-right:0;
+            border-bottom:1px solid #dadada;
+            border-top:1px solid #dadada;
+            box-shadow: 0px 5px 7px -4px #ccc;
+            z-index:11;
+        }
+
+        .rooms .rooms-outside,
+        .rooms .rooms-inside {
+            border-radius:5px;
+            width:10px;
+            height:10px;
+            display:block;
+            margin-right:5px;
+        }
+
+            .rooms .rooms-inside {
+                background:#68b54d;
+            }
+            
+            .rooms .rooms-outside {
+                background:#e45857;
+            }
+        
+        .rooms .rooms-name {
+            position:relative;
+            -webkit-box-flex: 1;
+            box-flex: 1;
+            flex:1;
+            font-size:0.8em;
+            color:#5d5d5d;
+            overflow:hidden;
+            word-wrap:break-word;
+            text-overflow:ellipsis;
+            white-space: nowrap; 
+        }
+        
+        .rooms .rooms-unread {
+            display:block;
+            background:#e45857;
+            color:#ffffff;
+            padding:7px;
+            padding-top:2px;
+            padding-bottom:2px;
+            border-radius: 3px;
+            font-size:0.8em;
+            font-weight:bold;
+            margin-right:5px;
+        }
+        
+        .rooms .rooms-leave {
+            position:absolute;
+            font-size:1.4em;
+            margin-left:10px;
+            color:#999;
+            display:none;
+        }
+        
+            .rooms .rooms-leave:hover {
+                color:#000;
+            }
+        
+        .rooms li:hover .rooms-leave {
+            display:inline-block;
+        }
+    
+    
+/**************************/
+/* main chat message list */
+/**************************/
+
+#main {
+    padding:0;
+}
+
+    #main-header {
+        height:37px;
+        padding-top:10px;
+        padding-bottom:10px;
+        width:100%;
+        color:#ffffff;
+        background:#66829a;
+    }
+    
+        #main-metadata {
+            visibility:hidden;
+            display: flex;
+            align-items: center;
+            margin-left:20px;
+        }
+        
+            #main-metadata > * {
+                margin-right:10px;
+            }
+    
+        #main-close {
+            position:absolute;
+            left:100%;
+            margin-left:-40px;
+            top:20px;
+            cursor:pointer;
+            z-index:200;
+            -webkit-app-region: no-drag;
+        }
+    
+    #content {
+        padding:20px;
+        padding-top:0;
+        padding-bottom:10px;
+        list-style:none;
+    }
+    
+    #content li {
+        padding-top:0;
+    }
+    
+    .entry {
+        margin-bottom:20px;
+        font-size:0.8em;
+        color:#666;
+        padding-bottom:10px;
+        border-bottom:1px solid #dadada;
+    }
+    
+        .entry:last-child {
+            border-bottom:0;
+        }
+    
+        .entry-metadata {
+            display: flex;
+            align-items: center;
+            font-weight:bold;
+            margin-bottom:10px;
+        }
+        
+            .entry-metadata > * {
+                margin-right:10px;
+            }
+    
+            .entry-datetime {
+                font-weight:normal;
+                font-size:0.8em;
+            }
+    
+
+    
+/**********************/
+/* message input area */
+/**********************/   
+
+#message {
+    background:#f1f1f1;
+    padding-top:10px;
+}
+    
+    #message-emoticons {
+        display:none;
+        border: 1px solid #dadada;
+        position:absolute;
+        background:#f7f7f7;
+        width:200px;
+        left:100%;
+        margin-left:-230px;
+        padding:5px;
+    }
+
+        #message-emoticons img {
+            cursor:pointer;
+        }
+
+    #message-input {
+        display: -webkit-flex;
+        display: flex;
+        padding:5px;
+        background:#f1f1f1;
+    }
+
+        #message-input-textfield {
+            -webkit-box-flex: 1;
+            box-flex: 1;
+            flex:1;
+            padding:5px;
+            border-radius: 4px;
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            border: 1px solid #ccc;
+            margin-right:0;
+        }
+        
+        #message-input-textfield:focus {
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+            border-color: #66afe9;
+        }
+            
+        #message-toggleemots {
+            display:block;
+            margin:0;
+            margin-top:2px;
+            margin-bottom:2px;
+            background:url(emoticons/01.gif) no-repeat center center #eee;
+            width:30px;
+            height:30px;
+            border: 1px solid #ccc;
+            border-left:0;
+            border-right:0;
+            cursor:pointer;
+            height:40px;
+        }
+        
+            #message-toggleemots.active {
+                background-color:#e45857;
+                border-color:#14142;
+            }
+
+        #message-send {
+            cursor:pointer;
+            background-color:#68b54d;
+            border: 1px solid #ccc;
+            margin:0;
+            margin-top:2px;
+            margin-bottom:2px;
+            padding-top:7px;
+            padding-left:20px;
+            padding-right:20px;
+            font-size:1.5em;
+            color:#fff;
+            border-bottom-right-radius: 4px;
+            border-top-right-radius: 4px;
+        }
