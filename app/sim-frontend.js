@@ -60,15 +60,9 @@ sim.frontend = {
         // register callback for a user goes offline
         backend.onUserOfflineNotice(userOnlineOffline);
         
-        // register callback for user changes his state
-        backend.onUserUpdateNotice(function(id, text) {
-            alertify.log("Status: " + id + " " + text);
-            backend.updateUserlist();
-        });
-        
         // register callback for incoming new message
         backend.onNewMessage(function(message) {
-            backend.notification("Neue Nachricht von " + sim.frontend.helpers.escape(message.sender), message.text);
+            backend.notification(backend.getAvatar(message.sender), "Neue Nachricht von " + sim.frontend.helpers.escape(message.sender), message.text);
             if(sim.frontend.currentConversation == message.sender)
                 backend.getConversation(sim.frontend.currentConversation);
             else {
@@ -79,24 +73,6 @@ sim.frontend = {
                 backend.updateUserlist();
                 backend.updateRoomlist();
             }
-        });
-        
-        // register callback for user enters room
-        backend.onRoomEnterNotice(function(room, user) {
-            alertify.log("Benutzer: " + user + " hat den Raum " + room + " betreten");
-            backend.updateUserlist();
-        });
-        
-        // register callback for user leaves room
-        backend.onRoomLeaveNotice(function() {
-            alertify.log("Benutzer: " + user + " hat den Raum " + room + " verlassen");
-            backend.updateUserlist();
-        });
-        
-        // register callback for new room was opened
-        backend.onRoomOpened(function(room) {
-            alertify.log("Neuer Raum " + room + " wurde eröffnet");
-            backend.updateRoomlist();
         });
         
         // register callback for room list update
@@ -134,7 +110,63 @@ sim.frontend = {
     /**
      * initialize events (clicks, ...)
      */
-    initEvents: function(backend) {
+    initEvents: function(backend) {       
+        
+        // menue
+        $('#main-menue').click(function() {
+            $('#main-menue-dropdown').toggle();
+        });
+        
+        // menue: select avatar
+        $('#main-menue-avatar').click(function(evt) {
+            $('#fileDialog').change(function(evt) {
+                $('#main-menue-dropdown li').hide();
+                $('#main-menue-avatar-croper').show();
+                
+                var file = $(this).val();
+                backend.helpers.readFile(file, function(data) {
+                    var filetype = file.split('.').pop();
+                    if (filetype != "png" && filetype != "jpg" && filetype != "gif") {
+                        alertify.error("Bitte PNG, JPG oder GIF Datei w&auml;hlen");
+                        $('#main-menue-avatar-croper .cancel').click();
+                        return;
+                    }
+                    
+                    $('#main-menue-avatar-croper img, .evroneCropCanvas').remove();
+                    $('#main-menue-avatar-croper').prepend('<img />');
+                    $('#main-menue-avatar-croper img').attr('src', 'data:image/' + filetype + ';base64,' + data.toString('base64'));
+                    sim.frontend.helpers.resizeImage($('#main-menue-avatar-croper img'), 200, 200);
+                    $('#main-menue-avatar-croper img').evroneCrop({
+                      size: {w: 150, h: 150}, 
+                      ratio: 1
+                    });
+                });
+            });
+            $('#fileDialog').trigger('click');
+        });
+        
+        // menue: save avatar
+        $('#main-menue-avatar-croper .save').click(function() {
+            $('#main-menue-dropdown li').show();
+            $('#main-menue-avatar-croper').hide();
+            backend.saveAvatar($('#main-menue-avatar-croper img').data('evroneCrop'));
+            $('#main-menue-dropdown').hide();
+            backend.updateUserlist();
+        });
+        
+        // menue: cancel avatar
+        $('#main-menue-avatar-croper .cancel').click(function() {
+            $('#main-menue-dropdown li').show();
+            $('#main-menue-avatar-croper').hide();
+            $('#main-menue-dropdown').hide();
+        });
+        
+        
+        // menue: about
+        $('#main-menue-about').click(function() {
+            gui.Shell.openExternal('https://github.com/SSilence/sum');
+        });
+        
         // close
         $('#main-close').click(function() {
             backend.quit();
@@ -225,15 +257,10 @@ sim.frontend = {
             if (typeof sim.frontend.unreadMessagesCounter[user.username] != "undefined")
                 unread = '<div class="contacts-unread">' + sim.frontend.unreadMessagesCounter[user.username] + '</div>';
             
-            // online state
-            var state = 'online';
-            if(user.state.toLowerCase()=='not_available')
-                state = 'offline';
-            if(user.state.toLowerCase()=='busy')
-                state = 'notavailable';
-            
             // avatar url
-            var avatar = sim.frontend.helpers.gravatarUrl(user.email);
+            var avatar = "avatar.png";
+            if (typeof user.avatar != "undefined")
+                avatar = user.avatar;
             
             // active
             var active = '';
@@ -241,7 +268,7 @@ sim.frontend = {
                 active = 'class="active"';
             
             $('.contacts').append('<li ' + active + '>\
-                <div class="' + state + ' contacts-state"></div>\
+                <div class="online contacts-state"></div>\
                 <img src="' + avatar + '" class="contacts-avatar avatar" />\
                 <div class="contacts-name">' + sim.frontend.helpers.escape(user.username) + '</div>\
                 ' + unread + '\
@@ -328,7 +355,7 @@ sim.frontend = {
         $.each(messages, function(index, message) {
             $('#content').append('<li class="entry">\
                 <div class="entry-metadata">\
-                    <img src="' + sim.frontend.helpers.gravatarUrl(message.email) + '" class="avatar" />\
+                    <img src="' + backend.getAvatar(message.sender) + '" class="avatar" />\
                     <span>' + sim.frontend.helpers.escape(message.sender) + '</span>\
                     <span class="entry-datetime">' + sim.frontend.helpers.dateAgo(message.datetime) + '</span>\
                 </div>\

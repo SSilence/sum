@@ -6,7 +6,7 @@
   "main": "app/index.html",
   "window": {
     "icon": "app/favicon.png",
-    "toolbar": false,
+    "toolbar": true,
     "width": 900,
     "height": 600,
     "frame": false

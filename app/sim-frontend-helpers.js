@@ -45,14 +45,6 @@ sim.frontend.helpers = {
     
     
     /**
-     * return gravatar image if available
-     */
-    gravatarUrl: function(email) {
-        return "http://www.gravatar.com/avatar/" + CryptoJS.MD5(email);
-    },
-    
-    
-    /**
      * convert date in vor n Minuten
      */
     dateAgo: function(date) {
@@ -106,6 +98,31 @@ sim.frontend.helpers = {
             text = text.replace(re, '<img src="'+ emoticon +'" title="' + shortcut + '"/>');
         });
         return text;
-    }
+    },
     
+    
+    /**
+     * resize image to smaller size in frontend
+     */
+    resizeImage: function(img, maxWidth, maxHeight) {
+        var ratio = 0;  // Used for aspect ratio
+        var width = $(img).width();    // Current image width
+        var height = $(img).height();  // Current image height
+
+        // Check if the current width is larger than the max
+        if(width > maxWidth){
+            ratio = maxWidth / width;   // get ratio for scaling image
+            $(img).css("width", maxWidth); // Set new width
+            $(img).css("height", height * ratio);  // Scale height based on ratio
+            height = height * ratio;    // Reset height to match scaled image
+        }
+
+        // Check if current height is larger than max
+        if(height > maxHeight){
+            ratio = maxHeight / height; // get ratio for scaling image
+            $(img).css("height", maxHeight);   // Set new height
+            $(img).css("width", width * ratio);    // Scale width based on ratio
+            width = width * ratio;    // Reset width to match scaled image
+        }
+    }
 }

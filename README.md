@@ -63,3 +63,4 @@ Special thanks to the great programmers of this libraries which will be used in 
 * ionicons: http://ionicons.com/
 * jquery custom content scroller: http://manos.malihu.gr/jquery-custom-content-scroller/
 * Font Oswald: http://www.fontsquirrel.com/fonts/oswald
+* evrondeCrop: https://github.com/evrone/evroneCrop

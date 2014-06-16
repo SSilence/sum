@@ -9,40 +9,39 @@ sim.backend.helpers = {
      * all users are registered in a single json file. This method updates or adds
      * an entry of the current user.
      */
-    updateUserlist: function(file, key, success) {
+    updateUserlist: function(file, key, ip, avatar, success) {
         sim.backend.helpers.readJsonFile(file, function(users) {
             var currentuser = sim.backend.helpers.getUsername();
-            
-            // search own user
-            var found = false;
             var now = new Date().getTime();
+            
+            // entry for current user
+            var userEntry = {
+                username: currentuser,
+                timestamp: now,
+                key: key,
+                ip: ip,
+                port: config.chatport,
+                rooms: [] // todo
+            };
+            
+            // avatar for current user
+            if (typeof avatar != 'undefined')
+                userEntry.avatar = avatar;
+            
+            // remove orphaned user entries
             var newUserlist = [];
             for(var i=0; i<users.length; i++) {
-                // only save active users
-                if (users[i].timestamp + config.user_timeout > now) {
-                    newUserlist[newUserlist.length] = users[i];
-                }
+                // current user will be added later
+                if (users[i].username == currentuser)
+                    continue;
                 
-                // update timestamp of current user
-                if (newUserlist.length > 0 && newUserlist[newUserlist.length-1].username == currentuser) {
-                    newUserlist[newUserlist.length-1].timestamp = now;
-                    found = true;
-                }
+                // only save active users
+                if (users[i].timestamp + config.user_timeout > now)
+                    newUserlist[newUserlist.length] = users[i];
             }
             
-            // user not found: add it
-            if(found==false) {
-                newUserlist[newUserlist.length] = {
-                    username: currentuser,
-                    timestamp: now,
-                    key: key,
-                    ip: sim.backend.ip,
-                    port: config.chatport,
-                    state: 'ONLINE', // todo
-                    email: '', // todo
-                    rooms: [] // todo
-                }
-            }
+            // add current user
+            newUserlist[newUserlist.length] = userEntry;
             
             // write back userfile
             sim.backend.helpers.writeJsonFile(file, newUserlist);
@@ -120,6 +119,22 @@ sim.backend.helpers = {
         });
     },
 
+    
+    /**
+     * read file and return as object
+     */
+    readFile: function(file, callback) {
+        fs.readFile(file, function (err, data) {
+            if (err) {
+                alertify.error('Datei konnte nicht geladen werden');
+                return;
+            }
+
+            callback(data);
+        });
+    },
+    
+    
     /**
      * get lock for user list file.
      */

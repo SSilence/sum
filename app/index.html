@@ -47,7 +47,14 @@
                     <span>Name</span>
                     <span class="online"></span>
                 </div>
+                <div id="main-menue" class="ion-navicon-round"></div>
                 <div id="main-close" class="ion-close-round"></div>
+                <ul id="main-menue-dropdown">
+                    <li id="main-menue-avatar-croper"> <input class="save" type="button" value="speichern" /> <input class="cancel" type="button" value="abbrechen" /></li>
+                    <li id="main-menue-status"><span class="ion-checkmark-round"></span> Statusmeldungen anzeigen</li>
+                    <li id="main-menue-avatar"><span class="ion-image"></span> neuen Avatar setzen</li>
+                    <li id="main-menue-about"><span class="ion-information-circled"></span> &Uuml;ber SUM</li>
+                </ul>
             </div>
 
             <!-- chat conversation -->
@@ -67,7 +74,10 @@
                 </div>
             </div>
         </div>
-
+        
+        
+        <!-- hidden file input dialog -->
+        <input style="display:none;" id="fileDialog" accept=".jpg,.jpeg,.png,.gif" type="file" />
         
         <!-- javascripts -->
         <script src="config.js"></script>
@@ -78,6 +88,7 @@
         <script src="libs/jquery-custom-content-scroller/jquery.mCustomScrollbar.min.js"></script>
         <script src="libs/alertify/alertify.min.js"></script>
         <script src="libs/cryptojs/md5.js"></script>
+        <script src="libs/evroneCrop/evroneCrop.js"></script>
         
         <script src="sim-init.js"></script>
         <script src="sim-emoticons.js"></script>

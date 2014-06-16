@@ -95,7 +95,9 @@ sim.backend = {
                 // have lock?
                 sim.backend.helpers.updateUserlist(
                     config.user_file, 
-                    sim.backend.key.getPublicPEM(), 
+                    sim.backend.key.getPublicPEM(),
+                    sim.backend.ip,
+                    sim.backend.loadAvatar(),
                     function(users) {
                         // release lock
                         sim.backend.helpers.unlock();
@@ -166,12 +168,6 @@ sim.backend = {
      * route request
      */
     route: function(request) {
-        // todo: get message
-        // todo: get room update
-        // todo: user status update
-        // todo: room update
-        // todo: file request
-        
         // new message
         if (request.type == 'message') {
             if (typeof sim.backend.conversations[request.sender] == 'undefined') 
@@ -206,13 +202,6 @@ sim.backend = {
      */
     onUserOfflineNotice: function(callback) {
         sim.backend.userOfflineNoticeCallback = callback;
-    },
-    
-    /**
-     * register callback for user changes his state
-     */
-    onUserUpdateNotice: function(callback) {
-        sim.backend.userUpdateNotice = callback;
     },
     
     /**
@@ -332,39 +321,6 @@ sim.backend = {
     
     
     /**
-     * update own status.
-     * status = AVAILABLE oder BUSY oder NOT_AVAILABLE
-     */
-    updateStatus: function(status) {
-    
-    },
-    
-    
-    /**
-     * open new room
-     */
-    openRoom: function(name) {
-    
-    },
-    
-    
-    /**
-     * join room
-     */
-    joinRoom: function(name) {
-    
-    },
-    
-    
-    /**
-     * leave room
-     */
-    leaveRoom: function(name) {
-    
-    },
-    
-    
-    /**
      * quit application
      */
     quit: function() {
@@ -373,10 +329,41 @@ sim.backend = {
     
     
     /**
+     * save avatar
+     */
+    saveAvatar: function(avatar) {
+        window.localStorage.avatar = avatar;
+    },
+    
+    
+    /**
+     * load avatar
+     */
+    loadAvatar: function() {
+        return window.localStorage.avatar;
+    },
+    
+    
+    /**
+     * get avatar of a given user
+     */
+    getAvatar: function(username) {
+        var avatar = "avatar.png";
+        for(var i=0; i<sim.backend.userlist.length; i++) {
+            if (sim.backend.userlist[i].username==username && typeof sim.backend.userlist[i].avatar != 'undefined') {
+                avatar = sim.backend.userlist[i].avatar;
+                break;
+            }
+        }
+        return avatar;
+    },
+    
+    
+    /**
      * send system notification
      */
-    notification: function(title, text) {
-        window.LOCAL_NW.desktopNotifications.notify('favicon.png', title, text);
+    notification: function(image, title, text) {
+        window.LOCAL_NW.desktopNotifications.notify(image, title, text);
     }
 
 };

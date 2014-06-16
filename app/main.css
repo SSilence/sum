@@ -179,6 +179,10 @@ body {
     margin-right:0;
 }
 
+    .mCustomScrollBox  {
+        z-index:19;
+    }
+
     .mCSB_scrollTools .mCSB_draggerContainer {
         margin-top:10px;
         margin-bottom:10px;
@@ -395,6 +399,12 @@ body {
         background:#66829a;
     }
     
+        #main-header .dragzone {
+            height:100%;
+            width:80%;
+            background:red;
+        }
+    
         #main-metadata {
             visibility:hidden;
             display: flex;
@@ -406,6 +416,7 @@ body {
                 margin-right:10px;
             }
     
+        #main-menue,
         #main-close {
             position:absolute;
             left:100%;
@@ -415,7 +426,86 @@ body {
             z-index:200;
             -webkit-app-region: no-drag;
         }
-    
+        
+        #main-menue {
+            margin-left:-80px;
+        }
+        
+        #main-menue-dropdown {
+            display:none;
+            position: absolute;
+            background: #f7f7f7;
+            border: 1px solid #dadada;
+            color:#5d5d5d;
+            padding:0;
+            left:100%;
+            top:60px;
+            margin-left:-235px;
+            border-radius: 3px;
+            z-index:30;
+            -webkit-app-region: no-drag;
+        }
+        
+            #main-menue-dropdown:after, #main-menue-dropdown:before {
+                bottom: 100%;
+                left: 70%;
+                border: solid transparent;
+                content: " ";
+                height: 0;
+                width: 0;
+                position: absolute;
+                pointer-events: none;
+            }
+
+            #main-menue-dropdown:after {
+                border-color: rgba(241, 241, 241, 0);
+                border-bottom-color: #f7f7f7;
+                border-width: 30px;
+                margin-left: -30px;
+            }
+            
+            #main-menue-dropdown:before {
+                border-color: rgba(218, 218, 218, 0);
+                border-bottom-color: #dadada;
+                border-width: 31px;
+                margin-left: -31px;
+            }
+            
+            #main-menue-dropdown li {
+                list-style:none;
+                padding:10px;
+                font-size:0.9em;
+                border-bottom:1px solid #f1f1f1;
+                cursor:pointer;
+            }
+            
+                #main-menue-dropdown li:hover {
+                    background:#f9f9f9;
+                }
+            
+            #main-menue-avatar-croper {
+                display:none;
+            }
+            
+                #main-menue-avatar-croper .save,
+                #main-menue-avatar-croper .cancel {
+                    border-radius:3px;
+                    padding:5px;
+                    color:#ffffff;
+                    font-size:1.1em;
+                }
+                
+                #main-menue-avatar-croper .save {
+                    background:#68b54d;
+                    border:1px solid #519339;
+                }
+                
+                #main-menue-avatar-croper .cancel {
+                    background:#e45857;
+                    border:1px solid #C94B4B;
+                }
+            
+            
     #content {
         padding:20px;
         padding-top:0;
