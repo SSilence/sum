@@ -40,6 +40,14 @@ You can access the debugger by setting ``"toolbar": true`` in ``package.json``
 
 
 
+SETUP
+-----
+
+Setup file can be created with Inno Setup: http://www.jrsoftware.org/isinfo.php
+Use the setup.iss configuration file.
+
+
+
 CHANGELOG
 ---------
 

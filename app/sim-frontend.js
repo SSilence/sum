@@ -10,6 +10,7 @@ sim.frontend = {
      */
     currentConversation: false,
 
+    
     /**
      * initialize frontend
      */
@@ -120,10 +121,14 @@ sim.frontend = {
         // menue: select avatar
         $('#main-menue-avatar').click(function(evt) {
             $('#fileDialog').change(function(evt) {
+                if ($(this).val() == '')
+                    return;
+                
                 $('#main-menue-dropdown li').hide();
                 $('#main-menue-avatar-croper').show();
                 
                 var file = $(this).val();
+                $(this).val('');
                 backend.helpers.readFile(file, function(data) {
                     var filetype = file.split('.').pop();
                     if (filetype != "png" && filetype != "jpg" && filetype != "gif") {
@@ -138,7 +143,8 @@ sim.frontend = {
                     sim.frontend.helpers.resizeImage($('#main-menue-avatar-croper img'), 200, 200);
                     $('#main-menue-avatar-croper img').evroneCrop({
                       size: {w: 150, h: 150}, 
-                      ratio: 1
+                      ratio: 1,
+                      setSelect: 'center'
                     });
                 });
             });
@@ -161,6 +167,16 @@ sim.frontend = {
             $('#main-menue-dropdown').hide();
         });
         
+        // menue: about
+        $('#main-menue-status').click(function() {
+            if($(this).hasClass('inactive')) {
+                $(this).removeClass('inactive');
+                sim.backend.enableNotifications = true;
+            } else {
+                $(this).addClass('inactive');
+                sim.backend.enableNotifications = false;
+            }
+        });
         
         // menue: about
         $('#main-menue-about').click(function() {

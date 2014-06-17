@@ -32,6 +32,10 @@ sim.backend = {
      */
     conversations: {},
     
+    /**
+     * enable/disable notifications
+     */
+    enableNotifications: true,
     
     /**
      * initialize backend
@@ -363,7 +367,8 @@ sim.backend = {
      * send system notification
      */
     notification: function(image, title, text) {
-        window.LOCAL_NW.desktopNotifications.notify(image, title, text);
+        if(sim.backend.enableNotifications==true)
+            window.LOCAL_NW.desktopNotifications.notify(image, title, text);
     }
 
 };

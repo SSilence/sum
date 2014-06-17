@@ -482,6 +482,10 @@ body {
                 #main-menue-dropdown li:hover {
                     background:#f9f9f9;
                 }
+                
+                #main-menue-dropdown li.inactive {
+                    color:#A0A0A0;
+                }
             
             #main-menue-avatar-croper {
                 display:none;
