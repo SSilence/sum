@@ -21,7 +21,7 @@ sim.backend.helpers = {
                 key: key,
                 ip: ip,
                 port: config.chatport,
-                rooms: [] // todo
+                rooms: ["room2"] // todo
             };
             
             // avatar for current user

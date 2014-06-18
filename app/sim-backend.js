@@ -24,7 +24,17 @@ sim.backend = {
     /**
      * current roomlist
      */
-    roomlist: [],
+    roomlist: [ { name: "room2" }],
+    
+    
+    /**
+     * rooms with invitations
+     */
+    invited: [
+                { name: "room1", invited: "Zeising.Tobias" },
+                { name: "room3", invited: "Zeising.Tobias" },
+                { name: "room5", invited: "Zeising.Tobias" }
+            ],
     
     
     /**
@@ -32,10 +42,12 @@ sim.backend = {
      */
     conversations: {},
     
+    
     /**
      * enable/disable notifications
      */
     enableNotifications: true,
+    
     
     /**
      * initialize backend
@@ -106,6 +118,7 @@ sim.backend = {
                         // release lock
                         sim.backend.helpers.unlock();
                         
+                        // save userlist
                         sim.backend.userlist = users;
                         
                         // update ui
@@ -284,7 +297,7 @@ sim.backend = {
      */
     updateRoomlist: function() {
         if(typeof sim.backend.getRoomlistResponse != "undefined") {
-            sim.backend.getRoomlistResponse(sim.backend.roomlist);
+            sim.backend.getRoomlistResponse(sim.backend.roomlist.concat(sim.backend.invited));
         }
     },
     
@@ -369,6 +382,51 @@ sim.backend = {
     notification: function(image, title, text) {
         if(sim.backend.enableNotifications==true)
             window.LOCAL_NW.desktopNotifications.notify(image, title, text);
+    },
+    
+    
+    /**
+     * returns array with all known users
+     */
+    getAllUsers: function(withoutCurrentUser) {
+        var currentuser = sim.backend.helpers.getUsername();
+        var users = [];
+        for(var i=0; i<sim.backend.userlist.length; i++) {
+            if (withoutCurrentUser==true && sim.backend.userlist[i].username == currentuser)
+                continue;
+            users[users.length] = sim.backend.userlist[i].username;
+        }
+        return users;
+    },
+    
+    
+    /**
+     * returns all users which are in a given room
+     */
+    getUsersInRoom: function(room) {
+        var users = [];
+        for(var i=0; i<sim.backend.userlist.length; i++) {
+            for(var n=0; n<sim.backend.userlist[i].rooms.length; n++) {
+                if (sim.backend.userlist[i].rooms[n]==room) {
+                    users[users.length] = sim.backend.userlist[i].username;
+                }
+            }
+        }
+        return users;
+    },
+    
+    
+    /**
+     * decline room invitation
+     */
+    declineInvitation: function(room) {
+        var invited = [];
+        for(var i=0; i<sim.backend.invited.length; i++) {
+            if (sim.backend.invited[i].name == room.name)
+                continue;
+            invited[invited.length] = sim.backend.invited[i];
+        }
+        sim.backend.invited = invited;
+        sim.backend.updateRoomlist();
     }
-
 };

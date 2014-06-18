@@ -124,5 +124,19 @@ sim.frontend.helpers = {
             $(img).css("width", width * ratio);    // Scale width based on ratio
             width = width * ratio;    // Reset width to match scaled image
         }
+    },
+    
+    
+    /**
+     * create popup for rooms messages
+     */
+    createRoomsPopup: function(e, name) {
+        var pos = $(e).offset();
+        var div = document.createElement("div");
+        div.setAttribute('class', 'rooms-popup ' + name);
+        div.style.top = pos.top + "px";
+        div.style.left = pos.left + "px";
+        $(document.body).append(div);
+        return div;
     }
 }

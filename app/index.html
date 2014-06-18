@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="libs/jquery-custom-content-scroller/jquery.mCustomScrollbar.css">
         <link rel="stylesheet" href="libs/alertify/alertify.core.css">
         <link rel="stylesheet" href="libs/alertify/alertify.default.css">
+        <link rel="stylesheet" href="libs/selectize/selectize.css">
+        <link rel="stylesheet" href="libs/selectize/selectize.default.css">
         <link rel="stylesheet" href="main.css">
     </head>
     <body>
@@ -28,7 +30,7 @@
             
             <!-- rooms -->
             <div id="rooms">
-                <h1>R&auml;ume</h1>
+                <h1>R&auml;ume <span id="rooms-add" class="ion-plus-round"></span></h1>
                 
                 <div id="rooms-wrapper">
                     <ul class="rooms">
@@ -74,8 +76,7 @@
                 </div>
             </div>
         </div>
-        
-        
+               
         <!-- hidden file input dialog -->
         <input style="display:none;" id="fileDialog" accept=".jpg,.jpeg,.png,.gif" type="file" />
         
@@ -88,6 +89,7 @@
         <script src="libs/jquery-custom-content-scroller/jquery.mCustomScrollbar.min.js"></script>
         <script src="libs/alertify/alertify.min.js"></script>
         <script src="libs/evroneCrop/evroneCrop.js"></script>
+        <script src="libs/selectize/selectize.js"></script>
         
         <script src="sim-init.js"></script>
         <script src="sim-emoticons.js"></script>

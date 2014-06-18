@@ -77,8 +77,8 @@ sim.frontend = {
         });
         
         // register callback for room list update
-        backend.onGetRoomlistResponse(function(rooms) {
-            sim.frontend.updateRoomlist(rooms);
+        backend.onGetRoomlistResponse(function(rooms, invitedRooms) {
+            sim.frontend.updateRoomlist(rooms, invitedRooms);
         });
         
         // register callback for user list update
@@ -236,6 +236,17 @@ sim.frontend = {
             backend.leaveRoom(room);
         });
         
+        // edit room click
+        $('.rooms').delegate("li .rooms-edit", "click", function(e) {
+            var room = $(this).parent().find('.name').html();
+            
+            // get rooms users
+            var users = backend.getUsersInRoom(room);
+            var div = $(sim.frontend.helpers.createRoomsPopup($('#rooms-add'), "edit"));
+            sim.frontend.showAddEditRoom(div, backend, users);
+            div.find('.name').remove();
+        });
+        
         // send message
         $('#message-send').click(function() {
             var message = $('#message-input-textfield').val();
@@ -250,6 +261,19 @@ sim.frontend = {
             }
             $('#message-input-textfield').val("");
             backend.sendMessage(sim.frontend.currentConversation, message);
+        });
+        
+        // rooms add
+        $('#rooms-add').click(function() {
+            $('.rooms-popup.add').remove();
+            var div = $(sim.frontend.helpers.createRoomsPopup(this, "add"));
+            sim.frontend.showAddEditRoom(div, backend);
+            
+            // set cancel event
+            div.find('.save').click(function() {
+                alert("save");
+                div.remove();
+            });
         });
     },
     
@@ -305,30 +329,46 @@ sim.frontend = {
         
         // update roomlist
         $('.rooms').html('');
+        var invited = [];
         $.each(rooms, function(index, room) {
             // state
             var state = 'rooms-outside';
-            var leave = '';
-            if($.inArray(room, rooms.usersrooms)) {
+            var edit = '';
+            if(typeof room.invited == 'undefined') {
                 state = 'rooms-inside';
-                leave = '<span class="rooms-leave ion-log-out"></span>';
+                edit = '<span class="rooms-edit ion-wrench"></span> <span class="rooms-leave ion-log-out"></span>';
+            } else {
+                invited[invited.length] = room;
             }
             
             // unread
             var unread = "";
-            if (typeof sim.frontend.unreadMessagesCounter[room] != "undefined")
-                unread = '<div class="contacts-unread">' + sim.frontend.unreadMessagesCounter[room] + '</div>';
+            if (typeof sim.frontend.unreadMessagesCounter[room.name] != "undefined")
+                unread = '<div class="contacts-unread">' + sim.frontend.unreadMessagesCounter[room.name] + '</div>';
 
             // active
             var active = '';
-            if(sim.frontend.currentConversation==room)
+            if(sim.frontend.currentConversation == room.name)
                 active = 'class="active"';
                 
             $('.rooms').append('<li ' + active + '>\
                 <div class="' + state + '"></div> \
-                <div class="rooms-name"><span class="name">' + sim.frontend.helpers.escape(room) + '</span> ' + leave + ' </div>\
+                <div class="rooms-name"><span class="name">' + sim.frontend.helpers.escape(room.name) + '</span> ' + edit + ' </div>\
                 ' + unread + '\
             </li>');
+        });
+        
+        // remove all room invite popups on redraw
+        $('.rooms-popup.invite').remove();
+        
+        // show invite dialog
+        $.each(invited, function(index, room) {
+            var div = $(sim.frontend.helpers.createRoomsPopup($('#rooms-add'), "invite"));
+            div.append('<p>Einladung f&uuml;r den Raum ' + room.name + ' von ' + room.invited + ' annehmen?</p>');
+            div.append('<input class="save" type="button" value="annehmen" /> <input class="cancel" type="button" value="ablehnen" />');
+            div.find('.cancel').click(function() {
+                sim.backend.declineInvitation(room);
+            });
         });
         
         // restore scroll state
@@ -392,7 +432,7 @@ sim.frontend = {
         
     },
     
-        
+    
     /**
      * set automatically the height of the tags and set scrollbar for div scrolling
      */
@@ -409,5 +449,44 @@ sim.frontend = {
         var padding = parseInt($('#content').css('padding-bottom')) * 2;
         
         $('#content-wrapper').height(windowHeight - headerHeight - messageHeight - padding);
+    },
+    
+    
+    /**
+     * show add/edit room
+     */
+    showAddEditRoom: function(div, backend, selected) {
+        if(typeof selected == 'undefined')
+            selected = [];
+    
+        // get all users from backend
+        var users = backend.getAllUsers(true);
+        
+        // create select with all users
+        var select = document.createElement("select");
+        select.setAttribute('placeholder', 'Mitglieder...');
+        select.setAttribute('multiple', 'multiple');
+        for (var i=0; i<users.length; i++) {
+            var option = document.createElement("option");
+            option.setAttribute('value', users[i]);
+            if($.inArray(users[i], selected)!=-1)
+                option.setAttribute('selected', 'selected');
+            option.innerHTML = users[i];
+            select.appendChild(option);
+        }
+        
+        // add text and buttons
+        div.append('<input type="text" class="name selectize-input" placeholder="Name des Raums">');
+        div.append(select);
+        div.append('<input class="save" type="button" value="speichern" /> <input class="cancel" type="button" value="abbrechen" />');
+        
+        // make user select selectize.js
+        $(select).selectize({plugins: ['remove_button']});
+        
+        // set cancel event
+        div.find('.cancel').click(function() {
+            div.remove();
+        });
     }
+    
 }

@@ -147,6 +147,24 @@ body {
     height:32px;
 }
 
+.save,
+.cancel {
+    border-radius:3px;
+    padding:5px;
+    color:#ffffff;
+    cursor:pointer;
+}
+
+.save {
+    background:#68b54d;
+    border:1px solid #519339;
+}
+
+.cancel {
+    background:#e45857;
+    border:1px solid #C94B4B;
+}
+
 
 /**************/
 /* left menue */
@@ -288,6 +306,14 @@ body {
         color:#aaaaaa;
     }
 
+    #rooms-add {
+        cursor:pointer;
+    }
+    
+        #rooms-add:hover {
+            color:#333333;
+        }
+    
     #rooms-wrapper {
         height:150px;
     }
@@ -365,6 +391,7 @@ body {
             margin-right:5px;
         }
         
+        .rooms .rooms-edit,
         .rooms .rooms-leave {
             position:absolute;
             font-size:1.4em;
@@ -373,12 +400,68 @@ body {
             display:none;
         }
         
-            .rooms .rooms-leave:hover {
+            .rooms .rooms-leave {
+                margin-left:35px;
+            }
+        
+            .rooms .rooms-leave:hover,
+            .rooms .rooms-edit:hover {
                 color:#000;
             }
         
+        .rooms li:hover .rooms-edit,
         .rooms li:hover .rooms-leave {
             display:inline-block;
+        }
+    
+    
+    .rooms-popup {
+        width:300px;
+        min-height:50px;
+        position:absolute;
+        top:0;
+        left:25%;
+        margin-left:25px;
+        margin-top:-25px;
+        padding:10px;
+        background: #f7f7f7;
+        border: 1px solid #dadada;
+        z-index:300;
+        border-radius: 3px;
+        color:#5d5d5d;
+    }
+    
+    .rooms-popup:after, .rooms-popup:before {
+        right: 100%;
+        top: 30px;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .rooms-popup:after {
+        border-color: rgba(241, 241, 241, 0);
+        border-right-color: #f7f7f7;
+        border-width: 10px;
+        margin-top: -10px;
+    }
+    
+    .rooms-popup:before {
+        border-color: rgba(218, 218, 218, 0);
+        border-right-color: #dadada;
+        border-width: 11px;
+        margin-top: -11px;
+    }
+    
+        .rooms-popup p {
+            margin:0;
+            margin-top:5px;
+            margin-bottom:5px;
+            padding:0;
+            font-size:0.8em;
         }
     
     
@@ -490,25 +573,6 @@ body {
             #main-menue-avatar-croper {
                 display:none;
             }
-            
-                #main-menue-avatar-croper .save,
-                #main-menue-avatar-croper .cancel {
-                    border-radius:3px;
-                    padding:5px;
-                    color:#ffffff;
-                    font-size:1.1em;
-                }
-                
-                #main-menue-avatar-croper .save {
-                    background:#68b54d;
-                    border:1px solid #519339;
-                }
-                
-                #main-menue-avatar-croper .cancel {
-                    background:#e45857;
-                    border:1px solid #C94B4B;
-                }
-            
             
     #content {
         padding:20px;
