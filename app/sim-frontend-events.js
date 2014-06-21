@@ -226,7 +226,7 @@ sim.frontend.events = {
             // load file
             var file = $(this).val();
             $(this).val('');
-            backend.helpers.readFile(file, function(data) {
+            sim.backend.helpers.readFile(file, function(data) {
                 // check filetype
                 var filetype = file.split('.').pop();
                 if (filetype != "png" && filetype != "jpg" && filetype != "gif") {
