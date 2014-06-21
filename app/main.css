@@ -17,10 +17,12 @@ button green border: #519339
 
 */
 
+
 /***************/
 /* node-webkit */
 /***************/
 
+/* this makes the header to draggable window frame */
 #main-header,
 .heading {
     -webkit-user-select: none;
@@ -391,7 +393,7 @@ body {
             margin-right:5px;
         }
         
-        .rooms .rooms-edit,
+        .rooms .rooms-invite,
         .rooms .rooms-leave {
             position:absolute;
             font-size:1.4em;
@@ -405,11 +407,11 @@ body {
             }
         
             .rooms .rooms-leave:hover,
-            .rooms .rooms-edit:hover {
+            .rooms .rooms-invitet:hover {
                 color:#000;
             }
         
-        .rooms li:hover .rooms-edit,
+        .rooms li:hover .rooms-invite,
         .rooms li:hover .rooms-leave {
             display:inline-block;
         }

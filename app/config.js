@@ -15,5 +15,8 @@ var config = {
     chatport: 60123,
     
     // max age in milliseconds of lock file
-    lock_stale: 3000
+    lock_stale: 3000,
+    
+    // name of the room for all chatters
+    room_all: "Alle"
 };

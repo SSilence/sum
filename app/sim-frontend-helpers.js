@@ -1,6 +1,15 @@
+/**
+ * static helpers for the frontend
+ *
+ * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
+ * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
+ */
 sim.frontend.helpers = {
+
     /**
      * updates ago during element is visible
+     * @param date (date) given date
+     * @param element (DOMNode) HTML Element which should holds the time
      */
     startDateAgoUpdater: function(date, element) {
         
@@ -46,6 +55,8 @@ sim.frontend.helpers = {
     
     /**
      * convert date in vor n Minuten
+     * @return (string) formatted date
+     * @param date (date) given date
      */
     dateAgo: function(date) {
         var now = new Date().getTime() / 1000;
@@ -68,26 +79,9 @@ sim.frontend.helpers = {
     
     
     /**
-     * escape html
-     */
-    escape: function(string) {
-        var entityMap = {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': '&quot;',
-            "'": '&#39;',
-            "/": '&#x2F;'
-          };
-
-        return String(string).replace(/[&<>"'\/]/g, function (s) {
-          return entityMap[s];
-        });
-    },
-    
-    
-    /**
      * insert emoticons
+     * @return (string) text with emoticons images
+     * @param text (string) text with emoticons shortcuts
      */
     emoticons: function(text) {
         $.each(emoticons, function(shortcut, emoticon) {
@@ -103,6 +97,9 @@ sim.frontend.helpers = {
     
     /**
      * resize image to smaller size in frontend
+     * @param img (DOMNode) image for resizing
+     * @param maxWidth (int) maximal allowed width
+     * @param maxHeight (int) maximal allowed height
      */
     resizeImage: function(img, maxWidth, maxHeight) {
         var ratio = 0;  // Used for aspect ratio
@@ -129,6 +126,8 @@ sim.frontend.helpers = {
     
     /**
      * create popup for rooms messages
+     * @param e (DOMNode) HTML Element for positioning of the popup
+     * @param name (text) additional class for the new popup
      */
     createRoomsPopup: function(e, name) {
         var pos = $(e).offset();

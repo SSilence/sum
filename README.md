@@ -10,14 +10,6 @@ Version 0.1-SNAPSHOT
 SUM is a simple instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a single file which will be stored at a shared network folder.
 
 
-STILL IN DEVELOPMENT
---------------------
-
-ToDo List:
-* room handling (add room, enter and leave room, one static room for all)
-* avatars
-* notifications for all events
-
 
 CONFIG AND DEBUGGING
 --------------------
@@ -35,6 +27,7 @@ Following configuration parameters are available:
 * ``user_list_update_intervall``: update every n seconds users entry in userlist file
 * ``chatport``: port for chat communication
 * ``lock_stale``: max age in milliseconds of lock file
+* ``room_all``: name of the default room for all users
 
 You can access the debugger by setting ``"toolbar": true`` in ``package.json``
 
@@ -72,3 +65,4 @@ Special thanks to the great programmers of this libraries which will be used in 
 * jquery custom content scroller: http://manos.malihu.gr/jquery-custom-content-scroller/
 * Font Oswald: http://www.fontsquirrel.com/fonts/oswald
 * evrondeCrop: https://github.com/evrone/evroneCrop
+* selectize.js: http://brianreavis.github.io/selectize.js/
