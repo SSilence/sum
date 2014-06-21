@@ -85,13 +85,17 @@ sim.backend = {
 
         // give it a menu
         var menu = new gui.Menu();
-        menu.append(new gui.MenuItem({ type: 'normal', label: 'exit', click: function() {
+        menu.append(new gui.MenuItem({ type: 'normal', label: 'Debug', click: function() {
+            gui.Window.get().showDevTools();
+        } }));
+        menu.append(new gui.MenuItem({ type: 'normal', label: 'Exit', click: function() {
             gui.App.quit();  
         } }));
         tray.menu = menu;
         
         // click on tray icon = focus window
         tray.on('click', function() {
+            gui.Window.get().show();
             gui.Window.get().focus();
         });
     },
@@ -328,6 +332,14 @@ sim.backend = {
     
     
     /**
+     * close application
+     */
+    close: function() {
+        gui.Window.get().hide();
+    },
+    
+    
+    /**
      * save avatar in local storage
      * @param avatar (string) base64 encoded avatar
      */
@@ -460,14 +472,8 @@ sim.backend = {
      * @param users (array) array of all usernames
      */
     addRoom: function(room, users) {
-        if (typeof users == 'undefined' || users == null)
-            users = [];
-        var usersFromList = [];
-        for (var i=0; i<users.length; i++)
-            usersFromList[usersFromList.length] = sim.backend.getUser(users[i]);
-            
         var room = room.trim();
-        sim.backend.inviteUsers(room, usersFromList);
+        sim.backend.inviteUsers(room, users);
         sim.backend.roomlist[sim.backend.roomlist.length] = { 'name': room };
         sim.backend.updateRoomlist();
     },
@@ -479,6 +485,13 @@ sim.backend = {
      * @param users (array) array of all usernames
      */
     inviteUsers: function(room, users) {
+        if (typeof users == 'undefined' || users == null)
+            users = [];
+        var usersFromList = [];
+        for (var i=0; i<users.length; i++)
+            usersFromList[usersFromList.length] = sim.backend.getUser(users[i]);
+        users = usersFromList;
+        
         var message = {
             'type': 'invite',
             'room': room,
@@ -538,4 +551,13 @@ sim.backend = {
         }
         return false;
     },
+    
+    
+    /**
+     * returns username of current user
+     * @return (string) username
+     */
+    getUsername: function() {
+        return sim.backend.helpers.getUsername();
+    }
 };

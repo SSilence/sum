@@ -59,13 +59,18 @@ sim.frontend.events = {
         });
         
         // menue: about
+        $('#main-menue-quit').click(function() {
+            backend.quit();
+        });
+        
+        // menue: about
         $('#main-menue-about').click(function() {
             gui.Shell.openExternal('https://github.com/SSilence/sum');
         });
         
         // close
         $('#main-close').click(function() {
-            backend.quit();
+            backend.close();
         });
         
         // toggle emoticons
@@ -284,7 +289,7 @@ sim.frontend.events = {
         // create popup with text and buttons
         var div = $(sim.frontend.helpers.createRoomsPopup($('#rooms-add'), "edit"));
         div.append('<p>Weitere Mitglieder in Gruppe einladen:</p>');
-        div.append('<input class="name" type="hidden" value="' + room.escape() + ' />"');
+        div.append('<input class="name" type="hidden" value="' + room.escape() + '" />');
         div.append(select);
         div.append('<input class="save" type="button" value="einladen" /> <input class="cancel" type="button" value="abbrechen" />');
         

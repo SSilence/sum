@@ -82,7 +82,8 @@ sim.frontend = {
         
         // register callback for incoming new message
         backend.onNewMessage(function(message) {
-            backend.notification(backend.getAvatar(message.sender), "Neue Nachricht von " + message.sender.escape(), message.text);
+            if (message.sender != backend.getUsername())
+                backend.notification(backend.getAvatar(message.sender), "Neue Nachricht von " + message.sender.escape(), message.text);
             
             // conversation = sender
             var conversationId = message.sender;

@@ -243,7 +243,6 @@ body {
     background:#f1f1f1;
     margin:0;
     padding:0;
-    border-right:1px solid #dadada;
     
     display: -webkit-flex;
     display: flex;
@@ -331,7 +330,6 @@ body {
         padding:10px;
         position:relative;
         background:#f1f1f1;
-        border-right:1px solid #dadada;
         cursor:pointer;
         
         display: -webkit-flex;
