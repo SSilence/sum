@@ -296,9 +296,6 @@ sim.backend = {
         
         // send message to all users
         for (var i=0; i<users.length; i++) {
-            if (users[i].username == sim.backend.helpers.getUsername())
-                continue;
-            
             var message = {
                 'type': 'message',
                 'text': text,
@@ -307,11 +304,13 @@ sim.backend = {
             };
             sim.backend.client.send(users[i], message, function() {
                 // save message in own conversation on success
-                message.datetime = new Date().getTime();
-                if (typeof sim.backend.conversations[receiver] == 'undefined') 
-                    sim.backend.conversations[receiver] = [];
-                var conversation = sim.backend.conversations[receiver];           
-                sim.backend.conversations[receiver][conversation.length] = message;
+                if (message.sender != sim.backend.helpers.getUsername()) {
+                    message.datetime = new Date().getTime();
+                    if (typeof sim.backend.conversations[receiver] == 'undefined') 
+                        sim.backend.conversations[receiver] = [];
+                    var conversation = sim.backend.conversations[receiver];           
+                    sim.backend.conversations[receiver][conversation.length] = message;
+                }
                 
                 // update own message stream
                 sim.backend.getConversation(receiver);
