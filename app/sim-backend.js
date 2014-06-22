@@ -22,9 +22,21 @@ sim.backend = {
     
     
     /**
+     * timestamp userfile was written
+     */
+    userfileTimestamp: false,
+    
+    
+    /**
      * current userlist
      */
     userlist: [],
+    
+    
+    /**
+     * cache for all additional userinfos
+     */
+    userinfos: {},
     
     
     /**
@@ -52,6 +64,12 @@ sim.backend = {
     
     
     /**
+     * don't send notifications on first update run on program startup
+     */
+    firstUpdate: true,
+    
+    
+    /**
      * initialize backend
      */
     init: function() {
@@ -65,14 +83,19 @@ sim.backend = {
         // set ip
         sim.backend.ip = sim.backend.helpers.getIp();
 
-        // timer: userlist update timestamp for current user
-        sim.backend.initUserUpdater();
-
         // start backend server for chat communication
         sim.backend.server.init(sim.backend, config.chatport);
         
-        // init node webkit environment
+        // init node webkit tray icon
         sim.backend.initTray();
+        
+        // create/update userfile
+        sim.backend.updateUserfile(
+            function() {
+                // timer: userlist update timestamp for current user
+                sim.backend.userUpdater();
+            }
+        );
     },
     
     
@@ -85,9 +108,13 @@ sim.backend = {
 
         // give it a menu
         var menu = new gui.Menu();
+        
+        // open debugger
         menu.append(new gui.MenuItem({ type: 'normal', label: 'Debug', click: function() {
             gui.Window.get().showDevTools();
         } }));
+        
+        // quit app
         menu.append(new gui.MenuItem({ type: 'normal', label: 'Exit', click: function() {
             gui.App.quit();  
         } }));
@@ -99,64 +126,138 @@ sim.backend = {
             gui.Window.get().focus();
         });
     },
-
+    
     
     /**
-     * timer: userlist update timestamp for current user
+     * timer: regular userfile and userlist update for current user
      */
-    initUserUpdater: function() {
-        var firstUpdate = true;
-        var userUpdater = function() {
-            sim.backend.helpers.lock(function(err) {
-                // can't get lock? retry in random timeout
-                if (typeof err != 'undefined') {
-                    var randomTimeout = Math.floor(Math.random() * 10000) + 4000;
-                    window.setTimeout(userUpdater, randomTimeout);
-                    return;
+    userUpdater: function() {
+        sim.backend.helpers.lock(function(err) {
+            // can't get lock for exclusive userfile access? retry in random timeout
+            if (typeof err != 'undefined') {
+                var randomTimeout = Math.floor(Math.random() * config.lock_retry_maximum) + config.lock_retry_minimum;
+                window.setTimeout(sim.backend.userUpdater, randomTimeout);
+                return;
+            }
+            
+            // have lock? Update user list entry
+            sim.backend.helpers.updateUserlist(
+                config.user_file, 
+                sim.backend.userfileTimestamp,
+                sim.backend.roomlist,
+                function(users) {
+                    // release lock
+                    sim.backend.helpers.unlock();
+                    
+                    // load additional userinfos and update local userlist
+                    sim.backend.loadAdditionalUserinfos(users);
                 }
                 
-                // have lock? Update user list entry
-                sim.backend.helpers.updateUserlist(
-                    config.user_file, 
-                    sim.backend.key.getPublicPEM(),
-                    sim.backend.ip,
-                    sim.backend.loadAvatar(),
-                    sim.backend.roomlist,
-                    function(users) {
-                        // release lock
-                        sim.backend.helpers.unlock();
-                        
-                        // show notification for users which are now online/offline
-                        if (firstUpdate==false) {
-                            var online = sim.backend.helpers.getUsersNotInListOne(sim.backend.userlist, users);
-                            var offline = sim.backend.helpers.getUsersNotInListOne(users, sim.backend.userlist);
-                            
-                            if (typeof sim.backend.userOnlineNotice != 'undefined')
-                                for(var i=0; i<online.length; i++)
-                                    sim.backend.userOnlineNotice(online[i].avatar, online[i].username);
-                            
-                            if (typeof sim.backend.userOfflineNotice != 'undefined')
-                                for(var i=0; i<offline.length; i++)
-                                    sim.backend.userOfflineNotice(offline[i].avatar, offline[i].username);
-                        }
-                        firstUpdate = false;
-                        
-                        // save userlist
-                        sim.backend.userlist = users;
-                        
-                        // update ui
-                        if(typeof sim.backend.hasUserlistUpdate != "undefined")
-                            sim.backend.hasUserlistUpdate();
-                        
-                        // initialize next update
-                        window.setTimeout(userUpdater, config.user_list_update_intervall);
-                    });
-                
-            });
-        };
-        userUpdater();
+            );
+        });
     },
     
+    
+    /**
+     * loads all additional userinfos from users single file
+     * @param users (array) fetched users
+     */
+    loadAdditionalUserinfos: function(users) {
+        var toMerge = users.length;
+        
+        // checks whether all userinfos was fetched
+        var checkAllHandledThenExecuteRefreshUserlist = function() {
+            toMerge--;
+            if(toMerge==0)
+                sim.backend.refreshUserlist(users);
+        };
+        
+        // loads current userinfos for a single user
+        var loadUserinfos = function(currentIndex) {
+            // load from users file
+            if (typeof sim.backend.userinfos[users[currentIndex].username] == 'undefined'
+                || users[currentIndex].userfileTimestamp != sim.backend.userinfos[users[currentIndex].username].timestamp) {
+                
+                // read userinfos from file
+                var file = config.user_file_extended.replace(/#/, CryptoJS.MD5(users[currentIndex].username));
+                sim.backend.helpers.readJsonFile(
+                    file, 
+                    function(userinfos) {
+                        // merge user and userinfos
+                        if (typeof userinfos.ip != 'undefined' && typeof userinfos.port != 'undefined' && typeof userinfos.key != 'undefined') {
+                            users[currentIndex] = sim.backend.helpers.mergeUserAndUserinfos(users[currentIndex], userinfos);
+                            
+                            // save userinfos in cache
+                            sim.backend.userinfos[users[currentIndex].username] = userinfos;
+                        }
+                        checkAllHandledThenExecuteRefreshUserlist();
+                    },
+                    function() {
+                        checkAllHandledThenExecuteRefreshUserlist();
+                    }
+                );
+            
+            // load from cache
+            } else {
+                users[currentIndex] = sim.backend.helpers.mergeUserAndUserinfos(users[currentIndex], sim.backend.userinfos[users[currentIndex].username]);
+                checkAllHandledThenExecuteRefreshUserlist();
+            }
+        };
+        
+        // load additional infos per user from users own files
+        for (var i=0; i<users.length; i++) {
+            loadUserinfos(i);
+        }
+    },
+    
+    
+    /**
+     * refresh current userlist after reading userfile
+     * @param users (array) fetched users
+     */
+    refreshUserlist: function(users) {
+        // show notification for users which are now online/offline
+        if (sim.backend.firstUpdate==false) {
+            var online = sim.backend.helpers.getUsersNotInListOne(sim.backend.userlist, users);
+            var offline = sim.backend.helpers.getUsersNotInListOne(users, sim.backend.userlist);
+            
+            if (typeof sim.backend.userOnlineNotice != 'undefined')
+                for(var i=0; i<online.length; i++)
+                    sim.backend.userOnlineNotice(online[i].avatar, online[i].username);
+            
+            if (typeof sim.backend.userOfflineNotice != 'undefined')
+                for(var i=0; i<offline.length; i++)
+                    sim.backend.userOfflineNotice(offline[i].avatar, offline[i].username);
+        }
+        sim.backend.firstUpdate = false;
+        
+        // save userlist
+        sim.backend.userlist = users;
+        
+        // update ui
+        if(typeof sim.backend.hasUserlistUpdate != "undefined")
+            sim.backend.hasUserlistUpdate();
+        
+        // initialize next update
+        window.setTimeout(sim.backend.userUpdater, config.user_list_update_intervall);
+    },
+    
+    
+    /**
+     * write userfile with avatar, ip, chatport and other less frequently updated information
+     * @param success (callback) will be executed after successfully writing file
+     */
+    updateUserfile: function(success) {
+        sim.backend.helpers.updateUserfile(
+            config.user_file_extended.replace(/#/, CryptoJS.MD5(sim.backend.helpers.getUsername())),
+            sim.backend.ip,
+            config.chatport,
+            sim.backend.key.getPublicPEM(),
+            sim.backend.loadAvatar(),
+            success
+        );
+        sim.backend.userfileTimestamp = new Date().getTime();
+    },
     
     
     // callback registration for the frontend
@@ -230,7 +331,7 @@ sim.backend = {
     
     
     /**
-     * update frontend with current userlist. onGetUserlistRespons will be executed.
+     * update frontend with current userlist. onGetUserlistResponse will be executed.
      * @param conversation (string) the current conversation (room or user or nothing)
      */
     updateUserlist: function(conversation) {
@@ -239,7 +340,7 @@ sim.backend = {
             // per default: return all
             var users = sim.backend.userlist;
             
-            // filter by room
+            // filter by room if user has selected a room
             if (typeof conversation != 'undefined' && conversation != false) {
                 // given conversation is a room and not a user?
                 if (sim.backend.getUser(conversation)==false) {
@@ -299,22 +400,26 @@ sim.backend = {
         }
         
         // send message to all users
+        var currentuser = sim.backend.helpers.getUsername();
         for (var i=0; i<users.length; i++) {
+            // don't send message to this user
+            if (users[i].username == currentuser)
+                continue;
+                
             var message = {
                 'type': 'message',
                 'text': text,
                 'sender': sim.backend.helpers.getUsername(),
                 'receiver': receiver
             };
+            
             sim.backend.client.send(users[i], message, function() {
                 // save message in own conversation on success
-                if (message.sender != sim.backend.helpers.getUsername()) {
-                    message.datetime = new Date().getTime();
-                    if (typeof sim.backend.conversations[receiver] == 'undefined') 
-                        sim.backend.conversations[receiver] = [];
-                    var conversation = sim.backend.conversations[receiver];           
-                    sim.backend.conversations[receiver][conversation.length] = message;
-                }
+                message.datetime = new Date().getTime();
+                if (typeof sim.backend.conversations[receiver] == 'undefined') 
+                    sim.backend.conversations[receiver] = [];
+                var conversation = sim.backend.conversations[receiver];           
+                sim.backend.conversations[receiver][conversation.length] = message;
                 
                 // update own message stream
                 sim.backend.getConversation(receiver);
@@ -345,6 +450,7 @@ sim.backend = {
      */
     saveAvatar: function(avatar) {
         window.localStorage.avatar = avatar;
+        sim.backend.updateUserfile();
     },
     
     

@@ -66,3 +66,4 @@ Special thanks to the great programmers of this libraries which will be used in 
 * Font Oswald: http://www.fontsquirrel.com/fonts/oswald
 * evrondeCrop: https://github.com/evrone/evroneCrop
 * selectize.js: http://brianreavis.github.io/selectize.js/
+* crypto-js: https://code.google.com/p/crypto-js/

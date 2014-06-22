@@ -140,6 +140,13 @@ sim.frontend.events = {
             backend.sendMessage(sim.frontend.currentConversation, message);
         });
         
+        // send message by enter
+        $('#message-input-textfield').keypress(function(e) {
+            if(e.which == 13) {
+                $('#message-send').click();
+            }
+        });
+        
         // rooms add: show dialog
         $('#rooms-add').click(sim.frontend.events.showAddRoomsDialog);
         

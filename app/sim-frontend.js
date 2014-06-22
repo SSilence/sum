@@ -11,15 +11,18 @@ sim.frontend = {
      */
     unreadMessagesCounter: {},
     
+    
     /**
      * id of current visible conversation
      */
     currentConversation: false,
-
+    
+    
     /**
      * window height before last resize event
      */
     lastWindowHeight: $(window).height(),
+    
     
     /**
      * initialize frontend

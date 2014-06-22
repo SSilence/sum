@@ -1,8 +1,4 @@
-// extend string
-String.prototype.trim = function () {
-    return this.replace(/^\s+|\s+$/g, "");
-};
-
+// add escape for string
 String.prototype.escape = function () {
     var entityMap = {
         "&": "&amp;",

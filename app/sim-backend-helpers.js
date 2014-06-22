@@ -15,13 +15,11 @@ sim.backend.helpers = {
      * all users are registered in a single json file. This method updates or adds
      * an entry of the current user.
      * @param file (string) The path and filename of the userfile
-     * @param key (NodeRSA) RSA Key for writing public key into userfile
-     * @param ip (string) IP Address of current user
-     * @param avatar (string) base64 encoded avatar file
+     * @param userfileTimestamp (timestamp) timestamp with last stored userfile
      * @param rooms (Array of strings) all rooms this user is in
-     * @param success (function) callback with all current fetched users
+     * @param success (function) callback will be after all users was read successfully
      */
-    updateUserlist: function(file, key, ip, avatar, rooms, success) {
+    updateUserlist: function(file, userfileTimestamp, rooms, success) {
         sim.backend.helpers.readJsonFile(file, function(users) {
             var currentuser = sim.backend.helpers.getUsername();
             var now = new Date().getTime();
@@ -30,9 +28,7 @@ sim.backend.helpers = {
             var userEntry = {
                 username: currentuser,
                 timestamp: now,
-                key: key,
-                ip: ip,
-                port: config.chatport,
+                userfileTimestamp: userfileTimestamp,
                 rooms: rooms
             };
             
@@ -41,26 +37,68 @@ sim.backend.helpers = {
                 userEntry.avatar = avatar;
             
             // remove orphaned user entries
-            var newUserlist = [];
+            var userlist = [];
             for(var i=0; i<users.length; i++) {
+                // ignore entries without username and timestamp
+                if (typeof users[i].username == 'undefined' || typeof users[i].timestamp == 'undefined')
+                    continue;
+                
                 // current user will be added later
                 if (users[i].username == currentuser)
                     continue;
                 
                 // only save active users
                 if (users[i].timestamp + config.user_timeout > now)
-                    newUserlist[newUserlist.length] = users[i];
+                    userlist[userlist.length] = users[i];
             }
             
             // add current user
-            newUserlist[newUserlist.length] = userEntry;
+            userlist[userlist.length] = userEntry;
             
-            // write back userfile
-            sim.backend.helpers.writeJsonFile(file, newUserlist);
+            // write back updated userfile
+            sim.backend.helpers.writeJsonFile(file, userlist);
             
             // execute success method
-            success(newUserlist);
+            success(userlist);
         });
+    },
+    
+    
+    /**
+     * merge user and extended userinfos (as avatar, ip, ...)
+     * @return (object) with user and userinfos data
+     * @param user (object) userobject
+     * @param userinfos (object) additional userinfos
+     */
+    mergeUserAndUserinfos: function(user, userinfos) {
+        user.ip = userinfos.ip;
+        user.port = userinfos.port;
+        user.key = userinfos.key;
+        
+        if (typeof userinfos.avatar != 'undefined')
+            user.avatar = userinfos.avatar;
+        
+        return user;
+    },
+    
+    
+    /**
+     * save userfile where less updated informations will be stored
+     * @param file (string) target file
+     * @param ip (string) IP Address of current user
+     * @param port (string) IP Address of current user
+     * @param key (NodeRSA) RSA Key for writing public key into userfile
+     * @param avatar (string) base64 encoded avatar file
+     */
+    updateUserfile: function(file, ip, port, key, avatar, success) {
+        sim.backend.helpers.writeJsonFile(file, {
+            ip: ip,
+            port: port,
+            key: key,
+            avatar: avatar
+        });
+        if (typeof success != 'undefined')
+            success();
     },
 
 
@@ -106,11 +144,14 @@ sim.backend.helpers = {
      * write object as json in file
      * @param file (string) filename for writing the content
      * @param content (object) will be json encoded written into file
+     * @param success (callback) will be called on success
      */
-    writeJsonFile: function(file, content) {
+    writeJsonFile: function(file, content, success) {
         fs.writeFile(file, JSON.stringify(content, null, 4), 'utf8', function(err) {
             if(err)
                 sim.backend.error('Fehler beim Schreiben der Userliste: ' + err);
+            else if (typeof success != 'undefined')
+                success();
         }); 
     },
     
@@ -118,23 +159,29 @@ sim.backend.helpers = {
     /**
      * read json encoded file and return as object
      * @param file (string) path and filename
-     * @param callback (function) after successfully reading and json parsing content of file
+     * @param success (function) after successfully reading and json parsing content of file
+     * @param error (function) after error on reading and json parsing content of file
      */
-    readJsonFile: function(file, callback) {
+    readJsonFile: function(file, success, error) {
+        if (typeof error == 'undefined')
+            error = function() {
+                success([]);
+            };
+        
         fs.readFile(file, 'utf8', function (err, data) {
             var res = [];
             if (err) {
-                callback(res);
+                error();
                 return;
             }
 
             try {
                 res = JSON.parse(data);
             } catch (er) {
-                // do nothing, return []
+                error();
             }
 
-            callback(res);
+            success(res);
         });
     },
 
