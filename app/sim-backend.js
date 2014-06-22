@@ -414,13 +414,17 @@ sim.backend = {
                 'receiver': receiver
             };
             
+            var count = 0;
             sim.backend.client.send(users[i], message, function() {
-                // save message in own conversation on success
-                message.datetime = new Date().getTime();
-                if (typeof sim.backend.conversations[receiver] == 'undefined') 
-                    sim.backend.conversations[receiver] = [];
-                var conversation = sim.backend.conversations[receiver];           
-                sim.backend.conversations[receiver][conversation.length] = message;
+                if(count==0) {
+                    // save message in own conversation on success
+                    message.datetime = new Date().getTime();
+                    if (typeof sim.backend.conversations[receiver] == 'undefined') 
+                        sim.backend.conversations[receiver] = [];
+                    var conversation = sim.backend.conversations[receiver];           
+                    sim.backend.conversations[receiver][conversation.length] = message;
+                    count++;
+                }
                 
                 // update own message stream
                 sim.backend.getConversation(receiver);
