@@ -89,10 +89,10 @@ sim.backend = {
         // init node webkit tray icon
         sim.backend.initTray();
         
-        // create/update userfile
+        // create/update userfile (holds additional information as avatar, key, ip, ...)
         sim.backend.updateUserfile(
             function() {
-                // timer: userlist update timestamp for current user
+                // userfile written? then start timer for updating the userlist
                 sim.backend.userUpdater();
             }
         );
@@ -163,6 +163,7 @@ sim.backend = {
      * @param users (array) fetched users
      */
     loadAdditionalUserinfos: function(users) {
+        // next step will be executed if all additonal informations of all users was loaded (toMerge == 0)
         var toMerge = users.length;
         
         // checks whether all userinfos was fetched
@@ -174,7 +175,7 @@ sim.backend = {
         
         // loads current userinfos for a single user
         var loadUserinfos = function(currentIndex) {
-            // load from users file
+            // load from users file if not in cache or newer one available
             if (typeof sim.backend.userinfos[users[currentIndex].username] == 'undefined'
                 || users[currentIndex].userfileTimestamp != sim.backend.userinfos[users[currentIndex].username].timestamp) {
                 
@@ -188,6 +189,7 @@ sim.backend = {
                             users[currentIndex] = sim.backend.helpers.mergeUserAndUserinfos(users[currentIndex], userinfos);
                             
                             // save userinfos in cache
+                            userinfos.timestamp = users[currentIndex].userfileTimestamp;
                             sim.backend.userinfos[users[currentIndex].username] = userinfos;
                         }
                         checkAllHandledThenExecuteRefreshUserlist();
@@ -205,9 +207,8 @@ sim.backend = {
         };
         
         // load additional infos per user from users own files
-        for (var i=0; i<users.length; i++) {
+        for (var i=0; i<users.length; i++)
             loadUserinfos(i);
-        }
     },
     
     
@@ -234,7 +235,7 @@ sim.backend = {
         // save userlist
         sim.backend.userlist = users;
         
-        // update ui
+        // inform frontend that new userlist is available
         if(typeof sim.backend.hasUserlistUpdate != "undefined")
             sim.backend.hasUserlistUpdate();
         

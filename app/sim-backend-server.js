@@ -12,26 +12,30 @@ sim.backend.server = {
      * @param port serverport
      */
     init: function(backend, port) {
-        http.createServer(function (request, response) {
+        // create new http server
+        var server = http.createServer(function (request, response) {
             var body = '';
 
+            // data chunk received
             request.addListener('data', function(chunk){
                 body += chunk;
             });
-
+            
+            // error occured
             request.addListener('error', function(error){
                 backend.error('server init error: ' + error);
                 next(err);
             });
 
+            // last data chunk received
             request.addListener('end', function(chunk){
-                if (chunk) {
+                if (chunk)
                     body += chunk;
-                }
                 
                 // decrypt message
                 var reqStr = sim.backend.helpers.decrypt(backend.key, body);
                 
+                // parse decrypted json
                 try {
                     req = JSON.parse(reqStr);
                 } catch(e) {
@@ -41,6 +45,7 @@ sim.backend.server = {
                     return;
                 }
                 
+                // is type given?
                 if(typeof req.type != "undefined") {
                     sim.backend.server.handle(backend, req);
                     response.writeHeader(200, {"Content-Type": "text/plain"});  
@@ -48,9 +53,14 @@ sim.backend.server = {
                     backend.error('invalid request received');
                     response.writeHeader(400, {"Content-Type": "text/plain"}); 
                 }
+                
+                // finish handling
                 response.end();
             });
-        }).listen(port);
+        });
+        
+        // start server
+        server.listen(port);
     },
     
     

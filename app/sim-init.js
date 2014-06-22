@@ -14,7 +14,7 @@ String.prototype.escape = function () {
     });
 };
 
-
+// startup sim
 var sim = {};
 
 $(document).ready(function() {
