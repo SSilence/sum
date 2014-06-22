@@ -2,7 +2,7 @@ var config = {
     // path of user file
     user_file: "c:/tmp/userfile.json",
     
-    // file per user where avatar and key will be stored
+    // file per user where avatar and key will be stored. # will be replaced by the md5 hash of the username
     user_file_extended: "c:/tmp/#",
     
     // path of lock file
