@@ -71,3 +71,4 @@ Special thanks to the great programmers of this libraries which will be used in 
 * selectize.js: http://brianreavis.github.io/selectize.js/
 * crypto-js: https://code.google.com/p/crypto-js/
 * WebIconset.com Emoticons: http://www.webiconset.com/emoticons-smilies-icon-set/
+* Website Template: http://html5up.net/

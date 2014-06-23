@@ -25,7 +25,7 @@ OutputBaseFilename=sum-setup
 Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 
 [Files]
-Source: "*"; Excludes: ".git,setup.iss,config_ext*,sum-setup*" ; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "*"; Excludes: ".git,setup.iss,config_ext*,sum-setup*,website*" ; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 Source: "app/favicon.ico"; DestDir: "{app}"; DestName: "icon.ico"; Flags: ignoreversion
 
 [Tasks]

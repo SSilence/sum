@@ -12,7 +12,7 @@ var config = {
     user_timeout: 60000,
     
     // update every n seconds users entry in userlist file
-    user_list_update_intervall: 3000,
+    user_list_update_intervall: 15000,
     
     // port for chat communication
     chatport: 60123,

@@ -81,6 +81,6 @@ var emoticons = {
     ':uff:': 'emoticons/whew.png',
     ':win:': 'emoticons/win.png',
     ':gaehn:': 'emoticons/yawn.png',
-    ':übelst-gaehn:': 'emoticons/yawn2.png',
+    ':uebelst-gaehn:': 'emoticons/yawn2.png',
     ':zombie:': 'emoticons/zombie.png'
 };

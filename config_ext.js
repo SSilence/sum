@@ -1,5 +1,5 @@
 exports.extend = function(config) {
-    config.username = "zuzzl";
+    config.username = "Karl Mustermann";
     config.chatport = 60124;
     return config;
 };

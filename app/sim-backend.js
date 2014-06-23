@@ -400,33 +400,30 @@ sim.backend = {
             return;
         }
         
-        // send message to all users
+        // create new message
         var currentuser = sim.backend.helpers.getUsername();
+        var message = {
+            'type': 'message',
+            'text': text,
+            'sender': currentuser,
+            'receiver': receiver
+        };
+        
+        // save message in own conversation
+        if (typeof sim.backend.conversations[receiver] == 'undefined') 
+            sim.backend.conversations[receiver] = [];
+        var conversation = sim.backend.conversations[receiver];
+        conversation[conversation.length] = $.extend({}, message, { datetime: new Date().getTime() });
+        sim.backend.getConversation(receiver);
+        
+        // send message to all users
         for (var i=0; i<users.length; i++) {
             // don't send message to this user
             if (users[i].username == currentuser)
                 continue;
-                
-            var message = {
-                'type': 'message',
-                'text': text,
-                'sender': sim.backend.helpers.getUsername(),
-                'receiver': receiver
-            };
             
-            var count = 0;
+            // send message
             sim.backend.client.send(users[i], message, function() {
-                if(count==0) {
-                    // save message in own conversation on success
-                    message.datetime = new Date().getTime();
-                    if (typeof sim.backend.conversations[receiver] == 'undefined') 
-                        sim.backend.conversations[receiver] = [];
-                    var conversation = sim.backend.conversations[receiver];           
-                    sim.backend.conversations[receiver][conversation.length] = message;
-                    count++;
-                }
-                
-                // update own message stream
                 sim.backend.getConversation(receiver);
             }, sim.backend.error);
         }
