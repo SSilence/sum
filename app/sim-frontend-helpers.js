@@ -88,9 +88,11 @@ sim.frontend.helpers = {
             // escape shortcut
             shortcut = shortcut.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
             
+            // replace shortcut
             var re = new RegExp(shortcut, 'g');
             text = text.replace(re, '<img src="'+ emoticon +'" title="' + shortcut + '"/>');
         });
+        
         return text;
     },
     
@@ -127,7 +129,7 @@ sim.frontend.helpers = {
     /**
      * create popup for rooms messages
      * @param e (DOMNode) HTML Element for positioning of the popup
-     * @param name (text) additional class for the new popup
+     * @param name (string) additional class for the new popup
      */
     createRoomsPopup: function(e, name) {
         var pos = $(e).offset();
@@ -137,5 +139,17 @@ sim.frontend.helpers = {
         div.style.left = pos.left + "px";
         $(document.body).append(div);
         return div;
+    },
+    
+    
+    /**
+     * detects links an replace it with a tag
+     * @return (string) text with a tags
+     * @param text (string) given text
+     */
+    urlify: function(text) {
+        return text.replace(/(https?:\/\/[^\s]+)/g, function(url) {
+            return '<a href="' + url + '" class="extern">' + url + '</a>';
+        });
     }
 }

@@ -5,11 +5,10 @@ String.prototype.escape = function () {
         "<": "&lt;",
         ">": "&gt;",
         '"': '&quot;',
-        "'": '&#39;',
-        "/": '&#x2F;'
+        "'": '&#39;'
     };
 
-    return this.replace(/[&<>"'\/]/g, function (s) {
+    return this.replace(/[&<>"']/g, function (s) {
         return entityMap[s];
     });
 };

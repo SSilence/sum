@@ -199,10 +199,6 @@ body {
     margin-right:0;
 }
 
-    .mCustomScrollBox  {
-        z-index:19;
-    }
-
     .mCSB_scrollTools .mCSB_draggerContainer {
         margin-top:10px;
         margin-bottom:10px;
@@ -634,6 +630,7 @@ body {
         left:100%;
         margin-left:-230px;
         padding:5px;
+        z-index:29;
     }
 
         #message-emoticons img {
@@ -674,7 +671,7 @@ body {
             margin:0;
             margin-top:2px;
             margin-bottom:2px;
-            background:url(emoticons/01.gif) no-repeat center center #eee;
+            background:url(emoticons/smile.png) no-repeat center center #eee;
             width:30px;
             height:30px;
             border: 1px solid #ccc;

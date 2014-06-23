@@ -22,6 +22,13 @@ sim.frontend.events = {
         // initialize window resize handler
         $(window).bind("resize", sim.frontend.events.resize);
         sim.frontend.events.resize();
+
+        // open external links in new window
+        $('body').delegate("a.extern", "click", function(e) {
+            gui.Shell.openExternal($(this).attr('href'));
+            e.preventDefault();
+            return false;
+        });
         
         // menue: toggle
         $('#main-menue').click(function() {

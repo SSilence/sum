@@ -275,6 +275,9 @@ sim.frontend = {
         // show messages (highlite new messages)
         $('#content').html('');
         $.each(messages, function(index, message) {
+            var messageText = message.text.escape();
+            messageText = sim.frontend.helpers.emoticons(messageText);
+            messageText = sim.frontend.helpers.urlify(messageText);
             $('#content').append('<li class="entry">\
                 <div class="entry-metadata">\
                     <img src="' + backend.getAvatar(message.sender) + '" class="avatar" />\
@@ -282,7 +285,7 @@ sim.frontend = {
                     <span class="entry-datetime">' + sim.frontend.helpers.dateAgo(message.datetime) + '</span>\
                 </div>\
                 <div class="entry-content">\
-                    ' + sim.frontend.helpers.emoticons(message.text.escape()) + '\
+                    ' + messageText + '\
                 </div>\
             </li>');
             
