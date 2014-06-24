@@ -85,6 +85,11 @@ sim.backend.helpers = {
      * @param error (function) will be executed on error
      */
     writeJsonFile: function(file, content, success, error) {
+        if (typeof error == 'undefined')
+            error = function(error) {
+                throw new Error(error);
+            };
+            
         fs.writeFile(file, JSON.stringify(content, null, 4), 'utf8', function(err) {
             if(err)
                 error('Fehler beim Schreiben der Userliste: ' + err);

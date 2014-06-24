@@ -1,7 +1,7 @@
 #define MyAppName "S Ultimate Messenger"
 #define MyAppVersion "0.1alpha"
 #define MyAppPublisher "Tobias Zeising"
-#define MyAppURL "https://github.com/ssilence/sum"
+#define MyAppURL "http://www.sum-messenger.org"
 #define LaunchProgram "Starte S Ultimate Messenger nach der Installation"
 #define DesktopIcon "Verknüpfung auf dem Desktop"
 #define CreateDesktopIcon "Wollen Sie eine Verknüpfung auf dem Desktop erstellen?"
