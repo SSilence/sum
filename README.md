@@ -7,7 +7,7 @@ Licensed under the GPLv3 license
 Version 0.1-SNAPSHOT
 
 
-SUM is a simple instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a single file which will be stored at a shared network folder.
+SUM is a simple instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a file which will be stored at a shared network folder.
 
 
 
@@ -42,14 +42,6 @@ SETUP
 
 Setup file can be created with Inno Setup: http://www.jrsoftware.org/isinfo.php
 Use the setup.iss configuration file.
-
-
-
-CHANGELOG
----------
-
-Version 0.1-SNAPSHOT
-* initial commit
 
 
 

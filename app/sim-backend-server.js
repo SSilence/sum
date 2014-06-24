@@ -32,14 +32,12 @@ sim.backend.server = {
                 if (chunk)
                     body += chunk;
                 
-                // decrypt message
-                var reqStr = sim.backend.helpers.decrypt(backend.key, body);
-                
                 // parse decrypted json
                 try {
-                    req = JSON.parse(reqStr);
+                    var reqStr = sim.backend.helpers.decrypt(backend.key, body);
+                    var req = JSON.parse(reqStr);
                 } catch(e) {
-                    backend.error('invalid encrypted request received');
+                    backend.error('Ungueltige Nachricht erhalten (verschluesselung oder JSON konnte nicht verarbeitet werden)');
                     response.writeHeader(400, {"Content-Type": "text/plain"});
                     response.end();
                     return;

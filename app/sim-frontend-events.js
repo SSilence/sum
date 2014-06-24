@@ -72,7 +72,7 @@ sim.frontend.events = {
         
         // menue: about
         $('#main-menue-about').click(function() {
-            gui.Shell.openExternal('https://github.com/SSilence/sum');
+            gui.Shell.openExternal('http://www.sum-messenger.org');
         });
         
         // close
@@ -245,26 +245,30 @@ sim.frontend.events = {
             // load file
             var file = $(this).val();
             $(this).val('');
-            sim.backend.helpers.readFile(file, function(data) {
-                // check filetype
-                var filetype = file.split('.').pop();
-                if (filetype != "png" && filetype != "jpg" && filetype != "gif") {
-                    alertify.error("Bitte PNG, JPG oder GIF Datei w&auml;hlen");
-                    $('#main-menue-avatar-croper .cancel').click();
-                    return;
-                }
-                
-                // init cropper
-                $('#main-menue-avatar-croper img, .evroneCropCanvas').remove();
-                $('#main-menue-avatar-croper').prepend('<img />');
-                $('#main-menue-avatar-croper img').attr('src', 'data:image/' + filetype + ';base64,' + data.toString('base64'));
-                sim.frontend.helpers.resizeImage($('#main-menue-avatar-croper img'), 200, 200);
-                $('#main-menue-avatar-croper img').evroneCrop({
-                  size: {w: 150, h: 150}, 
-                  ratio: 1,
-                  setSelect: 'center'
-                });
-            });
+            sim.backend.helpers.readFile(
+                file, 
+                function(data) {
+                    // check filetype
+                    var filetype = file.split('.').pop();
+                    if (filetype != "png" && filetype != "jpg" && filetype != "gif") {
+                        alertify.error("Bitte PNG, JPG oder GIF Datei w&auml;hlen");
+                        $('#main-menue-avatar-croper .cancel').click();
+                        return;
+                    }
+                    
+                    // init cropper
+                    $('#main-menue-avatar-croper img, .evroneCropCanvas').remove();
+                    $('#main-menue-avatar-croper').prepend('<img />');
+                    $('#main-menue-avatar-croper img').attr('src', 'data:image/' + filetype + ';base64,' + data.toString('base64'));
+                    sim.frontend.helpers.resizeImage($('#main-menue-avatar-croper img'), 200, 200);
+                    $('#main-menue-avatar-croper img').evroneCrop({
+                      size: {w: 150, h: 150}, 
+                      ratio: 1,
+                      setSelect: 'center'
+                    });
+                }, 
+                alertify.error
+            );
         });
         $('#fileDialog').trigger('click');
     },

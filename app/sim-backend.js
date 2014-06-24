@@ -90,10 +90,10 @@ sim.backend = {
         sim.backend.initTray();
         
         // create/update userfile (holds additional information as avatar, key, ip, ...)
-        sim.backend.updateUserfile(
+        sim.backend.userlistUpdateUsersOwnFile(
             function() {
                 // userfile written? then start timer for updating the userlist
-                sim.backend.userUpdater();
+                sim.backend.userlistUpdateTimer();
             }
         );
     },
@@ -104,7 +104,7 @@ sim.backend = {
      */
     initTray: function() {
         // create a tray icon
-        var tray = new gui.Tray({ title: 'Tray', icon: 'app/favicon.png' });
+        var tray = new gui.Tray({ title: 'Tray', icon: 'app/favicon.png', tooltip: 'S Ultimate Messenger' });
 
         // give it a menu
         var menu = new gui.Menu();
@@ -128,41 +128,85 @@ sim.backend = {
     },
     
     
+    
+    ////////////////////////////
+    // userlist file handling //
+    ////////////////////////////
+    
     /**
      * timer: regular userfile and userlist update for current user
      */
-    userUpdater: function() {
+    userlistUpdateTimer: function() {
         sim.backend.helpers.lock(function(err) {
             // can't get lock for exclusive userfile access? retry in random timeout
             if (typeof err != 'undefined') {
                 var randomTimeout = Math.floor(Math.random() * config.lock_retry_maximum) + config.lock_retry_minimum;
-                window.setTimeout(sim.backend.userUpdater, randomTimeout);
+                window.setTimeout(sim.backend.userlistUpdateTimer, randomTimeout);
                 return;
             }
             
-            // have lock? Update user list entry
-            sim.backend.helpers.updateUserlist(
-                config.user_file, 
-                sim.backend.userfileTimestamp,
-                sim.backend.roomlist,
-                function(users) {
-                    // release lock
-                    sim.backend.helpers.unlock();
-                    
-                    // load additional userinfos and update local userlist
-                    sim.backend.loadAdditionalUserinfos(users);
-                }
-                
-            );
+            // have lock? Update userlist
+            sim.backend.userlistUpdater();
         });
     },
     
     
     /**
-     * loads all additional userinfos from users single file
+     * all users are registered in a single json file. This method updates or adds
+     * an entry of the current user.
+     * @param success (function) callback will be after all users was read successfully
+     */
+    userlistUpdater: function(success) {
+        sim.backend.helpers.readJsonFile(config.user_file, function(users) {
+            var currentuser = sim.backend.helpers.getUsername();
+            var now = new Date().getTime();
+            
+            // remove orphaned user entries
+            var userlist = [];
+            for(var i=0; i<users.length; i++) {
+                // ignore entries without username and timestamp
+                if (typeof users[i].username == 'undefined' || typeof users[i].timestamp == 'undefined')
+                    continue;
+                
+                // current user will be added later
+                if (users[i].username == currentuser)
+                    continue;
+                
+                // only save active users
+                if (users[i].timestamp + config.user_timeout > now)
+                    userlist[userlist.length] = users[i];
+            }
+            
+            // add current user
+            userlist[userlist.length] = {
+                username: currentuser,
+                timestamp: now,
+                userfileTimestamp: sim.backend.userfileTimestamp,
+                rooms: sim.backend.roomlist
+            };
+            
+            // write back updated userfile
+            sim.backend.helpers.writeJsonFile(
+                config.user_file,
+                userlist,
+                function() {
+                    // release lock
+                    sim.backend.helpers.unlock();
+                },
+                sim.backend.error
+            );
+            
+            // load additional userinfos and update local userlist
+            sim.backend.userlistLoadAdditionalUserinfos(userlist);
+        });
+    },
+    
+    
+    /**
+     * loads all additional userinfos from users single files
      * @param users (array) fetched users
      */
-    loadAdditionalUserinfos: function(users) {
+    userlistLoadAdditionalUserinfos: function(users) {
         // next step will be executed if all additonal informations of all users was loaded (toMerge == 0)
         var toMerge = users.length;
         
@@ -170,7 +214,7 @@ sim.backend = {
         var checkAllHandledThenExecuteRefreshUserlist = function() {
             toMerge--;
             if(toMerge==0)
-                sim.backend.refreshUserlist(users);
+                sim.backend.userlistRefreshFrontend(users);
         };
         
         // loads current userinfos for a single user
@@ -216,7 +260,7 @@ sim.backend = {
      * refresh current userlist after reading userfile
      * @param users (array) fetched users
      */
-    refreshUserlist: function(users) {
+    userlistRefreshFrontend: function(users) {
         // show notification for users which are now online/offline
         if (sim.backend.firstUpdate==false) {
             var online = sim.backend.helpers.getUsersNotInListOne(sim.backend.userlist, users);
@@ -240,29 +284,40 @@ sim.backend = {
             sim.backend.hasUserlistUpdate();
         
         // initialize next update
-        window.setTimeout(sim.backend.userUpdater, config.user_list_update_intervall);
+        window.setTimeout(sim.backend.userlistUpdateTimer, config.user_list_update_intervall);
     },
     
     
     /**
-     * write userfile with avatar, ip, chatport and other less frequently updated information
+     * write extended userfile with avatar, ip, chatport and other less frequently updated information
      * @param success (callback) will be executed after successfully writing file
      */
-    updateUserfile: function(success) {
-        sim.backend.helpers.updateUserfile(
-            config.user_file_extended.replace(/#/, CryptoJS.MD5(sim.backend.helpers.getUsername())),
-            sim.backend.ip,
-            config.chatport,
-            sim.backend.key.getPublicPEM(),
-            sim.backend.loadAvatar(),
-            success
+    userlistUpdateUsersOwnFile: function(success) {
+        var file = config.user_file_extended.replace(/#/, CryptoJS.MD5(sim.backend.helpers.getUsername()));
+        sim.backend.helpers.writeJsonFile(
+            file, 
+            {
+                ip: sim.backend.ip,
+                port: config.chatport,
+                key: sim.backend.key.getPublicPEM(),
+                avatar: sim.backend.loadAvatar()
+            }, 
+            function() {
+                sim.backend.userfileTimestamp = new Date().getTime();
+                if (typeof success != 'undefined')
+                    success();
+            },
+            sim.backend.error
         );
-        sim.backend.userfileTimestamp = new Date().getTime();
+        
     },
     
     
-    // callback registration for the frontend
-
+    
+    ////////////////////////////////////////////
+    // callback registration for the frontend //
+    ////////////////////////////////////////////
+    
     /**
      * register callback for a new online user
      */
@@ -328,7 +383,9 @@ sim.backend = {
     
     
     
-    // functions for frontend
+    ////////////////////////////
+    // functions for frontend //
+    ////////////////////////////
     
     
     /**
@@ -452,7 +509,7 @@ sim.backend = {
      */
     saveAvatar: function(avatar) {
         window.localStorage.avatar = avatar;
-        sim.backend.updateUserfile();
+        sim.backend.userlistUpdateUsersOwnFile();
     },
     
     
