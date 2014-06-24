@@ -118,10 +118,19 @@ sim.backend.helpers = {
     getIp: function() {
         var ifaces=os.networkInterfaces();
         var ip = false;
+        var excluded = config.excluded_ips.split(',');
         for (var dev in ifaces) {
             ifaces[dev].forEach(function(details){
-                if (details.family=='IPv4' && details.address!="127.0.0.1")
-                    ip = details.address;
+                if (details.family!='IPv4')
+                    return;
+                
+                for (var i = 0; i<excluded.length; i++) {
+                    if (details.address.indexOf(excluded[i])==0) {
+                        return;
+                    }
+                }
+                
+                ip = details.address;
             });
         }
         return ip;

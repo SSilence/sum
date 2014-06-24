@@ -27,5 +27,8 @@ var config = {
     lock_retry_maximum: 5000,
     
     // name of the room for all chatters
-    room_all: "Alle"
+    room_all: "Alle",
+    
+    // ips which will be ignored
+    excluded_ips: "127.0.0.1"
 };

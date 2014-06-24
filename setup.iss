@@ -1,5 +1,5 @@
 #define MyAppName "S Ultimate Messenger"
-#define MyAppVersion "0.1"
+#define MyAppVersion "0.1alpha"
 #define MyAppPublisher "Tobias Zeising"
 #define MyAppURL "https://github.com/ssilence/sum"
 #define LaunchProgram "Starte S Ultimate Messenger nach der Installation"
@@ -19,7 +19,7 @@ DefaultGroupName={#MyAppName}
 Compression=lzma
 SolidCompression=yes
 OutputDir=.
-OutputBaseFilename=sum-setup
+OutputBaseFilename=sum-setup-{#MyAppVersion}
 
 [Languages]
 Name: "german"; MessagesFile: "compiler:Languages\German.isl"
