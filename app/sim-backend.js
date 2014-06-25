@@ -261,6 +261,9 @@ sim.backend = {
      * @param users (array) fetched users
      */
     userlistRefreshFrontend: function(users) {
+        // sort userlist by username
+        users = sim.backend.helpers.sortUserlistByUsername(users);
+    
         // show notification for users which are now online/offline
         if (sim.backend.firstUpdate==false) {
             var online = sim.backend.helpers.getUsersNotInListOne(sim.backend.userlist, users);

@@ -11,6 +11,21 @@ var lockFile = require('lockfile');
  */
 sim.backend.helpers = {
 
+    /**
+     * sort userlist by username
+     * @param userlist (array) unsorted userlist
+     * @return (array) sorted userlist
+     */
+    sortUserlistByUsername: function(userlist) {
+        return userlist.sort(function(a,b) {
+            if (a.username.toLowerCase() < b.username.toLowerCase())
+                return -1;
+            if (a.username.toLowerCase() > b.username.toLowerCase())
+                return 1;
+            return 0;
+        });
+    },
+    
     
     /**
      * merge user and extended userinfos (as avatar, ip, ...)

@@ -6,6 +6,7 @@
  */
 sim.frontend.helpers = {
 
+
     /**
      * updates ago during element is visible
      * @param date (date) given date
