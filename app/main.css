@@ -519,6 +519,7 @@ body {
             padding:0;
             left:100%;
             top:60px;
+            width:230px;
             margin-left:-235px;
             border-radius: 3px;
             z-index:30;
@@ -569,6 +570,14 @@ body {
             #main-menue-avatar-croper {
                 display:none;
             }
+                
+                #main-menue-avatar-croper img {
+                    display:block;
+                }
+                
+                #canvas {
+                    display:none;
+                }
             
     #content {
         padding:20px;

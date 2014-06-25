@@ -12,6 +12,11 @@ sim.frontend.events = {
     backend: false,
     
     /**
+     * the jcrop selection
+     */
+    selection: false,
+    
+    /**
      * initialize events (clicks, ...)
      * @param backend (object) the current backend
      */
@@ -40,9 +45,21 @@ sim.frontend.events = {
         
         // menue: save avatar
         $('#main-menue-avatar-croper .save').click(function() {
+            if (sim.frontend.events.selection==false) {
+                alertify.error('Bitte einen sichtbaren Bereich w&auml;hlen');
+                return;
+            }
             $('#main-menue-dropdown li').show();
             $('#main-menue-avatar-croper').hide();
-            backend.saveAvatar($('#main-menue-avatar-croper img').data('evroneCrop'));
+            
+            var image = sim.frontend.helpers.cropAndResize(
+                $('#main-menue-avatar-croper img')[0], 
+                sim.frontend.events.selection.x,
+                sim.frontend.events.selection.y,
+                sim.frontend.events.selection.w,
+                sim.frontend.events.selection.h);
+            
+            backend.saveAvatar(image);
             $('#main-menue-dropdown').hide();
             backend.updateUserlist(sim.frontend.currentConversation);
         });
@@ -256,15 +273,21 @@ sim.frontend.events = {
                         return;
                     }
                     
-                    // init cropper
-                    $('#main-menue-avatar-croper img, .evroneCropCanvas').remove();
+                    // init jCrop
+                    $('#main-menue-avatar-croper *:not(input)').remove();
                     $('#main-menue-avatar-croper').prepend('<img />');
                     $('#main-menue-avatar-croper img').attr('src', 'data:image/' + filetype + ';base64,' + data.toString('base64'));
                     sim.frontend.helpers.resizeImage($('#main-menue-avatar-croper img'), 200, 200);
-                    $('#main-menue-avatar-croper img').evroneCrop({
-                      size: {w: 150, h: 150}, 
-                      ratio: 1,
-                      setSelect: 'center'
+                    sim.frontend.events.selection = false;
+                    
+                    var img = $('#main-menue-avatar-croper img');
+                    var max = img.width()>img.height() ? img.height() : img.width();
+                    $('#main-menue-avatar-croper img').Jcrop({
+                        onSelect: function(c) {
+                            sim.frontend.events.selection = c;
+                        },
+                        setSelect: [max*0.1, max*0.1, max*0.9, max*0.9],
+                        aspectRatio: 1
                     });
                 }, 
                 alertify.error

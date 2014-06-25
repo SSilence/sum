@@ -116,6 +116,9 @@ sim.frontend.helpers = {
             height = height * ratio;    // Reset height to match scaled image
         }
 
+        width = $(img).width();    // Current image width
+        height = $(img).height();  // Current image height
+        
         // Check if current height is larger than max
         if(height > maxHeight){
             ratio = maxHeight / height; // get ratio for scaling image
@@ -151,5 +154,30 @@ sim.frontend.helpers = {
         return text.replace(/(https?:\/\/[^\s]+)/g, function(url) {
             return '<a href="' + url + '" class="extern">' + url + '</a>';
         });
+    },
+    
+    
+    /**
+     * crop and resize image with canvas.
+     * @return (string) base64 encoded png
+     * @param image (element) img element
+     * @param left (int) start cropping from left
+     * @param top (int) start cropping from top
+     * @param width (int) crop width
+     * @param height (int) crop height
+     */
+    cropAndResize: function(image, left, top, width, height) {
+        var ori = new Image();
+        ori.src = $(image).attr('src');
+        
+        factorX = ori.width / $(image).width();
+        factorY = ori.height / $(image).height();
+        
+        var canvas = document.createElement("canvas");
+        canvas.width  = "200";
+        canvas.height = "200";
+        var context = canvas.getContext('2d');
+        context.drawImage(image, left * factorX, top * factorY, width * factorX, height * factorY, 0, 0, 200, 200);
+        return canvas.toDataURL();
     }
 }

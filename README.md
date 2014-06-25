@@ -60,7 +60,7 @@ Special thanks to the great programmers of this libraries which will be used in 
 * ionicons: http://ionicons.com/
 * jquery custom content scroller: http://manos.malihu.gr/jquery-custom-content-scroller/
 * Font Oswald: http://www.fontsquirrel.com/fonts/oswald
-* evrondeCrop: https://github.com/evrone/evroneCrop
+* jCrop: http://deepliquid.com/content/Jcrop.html
 * selectize.js: http://brianreavis.github.io/selectize.js/
 * crypto-js: https://code.google.com/p/crypto-js/
 * WebIconset.com Emoticons: http://www.webiconset.com/emoticons-smilies-icon-set/
