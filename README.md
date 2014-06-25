@@ -20,13 +20,25 @@ You can configure SUM by changing app/config.js. You can also give a other confi
 nw.exe ./../config_ext.js
 ```
 
+config_ext.js content could be:
+```
+exports.extend = function(config) {
+    config.username = "Karl Mustermann";
+    return config;
+};
+```
+
+For only setting another username just use a username as parameter:
+```
+nw.exe KarlMustermann
+```
+
 Following configuration parameters are available:
 * ``user_file``: path of the file where all users register themself
 * ``user_file_extended``: file per user where avatar and key will be stored. # will be replaced by the md5 hash of the username
 * ``lock_file``: path of the lock file for the user file. ensures that only one user access the user file
 * ``user_timeout``: remove users from list after ms inactivity
 * ``user_list_update_intervall``: update every n seconds users entry in userlist file
-* ``chatport``: port for chat communication
 * ``lock_stale``: max age in milliseconds of lock file
 * ``lock_retry_minimum``: retry in minimum random ms when file is locked
 * ``lock_retry_maximum``: retry in maximum random ms when file is locked

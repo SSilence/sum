@@ -1,3 +1,6 @@
+var net = require('net');
+var http = require('http');
+
 /**
  * server for receiving encrypted chat messages and status updates from other users
  *
@@ -8,10 +11,10 @@ sim.backend.server = {
     
     /**
      * start chat message server
-     * @param backend the current backend
-     * @param port serverport
+     * @param backend (object) the current backend
+     * @param success (function) callback with port
      */
-    init: function(backend, port) {
+    init: function(backend, success) {
         // create new http server
         var server = http.createServer(function (request, response) {
             var body = '';
@@ -58,7 +61,10 @@ sim.backend.server = {
         });
         
         // start server
-        server.listen(port);
+        sim.backend.server.findFreePort(function(port) {
+            server.listen(port);
+            success(port);
+        });
     },
     
     
@@ -131,5 +137,26 @@ sim.backend.server = {
             // update roomlist
             backend.updateRoomlist();
         }
+    },
+    
+    
+    /**
+     * find a free port.
+     * @param callback (function) callback with port
+     */
+    findFreePort: function(callback) {
+        var server = net.createServer();
+        var port = 0;
+        
+        server.on('listening', function() {
+            port = server.address().port
+            server.close()
+        });
+        
+        server.on('close', function() {
+            callback(port)
+        });
+        
+        server.listen(0);
     }
 };

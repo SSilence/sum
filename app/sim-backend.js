@@ -1,5 +1,4 @@
 var gui = require('nw.gui');
-var http = require('http');
 
 /**
  * backend handles messaging, userlist management, update of userlist and all nodejs/node webkit tasks
@@ -19,6 +18,12 @@ sim.backend = {
      * Current ip
      */
     ip: false,
+    
+    
+    /**
+     * current port for chat communication
+     */
+    port: false,
     
     
     /**
@@ -74,8 +79,14 @@ sim.backend = {
      */
     init: function() {
         // load alternative config given by command line?
-        if (gui.App.argv.length > 0)
-            config = require(gui.App.argv[0]).extend(config);
+        if (gui.App.argv.length > 0) {
+            try {
+                config = require(gui.App.argv[0]).extend(config);
+            } catch(e) {
+                // can't load config file? Then user parameter as username
+                config.username = gui.App.argv[0];
+            }
+        }
 
         // initial generate rsa keys
         sim.backend.key = sim.backend.helpers.generateKeypair();
@@ -83,19 +94,18 @@ sim.backend = {
         // set ip
         sim.backend.ip = sim.backend.helpers.getIp();
 
-        // start backend server for chat communication
-        sim.backend.server.init(sim.backend, config.chatport);
-        
         // init node webkit tray icon
         sim.backend.initTray();
         
-        // create/update userfile (holds additional information as avatar, key, ip, ...)
-        sim.backend.userlistUpdateUsersOwnFile(
-            function() {
-                // userfile written? then start timer for updating the userlist
-                sim.backend.userlistUpdateTimer();
-            }
-        );
+        // start backend server for chat communication
+        sim.backend.server.init(sim.backend, function(port) {
+            // save port
+            sim.backend.port = port;
+            
+            // create/update userfile (holds additional information as avatar, key, ip, ...)
+            // afterwards start updating the userlist
+            sim.backend.userlistUpdateUsersOwnFile(sim.backend.userlistUpdateTimer);
+        });
     },
     
     
@@ -301,7 +311,7 @@ sim.backend = {
             file, 
             {
                 ip: sim.backend.ip,
-                port: config.chatport,
+                port: sim.backend.port,
                 key: sim.backend.key.getPublicPEM(),
                 avatar: sim.backend.loadAvatar()
             }, 
