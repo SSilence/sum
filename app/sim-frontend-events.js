@@ -80,6 +80,7 @@ sim.frontend.events = {
                 $(this).addClass('inactive');
                 backend.notifications(false);
             }
+            $('#main-menue-dropdown').hide();
         });
         
         // menue: about
@@ -90,6 +91,7 @@ sim.frontend.events = {
         // menue: about
         $('#main-menue-about').click(function() {
             gui.Shell.openExternal('http://www.sum-messenger.org');
+            $('#main-menue-dropdown').hide();
         });
         
         // close
