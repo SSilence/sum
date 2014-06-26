@@ -164,9 +164,8 @@ sim.backend = {
     /**
      * all users are registered in a single json file. This method updates or adds
      * an entry of the current user.
-     * @param success (function) callback will be after all users was read successfully
      */
-    userlistUpdater: function(success) {
+    userlistUpdater: function() {
         sim.backend.helpers.readJsonFile(config.user_file, function(users) {
             var currentuser = sim.backend.helpers.getUsername();
             var now = new Date().getTime();
