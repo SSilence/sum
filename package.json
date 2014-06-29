@@ -9,6 +9,8 @@
     "toolbar": false,
     "width": 900,
     "height": 600,
-    "frame": false
+    "frame": false,
+    "min_width": 800,
+    "min_height": 560
   }
 }
