@@ -39,7 +39,10 @@ sim.frontend = {
         
         // load emoticons
         sim.frontend.initEmoticons();
-            
+		
+		// initialize code highlighting
+		sim.frontend.initHighlight();
+		
         // initialize all events
         sim.frontend.events.init(backend);
         
@@ -141,6 +144,14 @@ sim.frontend = {
                 emotbox.append('<img src="'+ emoticon +'" title="' + shortcut + '"/>');
             lastEmot = emoticon;
         });
+    },
+	
+	
+	 /**
+     * initialize code highlighting
+     */
+    initHighlight: function() {
+        hljs.configure({useBR: true});
     },
     
     
@@ -276,8 +287,14 @@ sim.frontend = {
         $('#content').html('');
         $.each(messages, function(index, message) {
             var messageText = message.text.escape();
-            messageText = sim.frontend.helpers.emoticons(messageText);
-            messageText = sim.frontend.helpers.urlify(messageText);
+            if (sim.frontend.helpers.hasCode(messageText)) {
+                // hljs.configure({useBR: true});
+                messageText = hljs.highlightAuto(messageText).language;
+                // messageText = sim.frontend.helpers.setPreCodeBlock(messageText);
+            } else {            
+                messageText = sim.frontend.helpers.emoticons(messageText);
+                messageText = sim.frontend.helpers.urlify(messageText);
+            }
             $('#content').append('<li class="entry">\
                 <div class="entry-metadata">\
                     <img src="' + backend.getAvatar(message.sender) + '" class="avatar" />\
