@@ -289,7 +289,7 @@ sim.frontend = {
             var messageText = message.text.escape();
             if (sim.frontend.helpers.hasCode(messageText)) {
                 // hljs.configure({useBR: true});
-                messageText = hljs.highlightAuto(messageText).language;
+                messageText = hljs.highlightAuto(messageText).value;
                 // messageText = sim.frontend.helpers.setPreCodeBlock(messageText);
             } else {            
                 messageText = sim.frontend.helpers.emoticons(messageText);
