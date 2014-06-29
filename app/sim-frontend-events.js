@@ -186,6 +186,12 @@ sim.frontend.events = {
             var room = $(this).parent().find('.name').val();
             var users = $(this).parent().find('select').val();
             
+            // room name given?
+            if($.trim(room).length==0) {
+                alertify.error('Bitte einen Namen für den Raum angeben');
+                return;
+            }
+            
             // don't add room with same name
             if(sim.backend.doesRoomExists(room)) {
                 alertify.error('Raum mit dem Namen existiert bereits');
