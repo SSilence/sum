@@ -35,12 +35,17 @@ sim.frontend.events = {
             return false;
         });
         
-        // close menues
+        // close menues when clicking somewhere
         $('body').click(function(event) {
             if (event.target.id != 'main-menue' && event.target.id != 'main-menue-avatar' && event.target.id != 'fileDialog') {
                 $('#main-menue-dropdown li').show();
                 $('#main-menue-avatar-croper').hide();
                 $('#main-menue-dropdown').hide();
+            }
+            
+            if (event.target.id != 'message-add-menue' && event.target.id != 'message-add-menue-code') {
+                $('#message-add-menue-dropdown').hide();
+                alertify.log(event.target.id);
             }
         });
         
