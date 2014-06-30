@@ -40,9 +40,6 @@ sim.frontend = {
         // load emoticons
         sim.frontend.initEmoticons();
 		
-		// initialize code highlighting
-		sim.frontend.initHighlight();
-		
         // initialize all events
         sim.frontend.events.init(backend);
         
@@ -144,14 +141,6 @@ sim.frontend = {
                 emotbox.append('<img src="'+ emoticon +'" title="' + shortcut + '"/>');
             lastEmot = emoticon;
         });
-    },
-	
-	
-	 /**
-     * initialize code highlighting
-     */
-    initHighlight: function() {
-        hljs.configure({useBR: true});
     },
     
     
@@ -286,12 +275,12 @@ sim.frontend = {
         // show messages (highlite new messages)
         $('#content').html('');
         $.each(messages, function(index, message) {
-            var messageText = message.text.escape();
+            var messageText = message.text;
             if (sim.frontend.helpers.hasCode(messageText)) {
-                // hljs.configure({useBR: true});
                 messageText = hljs.highlightAuto(messageText).value;
-                // messageText = sim.frontend.helpers.setPreCodeBlock(messageText);
-            } else {            
+                messageText = sim.frontend.helpers.setPreCodeBlock(messageText);
+            } else {        
+                messageText = messageText.escape();
                 messageText = sim.frontend.helpers.emoticons(messageText);
                 messageText = sim.frontend.helpers.urlify(messageText);
             }

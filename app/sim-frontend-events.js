@@ -35,6 +35,15 @@ sim.frontend.events = {
             return false;
         });
         
+        // close menues
+        $('body').click(function(event) {
+            if (event.target.id != 'main-menue' && event.target.id != 'main-menue-avatar' && event.target.id != 'fileDialog') {
+                $('#main-menue-dropdown li').show();
+                $('#main-menue-avatar-croper').hide();
+                $('#main-menue-dropdown').hide();
+            }
+        });
+        
         // menue: toggle
         $('#main-menue').click(function() {
             $('#main-menue-dropdown').toggle();
@@ -98,6 +107,14 @@ sim.frontend.events = {
         $('#main-close').click(function() {
             backend.close();
         });
+        
+        // message-add-menue: toggle
+        $('#message-add-menue').click(function() {
+            $('#message-add-menue-dropdown').toggle();
+        });
+        
+        // message-add-menue-code
+        $('#message-add-menue-code').click(sim.frontend.events.insertCode);
         
         // toggle emoticons
         $('#message-toggleemots').click(function() {
@@ -366,6 +383,15 @@ sim.frontend.events = {
         }
         
         return select;
+    },
+    
+    
+    /**
+     * create a textarea for code
+     */
+    insertCode: function() {
+       alertify.log("Create Dialog for sending Code");  
+       $('#message-add-menue-dropdown').hide();
     },
     
     

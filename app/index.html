@@ -12,8 +12,8 @@
         <link rel="stylesheet" href="libs/selectize/selectize.css">
         <link rel="stylesheet" href="libs/selectize/selectize.default.css">
         <link rel="stylesheet" href="libs/jcrop/jquery.Jcrop.min.css">
+        <link rel="stylesheet" href="libs/highlight/styles/default.css">
         <link rel="stylesheet" href="main.css">
-		<link rel="stylesheet" href="libs/highlight/styles/default.css">
     </head>
     <body>
     
@@ -75,9 +75,13 @@
             <div id="message">
                 <div id="message-emoticons"></div>
                 <div id="message-input">
+                    <div id="message-add-menue" class="ion-chevron-up"></div>
                     <input type="text" id="message-input-textfield" placeholder="schreibe eine Nachricht..." />
                     <div id="message-toggleemots"></div>
                     <div id="message-send" class="ion-paper-airplane"></div>
+                    <ul id="message-add-menue-dropdown">
+                        <li id="message-add-menue-code"><span class="ion-android-developer"></span> Code senden</li>
+                    </ul>
                 </div>
             </div>
         </div>
