@@ -114,14 +114,14 @@ sim.frontend.helpers = {
     
 
     /**
-     * Replace BB-Tag "code" with HTML code-block
+     * Remove BB-Tag "code"
      * @return (string) text surounded with code-block (<pre><code>)
      * @param text (string) text with bb-tag "code"
      */
-    setPreCodeBlock: function(text) {
+    removeBBCode: function(text) {
         
-        text = text.replace(/\[code\]/g, "<pre><code>");
-        text = text.replace(/\[\/code\]/g, "</pre></code>");
+        text = text.replace(/\[code\]/g, "");
+        text = text.replace(/\[\/code\]/g, "");
         
         return text;
     },

@@ -281,8 +281,8 @@ sim.frontend = {
         $.each(messages, function(index, message) {
             var messageText = message.text;
             if (sim.frontend.helpers.hasCode(messageText)) {
-                messageText = hljs.highlightAuto(messageText).value;
-                messageText = sim.frontend.helpers.setPreCodeBlock(messageText);
+                messageText = sim.frontend.helpers.removeBBCode(messageText);
+                messageText = '<pre><code>' + hljs.highlightAuto(messageText).value + '</code></pre>';
             } else {        
                 messageText = messageText.escape();
                 messageText = sim.frontend.helpers.emoticons(messageText);

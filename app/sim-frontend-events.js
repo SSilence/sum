@@ -46,6 +46,13 @@ sim.frontend.events = {
             if (event.target.id != 'message-add-menue' && event.target.id != 'message-add-menue-code') {
                 $('#message-add-menue-dropdown').hide();
             }
+            
+            if (event.target.id != 'message-add-code-box' && event.target.id != 'message-add-code-box-inner' && event.target.id != 'message-add-code-box-area'
+                && event.target.id != 'message-add-menue-code' && event.target.id != 'message-add-code-box-send' && event.target.id != 'message-add-code-box-cancel') {
+                
+                $('#message-add-code-box').hide();
+                $('#message-add-code-box-area').val('');
+            }
         });
         
         // menue: toggle
@@ -118,7 +125,35 @@ sim.frontend.events = {
         });
         
         // message-add-menue-code
-        $('#message-add-menue-code').click(sim.frontend.events.insertCode);
+        $('#message-add-menue-code').click(sim.frontend.events.showCodeBox);
+        
+        // menue: send code block
+        $('#message-add-code-box-send').click(function() {
+            var message = '[code]' + $('#message-add-code-box-area').val() + '[/code]';
+            
+            // message given?
+            if (message.trim().length==0) {
+                alertify.error('bitte eine Nachricht eingeben');
+                return;
+            }
+            
+            // chat channel selected?
+            if (sim.frontend.currentConversation==false) {
+                alertify.error('bitte einen Chat Kanal ausw&auml;hlen');
+                return;
+            }
+            
+            // send message
+            $('#message-add-code-box').hide();
+            $('#message-add-code-box-area').val('');
+            backend.sendMessage(sim.frontend.currentConversation, message);
+        });
+        
+        // menue: cancel code block
+        $('#message-add-code-box-cancel').click(function() {
+            $('#message-add-code-box').hide();
+            $('#message-add-code-box-area').val('');
+        });
         
         // toggle emoticons
         $('#message-toggleemots').click(function() {
@@ -391,11 +426,11 @@ sim.frontend.events = {
     
     
     /**
-     * create a textarea for code
+     * show codeBox with textarea for code
      */
-    insertCode: function() {
-       alertify.log("Create Dialog for sending Code");  
-       $('#message-add-menue-dropdown').hide();
+    showCodeBox: function() {
+        $('#message-add-menue-dropdown').hide();
+        $('#message-add-code-box').show();
     },
     
     
