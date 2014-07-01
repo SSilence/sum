@@ -45,7 +45,6 @@ sim.frontend.events = {
             
             if (event.target.id != 'message-add-menue' && event.target.id != 'message-add-menue-code') {
                 $('#message-add-menue-dropdown').hide();
-                alertify.log(event.target.id);
             }
         });
         

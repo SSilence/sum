@@ -46,9 +46,13 @@ sim.frontend = {
         // initialize backend callbacks
         sim.frontend.initBackendCallbacks(backend);
         
+        // set room_all as default conversation
+        sim.frontend.currentConversation = config.room_all;
+        
         // Userliste und Rooms updaten
         backend.updateUserlist(sim.frontend.currentConversation);
         backend.updateRoomlist();
+        backend.getConversation(sim.frontend.currentConversation);
     },
 
 
