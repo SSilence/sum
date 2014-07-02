@@ -7,14 +7,17 @@ var http = require('http');
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-sim.backend.server = {
+var BackendServer = Class.extend({
     
     /**
      * start chat message server
      * @param backend (object) the current backend
+     * @param backendHelpers (object) the current backends helpers
      * @param success (function) callback with port
      */
-    init: function(backend, success) {
+    start: function(backend, backendHelpers, success) {
+        var that = this;
+        
         // create new http server
         var server = http.createServer(function (request, response) {
             var body = '';
@@ -37,7 +40,7 @@ sim.backend.server = {
                 
                 // parse decrypted json
                 try {
-                    var reqStr = sim.backend.helpers.decrypt(backend.key, body);
+                    var reqStr = backendHelpers.decrypt(backend.key, body);
                     var req = JSON.parse(reqStr);
                 } catch(e) {
                     backend.error('Ungueltige Nachricht erhalten (verschluesselung oder JSON konnte nicht verarbeitet werden)');
@@ -48,7 +51,7 @@ sim.backend.server = {
                 
                 // is type given?
                 if(typeof req.type != "undefined") {
-                    sim.backend.server.handle(backend, req);
+                    that.handle(backend, backendHelpers, req);
                     response.writeHeader(200, {"Content-Type": "text/plain"});  
                 } else {
                     backend.error('invalid request received');
@@ -61,7 +64,7 @@ sim.backend.server = {
         });
         
         // start server
-        sim.backend.server.findFreePort(function(port) {
+        this.findFreePort(function(port) {
             server.listen(port);
             success(port);
         });
@@ -71,9 +74,10 @@ sim.backend.server = {
     /**
      * handle request
      * @param backend the current backend
+     * @param backendHelpers (object) the current backends helpers
      * @param request object with the type
      */
-    handle: function(backend, request) {
+    handle: function(backend, backendHelpers, request) {
         // new message
         // {
         //    'type': 'message',
@@ -105,7 +109,7 @@ sim.backend.server = {
             };
             
             if(typeof backend.newMessage != "undefined")
-                backend.newMessage(sim.backend.conversations[conversationId][conversation.length-1]);
+                backend.newMessage(backend.conversations[conversationId][conversation.length-1]);
         
         // room invite
         // {
@@ -120,7 +124,7 @@ sim.backend.server = {
             }
             
             // only accept one invitation per room
-            if (sim.backend.helpers.isUserInRoomList(backend.invited, request.room)) {
+            if (backendHelpers.isUserInRoomList(backend.invited, request.room)) {
                 return;
             }
             
@@ -159,4 +163,4 @@ sim.backend.server = {
         
         server.listen(0);
     }
-};
+});

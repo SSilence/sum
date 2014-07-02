@@ -12,14 +12,3 @@ String.prototype.escape = function () {
         return entityMap[s];
     });
 };
-
-// startup sim
-var sim = {};
-
-$(document).ready(function() {
-    // initialize backend
-    sim.backend.init();
-
-    // initialize frontend
-    sim.frontend.init(sim.backend);
-});

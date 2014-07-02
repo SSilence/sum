@@ -4,29 +4,59 @@
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-sim.frontend.events = {
+var FrontendEvents = Class.extend({
     
     /**
      * the current backend
      */
     backend: false,
     
+    
+    /**
+     * the current backend helpers
+     */
+    backendHelpers: false,
+    
+    
+    /**
+     * the current frontend
+     */
+    frontend: false,
+    
+    
+    /**
+     * the current frontend helpers
+     */
+    frontendHelpers: false,
+    
+    
     /**
      * the jcrop selection
      */
     selection: false,
     
+    
     /**
      * initialize events (clicks, ...)
      * @param backend (object) the current backend
+     * @param backendHelpers (object) the helpers of backend
+     * @param frontend (object) the current frontend
+     * @param frontendHelpers (object) the helpers of frontend
      */
-    init: function(backend) {       
-        // save backend instance for later use
-        sim.frontend.events.backend = backend;
+    initAllEvents: function(backend, backendHelpers, frontend, frontendHelpers) {
+        var that = this;
+    
+        // save instances for later use
+        this.backend = backend;
+        this.frontend = frontend;
+        this.frontendHelpers = frontendHelpers;
+        this.backendHelpers = backendHelpers;
         
         // initialize window resize handler
-        $(window).bind("resize", sim.frontend.events.resize);
-        sim.frontend.events.resize();
+        $(window).bind("resize", function() {
+            that.resize();
+        });
+        this.resize();
 
         // open external links in new window
         $('body').delegate("a.extern", "click", function(e) {
@@ -37,19 +67,20 @@ sim.frontend.events = {
         
         // close menues when clicking somewhere
         $('body').click(function(event) {
-            if (event.target.id != 'main-menue' && event.target.id != 'main-menue-avatar' && event.target.id != 'fileDialog') {
+            // no click inside main menue: close it
+            if ($(event.target).parents('#main-menue-dropdown').length==0 && event.target.id != 'main-menue' && event.target.id != 'fileDialog') {
                 $('#main-menue-dropdown li').show();
                 $('#main-menue-avatar-croper').hide();
                 $('#main-menue-dropdown').hide();
             }
             
+            // no click inside add menue: close it
             if (event.target.id != 'message-add-menue' && event.target.id != 'message-add-menue-code') {
                 $('#message-add-menue-dropdown').hide();
             }
             
-            if (event.target.id != 'message-add-code-box' && event.target.id != 'message-add-code-box-inner' && event.target.id != 'message-add-code-box-area'
-                && event.target.id != 'message-add-menue-code' && event.target.id != 'message-add-code-box-send' && event.target.id != 'message-add-code-box-cancel') {
-                
+            // no click inside add code box: close it
+            if ($(event.target).parents('#message-add-code-box').length==0 && event.target.id != 'message-add-menue-code') {
                 $('#message-add-code-box').hide();
                 $('#message-add-code-box-area').val('');
             }
@@ -61,27 +92,29 @@ sim.frontend.events = {
         });
         
         // menue: select avatar
-        $('#main-menue-avatar').click(sim.frontend.events.selectAvatar);
+        $('#main-menue-avatar').click(function() { 
+            that.selectAvatar();
+        });
         
         // menue: save avatar
         $('#main-menue-avatar-croper .save').click(function() {
-            if (sim.frontend.events.selection==false) {
+            if (that.selection==false) {
                 alertify.error('Bitte einen sichtbaren Bereich w&auml;hlen');
                 return;
             }
             $('#main-menue-dropdown li').show();
             $('#main-menue-avatar-croper').hide();
             
-            var image = sim.frontend.helpers.cropAndResize(
+            var image = frontendHelpers.cropAndResize(
                 $('#main-menue-avatar-croper img')[0], 
-                sim.frontend.events.selection.x,
-                sim.frontend.events.selection.y,
-                sim.frontend.events.selection.w,
-                sim.frontend.events.selection.h);
+                that.selection.x,
+                that.selection.y,
+                that.selection.w,
+                that.selection.h);
             
             backend.saveAvatar(image);
             $('#main-menue-dropdown').hide();
-            backend.updateUserlist(sim.frontend.currentConversation);
+            backend.updateUserlist(frontend.currentConversation);
         });
         
         // menue: cancel avatar
@@ -125,7 +158,9 @@ sim.frontend.events = {
         });
         
         // message-add-menue-code
-        $('#message-add-menue-code').click(sim.frontend.events.showCodeBox);
+        $('#message-add-menue-code').click(function() {
+            that.showCodeBox();
+        });
         
         // menue: send code block
         $('#message-add-code-box-send').click(function() {
@@ -138,7 +173,7 @@ sim.frontend.events = {
             }
             
             // chat channel selected?
-            if (sim.frontend.currentConversation==false) {
+            if (frontend.currentConversation==false) {
                 alertify.error('bitte einen Chat Kanal ausw&auml;hlen');
                 return;
             }
@@ -146,7 +181,7 @@ sim.frontend.events = {
             // send message
             $('#message-add-code-box').hide();
             $('#message-add-code-box-area').val('');
-            backend.sendMessage(sim.frontend.currentConversation, message);
+            backend.sendMessage(frontend.currentConversation, message);
         });
         
         // menue: cancel code block
@@ -180,9 +215,9 @@ sim.frontend.events = {
             var user = $(this).find('.contacts-name').html();
             $('.rooms li, .contacts li').removeClass('active');
             $(this).addClass('active');
-            sim.frontend.currentConversation = user;
+            frontend.currentConversation = user;
             backend.getConversation(user);
-            backend.updateUserlist(sim.frontend.currentConversation);
+            backend.updateUserlist(frontend.currentConversation);
             $('#main-metadata').css('visibility', 'visible');
         });
         
@@ -195,9 +230,9 @@ sim.frontend.events = {
             var room = $(this).find('.name').html();
             $('.rooms li, .contacts li').removeClass('active');
             $(this).addClass('active');
-            sim.frontend.currentConversation = room;
-            backend.getConversation(sim.frontend.currentConversation);
-            backend.updateUserlist(sim.frontend.currentConversation);
+            frontend.currentConversation = room;
+            backend.getConversation(frontend.currentConversation);
+            backend.updateUserlist(frontend.currentConversation);
             $('#main-metadata').css('visibility', 'visible');
         });
         
@@ -212,14 +247,14 @@ sim.frontend.events = {
             }
             
             // chat channel selected?
-            if (sim.frontend.currentConversation==false) {
+            if (frontend.currentConversation==false) {
                 alertify.error('bitte einen Chat Kanal ausw&auml;hlen');
                 return;
             }
             
             // send message
             $('#message-input-textfield').val("");
-            backend.sendMessage(sim.frontend.currentConversation, message);
+            backend.sendMessage(frontend.currentConversation, message);
         });
         
         // send message by enter
@@ -230,7 +265,9 @@ sim.frontend.events = {
         });
         
         // rooms add: show dialog
-        $('#rooms-add').click(sim.frontend.events.showAddRoomsDialog);
+        $('#rooms-add').click(function() {
+            that.showAddRoomsDialog(this);
+        });
         
         // rooms add: cancel
         $('body').delegate(".rooms-popup.add .cancel", "click", function(e) {
@@ -249,13 +286,13 @@ sim.frontend.events = {
             }
             
             // don't add room with same name
-            if(sim.backend.doesRoomExists(room)) {
+            if(backend.doesRoomExists(room)) {
                 alertify.error('Raum mit dem Namen existiert bereits');
                 return;
             }
             
             // don't add room of name of a user
-            if(sim.backend.getUser(room)!=false) {
+            if(backend.getUser(room)!=false) {
                 alertify.error('Es existiert bereits ein Benutzer mit diesem Namen');
                 return;
             }
@@ -283,7 +320,9 @@ sim.frontend.events = {
         });
         
         // rooms: invite user
-        $('.rooms').delegate("li .rooms-invite", "click", sim.frontend.events.showInviteRoomsDialog);
+        $('.rooms').delegate("li .rooms-invite", "click", function() {
+            that.showInviteRoomsDialog(this);
+        });
         
         // rooms: invite user save
         $('body').delegate(".rooms-popup.edit .save", "click", function(e) {
@@ -314,6 +353,7 @@ sim.frontend.events = {
      * @param evt (object) event
      */
     selectAvatar: function(evt) {
+        var that = this;
         $('#fileDialog').change(function(evt) {
             // check file given?
             if ($(this).val() == '')
@@ -326,7 +366,7 @@ sim.frontend.events = {
             // load file
             var file = $(this).val();
             $(this).val('');
-            sim.backend.helpers.readFile(
+            that.backendHelpers.readFile(
                 file, 
                 function(data) {
                     // check filetype
@@ -341,14 +381,14 @@ sim.frontend.events = {
                     $('#main-menue-avatar-croper *:not(input)').remove();
                     $('#main-menue-avatar-croper').prepend('<img />');
                     $('#main-menue-avatar-croper img').attr('src', 'data:image/' + filetype + ';base64,' + data.toString('base64'));
-                    sim.frontend.helpers.resizeImage($('#main-menue-avatar-croper img'), 200, 200);
-                    sim.frontend.events.selection = false;
+                    that.frontendHelpers.resizeImage($('#main-menue-avatar-croper img'), 200, 200);
+                    that.selection = false;
                     
                     var img = $('#main-menue-avatar-croper img');
                     var max = img.width()>img.height() ? img.height() : img.width();
                     $('#main-menue-avatar-croper img').Jcrop({
                         onSelect: function(c) {
-                            sim.frontend.events.selection = c;
+                            that.selection = c;
                         },
                         setSelect: [max*0.1, max*0.1, max*0.9, max*0.9],
                         aspectRatio: 1
@@ -364,15 +404,15 @@ sim.frontend.events = {
     /**
      * show add room dialog popup
      */
-    showAddRoomsDialog: function() {
+    showAddRoomsDialog: function(element) {
         // remove existing popups
         $('.rooms-popup.add, .rooms-popup.edit').remove();
         
         // create select with all users
-        var select = sim.frontend.events.createSelectForAllUsers();
+        var select = this.createSelectForAllUsers();
         
         // create popup with text and buttons
-        var div = $(sim.frontend.helpers.createRoomsPopup(this, "add"));
+        var div = $(this.frontendHelpers.createRoomsPopup(element, "add"));
         div.append('<input type="text" class="name selectize-input" placeholder="Name des Raums">');
         div.append(select);
         div.append('<input class="save" type="button" value="speichern" /> <input class="cancel" type="button" value="abbrechen" />');
@@ -385,14 +425,14 @@ sim.frontend.events = {
     /**
      * shows the invite more users dialog
      */
-    showInviteRoomsDialog: function() {
-        var room = $(this).parent().find('.name').html();
+    showInviteRoomsDialog: function(element) {
+        var room = $(element).parent().find('.name').html();
         
         // create select with all users
-        var select = sim.frontend.events.createSelectForAllUsers();
+        var select = this.createSelectForAllUsers();
         
         // create popup with text and buttons
-        var div = $(sim.frontend.helpers.createRoomsPopup($('#rooms-add'), "edit"));
+        var div = $(this.frontendHelpers.createRoomsPopup($('#rooms-add'), "edit"));
         div.append('<p>Weitere Mitglieder in Gruppe einladen:</p>');
         div.append('<input class="name" type="hidden" value="' + room.escape() + '" />');
         div.append(select);
@@ -408,7 +448,7 @@ sim.frontend.events = {
      */
     createSelectForAllUsers: function() {
         // get all users from backend
-        var users = sim.frontend.events.backend.getAllUsers(true);
+        var users = this.backend.getAllUsers(true);
         
         // create select with all users
         var select = document.createElement("select");
@@ -452,10 +492,10 @@ sim.frontend.events = {
         $('#content-wrapper').height(windowHeight - headerHeight - messageHeight - padding);
         
         // set new position for rooms popups
-        var diff = windowHeight - sim.frontend.lastWindowHeight;
-        sim.frontend.lastWindowHeight = windowHeight;
+        var diff = windowHeight - this.frontend.lastWindowHeight;
+        this.frontend.lastWindowHeight = windowHeight;
         $('.rooms-popup').each(function(index, item) {
             $(item).css('top', parseInt($(item).css('top')) + diff);
         });
     }
-}
+});

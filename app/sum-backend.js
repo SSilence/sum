@@ -6,8 +6,20 @@ var gui = require('nw.gui');
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-sim.backend = {
+var Backend = Class.extend({
 
+    /**
+     * backends helpers
+     */
+    backendHelpers: false,
+    
+    
+    /**
+     * backends client
+     */
+    backendClient: false,
+    
+    
     /**
      * RSA Key
      */
@@ -76,8 +88,15 @@ sim.backend = {
     
     /**
      * initialize backend
+     * @param backendHelpers (object) the current backends helpers
+     * @param backendServer (object) the server of the backend
+     * @param backendClient (object) the client of the backend
      */
-    init: function() {
+    init: function(backendHelpers, backendServer, backendClient) {
+        // save instances
+        this.backendHelpers = backendHelpers;
+        this.backendClient = backendClient;
+        
         // load alternative config given by command line?
         if (gui.App.argv.length > 0) {
             try {
@@ -89,22 +108,25 @@ sim.backend = {
         }
 
         // initial generate rsa keys
-        sim.backend.key = sim.backend.helpers.generateKeypair();
+        this.key = backendHelpers.generateKeypair();
         
         // set ip
-        sim.backend.ip = sim.backend.helpers.getIp();
+        this.ip = backendHelpers.getIp();
 
         // init node webkit tray icon
-        sim.backend.initTray();
+        this.initTray();
         
         // start backend server for chat communication
-        sim.backend.server.init(sim.backend, function(port) {
+        var that = this;
+        backendServer.start(this, backendHelpers, function(port) {
             // save port
-            sim.backend.port = port;
+            that.port = port;
             
             // create/update userfile (holds additional information as avatar, key, ip, ...)
             // afterwards start updating the userlist
-            sim.backend.userlistUpdateUsersOwnFile(sim.backend.userlistUpdateTimer);
+            that.userlistUpdateUsersOwnFile(function() {
+                that.userlistUpdateTimer();
+            });
         });
     },
     
@@ -147,16 +169,19 @@ sim.backend = {
      * timer: regular userfile and userlist update for current user
      */
     userlistUpdateTimer: function() {
-        sim.backend.helpers.lock(function(err) {
+        var that = this;
+        this.backendHelpers.lock(function(err) {
             // can't get lock for exclusive userfile access? retry in random timeout
             if (typeof err != 'undefined') {
                 var randomTimeout = Math.floor(Math.random() * config.lock_retry_maximum) + config.lock_retry_minimum;
-                window.setTimeout(sim.backend.userlistUpdateTimer, randomTimeout);
+                window.setTimeout(function() { 
+                    that.userlistUpdateTimer();
+                }, randomTimeout);
                 return;
             }
             
             // have lock? Update userlist
-            sim.backend.userlistUpdater();
+            that.userlistUpdater();
         });
     },
     
@@ -166,8 +191,9 @@ sim.backend = {
      * an entry of the current user.
      */
     userlistUpdater: function() {
-        sim.backend.helpers.readJsonFile(config.user_file, function(users) {
-            var currentuser = sim.backend.helpers.getUsername();
+        var that = this;
+        that.backendHelpers.readJsonFile(config.user_file, function(users) {
+            var currentuser = that.backendHelpers.getUsername();
             var now = new Date().getTime();
             
             // remove orphaned user entries
@@ -190,23 +216,23 @@ sim.backend = {
             userlist[userlist.length] = {
                 username: currentuser,
                 timestamp: now,
-                userfileTimestamp: sim.backend.userfileTimestamp,
-                rooms: sim.backend.roomlist
+                userfileTimestamp: that.userfileTimestamp,
+                rooms: that.roomlist
             };
             
             // write back updated userfile
-            sim.backend.helpers.writeJsonFile(
+            that.backendHelpers.writeJsonFile(
                 config.user_file,
                 userlist,
                 function() {
                     // release lock
-                    sim.backend.helpers.unlock();
+                    that.backendHelpers.unlock();
                 },
-                sim.backend.error
+                that.error
             );
             
             // load additional userinfos and update local userlist
-            sim.backend.userlistLoadAdditionalUserinfos(userlist);
+            that.userlistLoadAdditionalUserinfos(userlist);
         });
     },
     
@@ -216,6 +242,8 @@ sim.backend = {
      * @param users (array) fetched users
      */
     userlistLoadAdditionalUserinfos: function(users) {
+        var that = this;
+    
         // next step will be executed if all additonal informations of all users was loaded (toMerge == 0)
         var toMerge = users.length;
         
@@ -223,27 +251,27 @@ sim.backend = {
         var checkAllHandledThenExecuteRefreshUserlist = function() {
             toMerge--;
             if(toMerge==0)
-                sim.backend.userlistRefreshFrontend(users);
+                that.userlistRefreshFrontend(users);
         };
         
         // loads current userinfos for a single user
         var loadUserinfos = function(currentIndex) {
             // load from users file if not in cache or newer one available
-            if (typeof sim.backend.userinfos[users[currentIndex].username] == 'undefined'
-                || users[currentIndex].userfileTimestamp != sim.backend.userinfos[users[currentIndex].username].timestamp) {
+            if (typeof that.userinfos[users[currentIndex].username] == 'undefined'
+                || users[currentIndex].userfileTimestamp != that.userinfos[users[currentIndex].username].timestamp) {
                 
                 // read userinfos from file
                 var file = config.user_file_extended.replace(/#/, CryptoJS.MD5(users[currentIndex].username));
-                sim.backend.helpers.readJsonFile(
+                that.backendHelpers.readJsonFile(
                     file, 
                     function(userinfos) {
                         // merge user and userinfos
                         if (typeof userinfos.ip != 'undefined' && typeof userinfos.port != 'undefined' && typeof userinfos.key != 'undefined') {
-                            users[currentIndex] = sim.backend.helpers.mergeUserAndUserinfos(users[currentIndex], userinfos);
+                            users[currentIndex] = that.backendHelpers.mergeUserAndUserinfos(users[currentIndex], userinfos);
                             
                             // save userinfos in cache
                             userinfos.timestamp = users[currentIndex].userfileTimestamp;
-                            sim.backend.userinfos[users[currentIndex].username] = userinfos;
+                            that.userinfos[users[currentIndex].username] = userinfos;
                         }
                         checkAllHandledThenExecuteRefreshUserlist();
                     },
@@ -254,7 +282,7 @@ sim.backend = {
             
             // load from cache
             } else {
-                users[currentIndex] = sim.backend.helpers.mergeUserAndUserinfos(users[currentIndex], sim.backend.userinfos[users[currentIndex].username]);
+                users[currentIndex] = that.backendHelpers.mergeUserAndUserinfos(users[currentIndex], that.userinfos[users[currentIndex].username]);
                 checkAllHandledThenExecuteRefreshUserlist();
             }
         };
@@ -271,32 +299,35 @@ sim.backend = {
      */
     userlistRefreshFrontend: function(users) {
         // sort userlist by username
-        users = sim.backend.helpers.sortUserlistByUsername(users);
+        users = this.backendHelpers.sortUserlistByUsername(users);
     
         // show notification for users which are now online/offline
-        if (sim.backend.firstUpdate==false) {
-            var online = sim.backend.helpers.getUsersNotInListOne(sim.backend.userlist, users);
-            var offline = sim.backend.helpers.getUsersNotInListOne(users, sim.backend.userlist);
+        if (this.firstUpdate==false) {
+            var online = this.backendHelpers.getUsersNotInListOne(this.userlist, users);
+            var offline = this.backendHelpers.getUsersNotInListOne(users, this.userlist);
             
-            if (typeof sim.backend.userOnlineNotice != 'undefined')
+            if (typeof this.userOnlineNotice != 'undefined')
                 for(var i=0; i<online.length; i++)
-                    sim.backend.userOnlineNotice(online[i].avatar, online[i].username);
+                    this.userOnlineNotice(online[i].avatar, online[i].username);
             
-            if (typeof sim.backend.userOfflineNotice != 'undefined')
+            if (typeof this.userOfflineNotice != 'undefined')
                 for(var i=0; i<offline.length; i++)
-                    sim.backend.userOfflineNotice(offline[i].avatar, offline[i].username);
+                    this.userOfflineNotice(offline[i].avatar, offline[i].username);
         }
-        sim.backend.firstUpdate = false;
+        this.firstUpdate = false;
         
         // save userlist
-        sim.backend.userlist = users;
+        this.userlist = users;
         
         // inform frontend that new userlist is available
-        if(typeof sim.backend.hasUserlistUpdate != "undefined")
-            sim.backend.hasUserlistUpdate();
+        if(typeof this.hasUserlistUpdate != "undefined")
+            this.hasUserlistUpdate();
         
         // initialize next update
-        window.setTimeout(sim.backend.userlistUpdateTimer, config.user_list_update_intervall);
+        var that = this;
+        window.setTimeout(function() { 
+            that.userlistUpdateTimer();
+        }, config.user_list_update_intervall);
     },
     
     
@@ -305,21 +336,22 @@ sim.backend = {
      * @param success (callback) will be executed after successfully writing file
      */
     userlistUpdateUsersOwnFile: function(success) {
-        var file = config.user_file_extended.replace(/#/, CryptoJS.MD5(sim.backend.helpers.getUsername()));
-        sim.backend.helpers.writeJsonFile(
+        var file = config.user_file_extended.replace(/#/, CryptoJS.MD5(this.backendHelpers.getUsername()));
+        var that = this;
+        this.backendHelpers.writeJsonFile(
             file, 
             {
-                ip: sim.backend.ip,
-                port: sim.backend.port,
-                key: sim.backend.key.getPublicPEM(),
-                avatar: sim.backend.loadAvatar()
+                ip: that.ip,
+                port: that.port,
+                key: that.key.getPublicPEM(),
+                avatar: that.loadAvatar()
             }, 
             function() {
-                sim.backend.userfileTimestamp = new Date().getTime();
+                that.userfileTimestamp = new Date().getTime();
                 if (typeof success != 'undefined')
                     success();
             },
-            sim.backend.error
+            that.error
         );
         
     },
@@ -334,63 +366,63 @@ sim.backend = {
      * register callback for a new online user
      */
     onRoomInvite: function(callback) {
-        sim.backend.roomInvite = callback;
+        this.roomInvite = callback;
     },
     
     /**
      * register callback for a new online user
      */
     onUserOnlineNotice: function(callback) {
-        sim.backend.userOnlineNotice = callback;
+        this.userOnlineNotice = callback;
     },
     
     /**
      * register callback for a user goes offline
      */
     onUserOfflineNotice: function(callback) {
-        sim.backend.userOfflineNotice = callback;
+        this.userOfflineNotice = callback;
     },
     
     /**
      * register callback for incoming new message
      */
     onNewMessage: function(callback) {
-        sim.backend.newMessage = callback;
+        this.newMessage = callback;
     },
     
     /**
      * register callback for room list update
      */
     onGetRoomlistResponse: function(callback) {
-        sim.backend.getRoomlistResponse = callback;
+        this.getRoomlistResponse = callback;
     },
     
     /**
      * register callback for user list update
      */
     onGetUserlistResponse: function(callback) {
-        sim.backend.getUserlistResponse = callback;
+        this.getUserlistResponse = callback;
     },
     
     /**
      * register callback for getting converstion
      */
     onGetContentResponse: function(callback) {
-        sim.backend.getContentResponse = callback;
+        this.getContentResponse = callback;
     },
     
     /**
      * register callback for error message
      */
     onError: function(callback) {
-        sim.backend.error = callback;
+        this.error = callback;
     },
     
     /**
      * register callback for error message
      */
     onHasUserlistUpdate: function(callback) {
-        sim.backend.hasUserlistUpdate = callback;
+        this.hasUserlistUpdate = callback;
     },
     
     
@@ -405,21 +437,21 @@ sim.backend = {
      * @param conversation (string) the current conversation (room or user or nothing)
      */
     updateUserlist: function(conversation) {
-        if(typeof sim.backend.getUserlistResponse != "undefined") {
+        if(typeof this.getUserlistResponse != "undefined") {
             
             // per default: return all
-            var users = sim.backend.userlist;
+            var users = this.userlist;
             
             // filter by room if user has selected a room
             if (typeof conversation != 'undefined' && conversation != false) {
                 // given conversation is a room and not a user?
-                if (sim.backend.getUser(conversation)==false) {
-                    users = sim.backend.getUsersInRoom(conversation);
+                if (this.getUser(conversation)==false) {
+                    users = this.getUsersInRoom(conversation);
                 }
             }
             
             // send userlist to frontend
-            sim.backend.getUserlistResponse(users);
+            this.getUserlistResponse(users);
         }
     },
     
@@ -428,11 +460,11 @@ sim.backend = {
      * update frontend with current roomlist. onGetRoomlistResponse will be executed.
      */
     updateRoomlist: function() {
-        if(typeof sim.backend.getRoomlistResponse != "undefined") {
+        if(typeof this.getRoomlistResponse != "undefined") {
             var rooms = [ { name: config.room_all} ]     // room: all users
-                        .concat(sim.backend.roomlist)    // rooms user is in
-                        .concat(sim.backend.invited);    // rooms user is invited
-            sim.backend.getRoomlistResponse(rooms);
+                        .concat(this.roomlist)    // rooms user is in
+                        .concat(this.invited);    // rooms user is invited
+            this.getRoomlistResponse(rooms);
         }
     },
     
@@ -442,9 +474,9 @@ sim.backend = {
      * @param id (string) the conversation (room or user or nothing)
      */
     getConversation: function(id) {
-        if(typeof sim.backend.getContentResponse != "undefined") {
-            var conversation = (typeof sim.backend.conversations[id] != "undefined") ? sim.backend.conversations[id] : [];
-            sim.backend.getContentResponse(id, conversation);
+        if(typeof this.getContentResponse != "undefined") {
+            var conversation = (typeof this.conversations[id] != "undefined") ? this.conversations[id] : [];
+            this.getContentResponse(id, conversation);
         }
     },
     
@@ -456,21 +488,21 @@ sim.backend = {
      */
     sendMessage: function(receiver, text) {
         // get user or users of a given room
-        var users = sim.backend.helpers.getUser(sim.backend.userlist, receiver);
+        var users = this.backendHelpers.getUser(this.userlist, receiver);
         if (users==false) {
-            users = sim.backend.getUsersInRoom(receiver);
+            users = this.getUsersInRoom(receiver);
         } else {
             users = [ users ];
         }
         
         // no room or user found
         if (users.length==0) {
-            sim.backend.error('Ungültiger Benutzer oder Raum');
+            this.error('Ungültiger Benutzer oder Raum');
             return;
         }
         
         // create new message
-        var currentuser = sim.backend.helpers.getUsername();
+        var currentuser = this.backendHelpers.getUsername();
         var message = {
             'type': 'message',
             'text': text,
@@ -479,22 +511,23 @@ sim.backend = {
         };
         
         // save message in own conversation
-        if (typeof sim.backend.conversations[receiver] == 'undefined') 
-            sim.backend.conversations[receiver] = [];
-        var conversation = sim.backend.conversations[receiver];
+        if (typeof this.conversations[receiver] == 'undefined') 
+            this.conversations[receiver] = [];
+        var conversation = this.conversations[receiver];
         conversation[conversation.length] = $.extend({}, message, { datetime: new Date().getTime() });
-        sim.backend.getConversation(receiver);
+        this.getConversation(receiver);
         
         // send message to all users
+        var that = this;
         for (var i=0; i<users.length; i++) {
             // don't send message to this user
             if (users[i].username == currentuser)
                 continue;
             
             // send message
-            sim.backend.client.send(users[i], message, function() {
-                sim.backend.getConversation(receiver);
-            }, sim.backend.error);
+            this.backendClient.send(users[i], message, function() {
+                that.getConversation(receiver);
+            }, this.error);
         }
     },
     
@@ -521,7 +554,7 @@ sim.backend = {
      */
     saveAvatar: function(avatar) {
         window.localStorage.avatar = avatar;
-        sim.backend.userlistUpdateUsersOwnFile();
+        this.userlistUpdateUsersOwnFile();
     },
     
     
@@ -541,9 +574,9 @@ sim.backend = {
      */
     getAvatar: function(username) {
         var avatar = "avatar.png";
-        for(var i=0; i<sim.backend.userlist.length; i++) {
-            if (sim.backend.userlist[i].username==username && typeof sim.backend.userlist[i].avatar != 'undefined') {
-                avatar = sim.backend.userlist[i].avatar;
+        for(var i=0; i<this.userlist.length; i++) {
+            if (this.userlist[i].username==username && typeof this.userlist[i].avatar != 'undefined') {
+                avatar = this.userlist[i].avatar;
                 break;
             }
         }
@@ -558,7 +591,7 @@ sim.backend = {
      * @param text (string) text of the notification
      */
     notification: function(image, title, text) {
-        if(sim.backend.enableNotifications==true)
+        if(this.enableNotifications==true)
             window.LOCAL_NW.desktopNotifications.notify(image, title, text);
     },
     
@@ -569,12 +602,12 @@ sim.backend = {
      * @param whithourCurrentUser (boolean) include current user in result or not
      */
     getAllUsers: function(withoutCurrentUser) {
-        var currentuser = sim.backend.helpers.getUsername();
+        var currentuser = this.backendHelpers.getUsername();
         var users = [];
-        for(var i=0; i<sim.backend.userlist.length; i++) {
-            if (withoutCurrentUser==true && sim.backend.userlist[i].username == currentuser)
+        for(var i=0; i<this.userlist.length; i++) {
+            if (withoutCurrentUser==true && this.userlist[i].username == currentuser)
                 continue;
-            users[users.length] = sim.backend.userlist[i].username;
+            users[users.length] = this.userlist[i].username;
         }
         return users;
     },
@@ -586,7 +619,7 @@ sim.backend = {
      * @param name (string) the name of the user
      */
     getUser: function(name) {
-        return sim.backend.helpers.getUser(sim.backend.userlist, name);
+        return this.backendHelpers.getUser(this.userlist, name);
     },
     
     
@@ -598,14 +631,14 @@ sim.backend = {
     getUsersInRoom: function(room) {
         // room for all users?
         if (room==config.room_all)
-            return sim.backend.userlist;
+            return this.userlist;
         
         // a user created room
         var users = [];
-        for(var i=0; i<sim.backend.userlist.length; i++) {
-            for(var n=0; n<sim.backend.userlist[i].rooms.length; n++) {
-                if (sim.backend.userlist[i].rooms[n].name==room) {
-                    users[users.length] = sim.backend.userlist[i];
+        for(var i=0; i<this.userlist.length; i++) {
+            for(var n=0; n<this.userlist[i].rooms.length; n++) {
+                if (this.userlist[i].rooms[n].name==room) {
+                    users[users.length] = this.userlist[i];
                 }
             }
         }
@@ -618,8 +651,8 @@ sim.backend = {
      * @param room (string) roomname
      */
     declineInvitation: function(room) {
-        sim.backend.invited = sim.backend.helpers.removeRoomFromList(sim.backend.invited, room);
-        sim.backend.updateRoomlist();
+        this.invited = this.backendHelpers.removeRoomFromList(this.invited, room);
+        this.updateRoomlist();
     },
     
     
@@ -629,17 +662,17 @@ sim.backend = {
      */
     acceptInvitation: function(room) {
         // remove room from invitation list
-        sim.backend.invited = sim.backend.helpers.removeRoomFromList(sim.backend.invited, room);
+        this.invited = this.backendHelpers.removeRoomFromList(this.invited, room);
         
         // check still in room?
-        if (sim.backend.helpers.isUserInRoomList(sim.backend.roomlist, room)) {
-            sim.backend.error('Du bist bereits in dem Raum');
+        if (this.backendHelpers.isUserInRoomList(this.roomlist, room)) {
+            this.error('Du bist bereits in dem Raum');
             return;
         }
         
         // add room to roomlist
-        sim.backend.roomlist[sim.backend.roomlist.length] = { 'name': room };
-        sim.backend.updateRoomlist();
+        this.roomlist[this.roomlist.length] = { 'name': room };
+        this.updateRoomlist();
     },
     
     
@@ -650,9 +683,9 @@ sim.backend = {
      */
     addRoom: function(room, users) {
         var room = room.trim();
-        sim.backend.inviteUsers(room, users);
-        sim.backend.roomlist[sim.backend.roomlist.length] = { 'name': room };
-        sim.backend.updateRoomlist();
+        this.inviteUsers(room, users);
+        this.roomlist[this.roomlist.length] = { 'name': room };
+        this.updateRoomlist();
     },
     
     
@@ -666,20 +699,20 @@ sim.backend = {
             users = [];
         var usersFromList = [];
         for (var i=0; i<users.length; i++)
-            usersFromList[usersFromList.length] = sim.backend.getUser(users[i]);
+            usersFromList[usersFromList.length] = this.getUser(users[i]);
         users = usersFromList;
         
         var message = {
             'type': 'invite',
             'room': room,
-            'sender': sim.backend.helpers.getUsername(),
+            'sender': this.backendHelpers.getUsername(),
             'receiver': ''
         };
         
         // send invite to all users
         for (var i=0; i<users.length; i++) {
             message.receiver = users[i].username;
-            sim.backend.client.send(users[i], message, function() {}, sim.backend.error);
+            this.backendClient.send(users[i], message, function() {}, this.error);
         }
     },
     
@@ -690,13 +723,13 @@ sim.backend = {
      */
     leaveRoom:function(room) {
         var newRoomlist = [];
-        for (var i=0; i<sim.backend.roomlist.length; i++) {
-            if (sim.backend.roomlist[i].name != room) {
-                newRoomlist[newRoomlist.length] = sim.backend.roomlist[i];
+        for (var i=0; i<this.roomlist.length; i++) {
+            if (this.roomlist[i].name != room) {
+                newRoomlist[newRoomlist.length] = this.roomlist[i];
             }
         }
-        sim.backend.roomlist = newRoomlist;
-        sim.backend.updateRoomlist();
+        this.roomlist = newRoomlist;
+        this.updateRoomlist();
     },
     
     
@@ -705,7 +738,7 @@ sim.backend = {
      * @param enable (boolean) enable/disable system notifications
      */
     notifications: function(enable) {
-        sim.backend.enableNotifications = enable;
+        this.enableNotifications = enable;
     },
     
     
@@ -719,9 +752,9 @@ sim.backend = {
             return true;
         
         room = room.toLowerCase();
-        for(var i=0; i<sim.backend.userlist.length; i++) {
-            for(var n=0; n<sim.backend.userlist[i].rooms.length; n++) {
-                if (sim.backend.userlist[i].rooms[n].name.toLowerCase() == room) {
+        for(var i=0; i<this.userlist.length; i++) {
+            for(var n=0; n<this.userlist[i].rooms.length; n++) {
+                if (this.userlist[i].rooms[n].name.toLowerCase() == room) {
                     return true;
                 }
             }
@@ -735,6 +768,6 @@ sim.backend = {
      * @return (string) username
      */
     getUsername: function() {
-        return sim.backend.helpers.getUsername();
+        return this.backendHelpers.getUsername();
     }
-};
+});

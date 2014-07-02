@@ -4,8 +4,23 @@
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-sim.backend.client = {
-
+var BackendClient = Class.extend({
+    
+    /**
+     * backends helpers
+     */
+    backendHelpers: false,
+    
+    
+    /**
+     * initialize client
+     * @param backendHelpers (object) the current backendHelpers
+     */
+    init: function(backendHelpers) {
+        this.backendHelpers = backendHelpers;
+    },
+    
+    
     /**
      * send new message or information to another user
      * @param receiver (mixed) the target user (with ip, port and key)
@@ -15,7 +30,7 @@ sim.backend.client = {
      */
     send: function(receiver, message, success, error) {
         // encrypt message
-        var encMessage = sim.backend.helpers.encrypt(new NodeRSA(receiver.key), message);
+        var encMessage = this.backendHelpers.encrypt(new NodeRSA(receiver.key), message);
         
         // send message
         var req = http.request({
@@ -46,4 +61,4 @@ sim.backend.client = {
         req.write(encMessage);
         req.end();
     },
-};
+});

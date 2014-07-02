@@ -1,11 +1,10 @@
 /**
- * static helpers for the frontend
+ * helpers for the frontend
  *
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-sim.frontend.helpers = {
-
+var FrontendHelpers = Class.extend({
 
     /**
      * updates ago during element is visible
@@ -45,11 +44,12 @@ sim.frontend.helpers = {
             return;
         
         // update element
-        $(element).html(sim.frontend.helpers.dateAgo(dateInSeconds));
+        $(element).html(this.dateAgo(dateInSeconds));
         
         // trigger next update
+        var that = this;
         window.setTimeout(function() {
-            sim.frontend.helpers.startDateAgoUpdater(date, element);
+            that.startDateAgoUpdater(date, element);
         }, timeout);
     },
     
@@ -197,9 +197,9 @@ sim.frontend.helpers = {
         // format message as text with emoticons, urls, ...
         } else {
             message = message.escape();
-            message = sim.frontend.helpers.emoticons(message);
-            message = sim.frontend.helpers.urlify(message);
+            message = this.emoticons(message);
+            message = this.urlify(message);
         }
         return message;
     }
-}
+});
