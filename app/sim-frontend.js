@@ -46,6 +46,9 @@ sim.frontend = {
         // initialize backend callbacks
         sim.frontend.initBackendCallbacks(backend);
         
+        // initialize language-selection for syntax-highlighting
+        sim.frontend.initSelectForCodeBoxLanguage();
+        
         // set room_all as default conversation
         sim.frontend.currentConversation = config.room_all;
         
@@ -144,6 +147,42 @@ sim.frontend = {
             if(lastEmot != emoticon)
                 emotbox.append('<img src="'+ emoticon +'" title="' + shortcut + '"/>');
             lastEmot = emoticon;
+        });
+    },
+    
+    
+    /**
+     * create a select input for code box language
+     */
+    initSelectForCodeBoxLanguage: function() {
+        // get all users from backend
+        var languages = {
+            xml: 'HTML und XML',
+            css: 'CSS',
+            javascript: 'JavaScript',
+            php: 'PHP',
+            json: 'JSON',
+            java: 'Java',
+            sql: 'SQL'
+        }
+        
+        // create select with all users
+        var select = $('#message-add-code-box-language');
+        
+        var option = document.createElement("option");
+            option.setAttribute('value', '');
+            option.innerHTML = "Syntax-Highlighting";
+            select.append(option);
+            
+        for (var languageName in languages) {
+            var option = document.createElement("option");
+            option.setAttribute('value', languageName);
+            option.innerHTML = languages[languageName];
+            select.append(option);
+        }
+        
+         $(select).selectize({
+            create: true
         });
     },
     
@@ -281,8 +320,17 @@ sim.frontend = {
         $.each(messages, function(index, message) {
             var messageText = message.text;
             if (sim.frontend.helpers.hasCode(messageText)) {
+                var language = sim.frontend.helpers.getBBCodeLanguage(messageText);
                 messageText = sim.frontend.helpers.removeBBCode(messageText);
-                messageText = '<pre><code>' + hljs.highlightAuto(messageText).value + '</code></pre>';
+                if (language == "auto") {
+                    messageText = '<pre><code>' + hljs.highlightAuto(messageText).value + '</code></pre>';
+                    //alertify.log("auto:" + messageText);
+                    //alertify.log(hljs.highlightAuto(messageText).language);
+                } else {
+                    messageText = '<pre><code>' + hljs.highlight(language, messageText).value + '</code></pre>';
+                    //alertify.log(language + ": " + messageText);
+                    //alertify.log(hljs.highlight(language, messageText).language);
+                }
             } else {        
                 messageText = messageText.escape();
                 messageText = sim.frontend.helpers.emoticons(messageText);

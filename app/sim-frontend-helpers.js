@@ -105,7 +105,7 @@ sim.frontend.helpers = {
      */
     hasCode: function(text) {        
         
-        if (text.search(/\[code\]/) != -1) {
+        if (text.search(/\[code.*\]/) != -1) {
             return true;
         } else {
             return false;
@@ -120,8 +120,23 @@ sim.frontend.helpers = {
      */
     removeBBCode: function(text) {
         
-        text = text.replace(/\[code\]/g, "");
-        text = text.replace(/\[\/code\]/g, "");
+        text = text.replace(/\[code.*\] /g, "");
+        text = text.replace(/ \[\/code\]/g, "");
+        
+        return text;
+    },
+    
+    
+    /**
+     * Remove BB-Tag "code"
+     * @return (string) text surounded with code-block (<pre><code>)
+     * @param text (string) text with bb-tag "code"
+     */
+    getBBCodeLanguage: function(text) {
+        
+        text = text.match(/\[code language=.*\] /g, "");
+        text = text[0].replace(/\[code language\=/g, "");
+        text = text.replace(/\] /g, "");
         
         return text;
     },

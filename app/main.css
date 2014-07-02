@@ -650,7 +650,7 @@ body {
     }
     
     #message-add-code-box {
-        display: none;
+        
         position: absolute;
         background: #f7f7f7;
         border: 1px solid #dadada;
@@ -701,6 +701,15 @@ body {
                 width:505px;
                 overflow:auto;
                 margin-bottom:5px;
+            }
+            
+            #message-add-code-box-select {
+                width: 300px;
+                float:right;
+            }
+            
+            #message-add-code-box-select .selectize-dropdown-content {
+                max-height: 80px;
             }
     
     #message-add-menue-dropdown {

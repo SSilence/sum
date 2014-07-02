@@ -37,18 +37,18 @@ sim.frontend.events = {
         
         // close menues when clicking somewhere
         $('body').click(function(event) {
-            if (event.target.id != 'main-menue' && event.target.id != 'main-menue-avatar' && event.target.id != 'fileDialog') {
+            if (event.target.id != 'main-menue' && event.target.id != 'main-menue-avatar' && event.target.id != 'fileDialog' && event.target.id != '') {
                 $('#main-menue-dropdown li').show();
                 $('#main-menue-avatar-croper').hide();
                 $('#main-menue-dropdown').hide();
             }
             
-            if (event.target.id != 'message-add-menue' && event.target.id != 'message-add-menue-code') {
+            if (event.target.id != 'message-add-menue' && event.target.id != 'message-add-menue-code' && event.target.id != '') {
                 $('#message-add-menue-dropdown').hide();
             }
             
             if (event.target.id != 'message-add-code-box' && event.target.id != 'message-add-code-box-inner' && event.target.id != 'message-add-code-box-area'
-                && event.target.id != 'message-add-menue-code' && event.target.id != 'message-add-code-box-send' && event.target.id != 'message-add-code-box-cancel') {
+                && event.target.id != 'message-add-menue-code' && event.target.id != 'message-add-code-box-send' && event.target.id != 'message-add-code-box-cancel' && event.target.id != '') {
                 
                 $('#message-add-code-box').hide();
                 $('#message-add-code-box-area').val('');
@@ -129,7 +129,13 @@ sim.frontend.events = {
         
         // menue: send code block
         $('#message-add-code-box-send').click(function() {
-            var message = '[code]' + $('#message-add-code-box-area').val() + '[/code]';
+            var language = 'auto';
+            
+            if ($('#message-add-code-box-language option:selected').val() != '') {
+                language = $('#message-add-code-box-language option:selected').val();
+            }
+        
+            var message = '[code language=' + language + '] ' + $('#message-add-code-box-area').val() + ' [/code]';
             
             // message given?
             if (message.trim().length==0) {
