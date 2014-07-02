@@ -13,9 +13,9 @@ sim.frontend = {
     
     
     /**
-     * id of current visible conversation
+     * id of current visible conversation (on app startup user is in room all)
      */
-    currentConversation: false,
+    currentConversation: config.room_all,
     
     
     /**
@@ -39,15 +39,12 @@ sim.frontend = {
         
         // load emoticons
         sim.frontend.initEmoticons();
-		
+        
         // initialize all events
         sim.frontend.events.init(backend);
         
         // initialize backend callbacks
         sim.frontend.initBackendCallbacks(backend);
-        
-        // set room_all as default conversation
-        sim.frontend.currentConversation = config.room_all;
         
         // Userliste und Rooms updaten
         backend.updateUserlist(sim.frontend.currentConversation);
@@ -279,15 +276,6 @@ sim.frontend = {
         // show messages (highlite new messages)
         $('#content').html('');
         $.each(messages, function(index, message) {
-            var messageText = message.text;
-            if (sim.frontend.helpers.hasCode(messageText)) {
-                messageText = sim.frontend.helpers.removeBBCode(messageText);
-                messageText = '<pre><code>' + hljs.highlightAuto(messageText).value + '</code></pre>';
-            } else {        
-                messageText = messageText.escape();
-                messageText = sim.frontend.helpers.emoticons(messageText);
-                messageText = sim.frontend.helpers.urlify(messageText);
-            }
             $('#content').append('<li class="entry">\
                 <div class="entry-metadata">\
                     <img src="' + backend.getAvatar(message.sender) + '" class="avatar" />\
@@ -295,7 +283,7 @@ sim.frontend = {
                     <span class="entry-datetime">' + sim.frontend.helpers.dateAgo(message.datetime) + '</span>\
                 </div>\
                 <div class="entry-content">\
-                    ' + messageText + '\
+                    ' + sim.frontend.helpers.formatMessage(message.text) + '\
                 </div>\
             </li>');
             

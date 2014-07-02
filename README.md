@@ -75,5 +75,6 @@ Special thanks to the great programmers of this libraries which will be used in 
 * jCrop: http://deepliquid.com/content/Jcrop.html
 * selectize.js: http://brianreavis.github.io/selectize.js/
 * crypto-js: https://code.google.com/p/crypto-js/
+* highlight.js: http://highlightjs.org/
 * WebIconset.com Emoticons: http://www.webiconset.com/emoticons-smilies-icon-set/
 * Website Template: http://html5up.net/

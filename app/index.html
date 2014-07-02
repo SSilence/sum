@@ -73,18 +73,32 @@
             
             <!-- input area for new messages -->
             <div id="message">
+                <!-- emoticons popup -->
                 <div id="message-emoticons"></div>
+                
+                <!-- input area -->
                 <div id="message-input">
+                    <!-- button: inserting code -->
                     <div id="message-add-menue" class="ion-chevron-up"></div>
+                    
+                    <!-- input field/text -->
                     <input type="text" id="message-input-textfield" placeholder="schreibe eine Nachricht..." />
+                    
+                    <!-- button: show/hide emoticons popup -->
                     <div id="message-toggleemots"></div>
+                    
+                    <!-- send message -->
                     <div id="message-send" class="ion-paper-airplane"></div>
+                    
+                    <!-- popup for inserting code -->
                     <div id="message-add-code-box">
                         <div id="message-add-code-box-inner">
                             <textarea id="message-add-code-box-area"></textarea>
                             <input id="message-add-code-box-send" class="save" type="button" value="senden" /> <input id="message-add-code-box-cancel" class="cancel" type="button" value="abbrechen" />
                         </div>
                     </div>
+                    
+                    <!-- menue for inserting code, files, ... -->
                     <ul id="message-add-menue-dropdown">
                         <li id="message-add-menue-code"><span class="ion-android-developer"></span> Code senden</li>
                     </ul>
@@ -106,7 +120,7 @@
         <script src="libs/jcrop/jquery.Jcrop.min.js"></script>
         <script src="libs/selectize/selectize.js"></script>
         <script src="libs/crypto-js/md5.js"></script>
-		<script src="libs/highlight/highlight.pack.js"></script>
+        <script src="libs/highlight/highlight.pack.js"></script>
         
         <script src="sim-init.js"></script>
         <script src="sim-emoticons.js"></script>

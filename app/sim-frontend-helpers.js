@@ -99,35 +99,6 @@ sim.frontend.helpers = {
     
     
     /**
-     * search for BB-Tag "code"
-     * @return (boolean) true or false
-     * @param text (string) text with BB-Tags
-     */
-    hasCode: function(text) {        
-        
-        if (text.search(/\[code\]/) != -1) {
-            return true;
-        } else {
-            return false;
-        }
-    },
-    
-
-    /**
-     * Remove BB-Tag "code"
-     * @return (string) text surounded with code-block (<pre><code>)
-     * @param text (string) text with bb-tag "code"
-     */
-    removeBBCode: function(text) {
-        
-        text = text.replace(/\[code\]/g, "");
-        text = text.replace(/\[\/code\]/g, "");
-        
-        return text;
-    },
-    
-    
-    /**
      * resize image to smaller size in frontend
      * @param img (DOMNode) image for resizing
      * @param maxWidth (int) maximal allowed width
@@ -188,7 +159,7 @@ sim.frontend.helpers = {
     
     
     /**
-     * crop and resize image with canvas.
+     * crop and resize image with canvas
      * @return (string) base64 encoded png
      * @param image (element) img element
      * @param left (int) start cropping from left
@@ -209,5 +180,26 @@ sim.frontend.helpers = {
         var context = canvas.getContext('2d');
         context.drawImage(image, left * factorX, top * factorY, width * factorX, height * factorY, 0, 0, 200, 200);
         return canvas.toDataURL();
+    },
+    
+    
+    /**
+     * format message for display it in conversation stream
+     * @return (string) formatted message
+     * @param message (string) unformatted message
+     */
+    formatMessage: function(message) {
+        // format message as sourcecode if [code] tag was given (highlight.js escapes)
+        if (message.search(/\[code\]/) != -1) {
+            message = message.replace(/\[\/?code\]/g, ""); // remove [code] tags
+            message = '<pre><code>' + hljs.highlightAuto(message).value + '</code></pre>';
+        
+        // format message as text with emoticons, urls, ...
+        } else {
+            message = message.escape();
+            message = sim.frontend.helpers.emoticons(message);
+            message = sim.frontend.helpers.urlify(message);
+        }
+        return message;
     }
 }
