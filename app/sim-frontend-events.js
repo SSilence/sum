@@ -35,6 +35,26 @@ sim.frontend.events = {
             return false;
         });
         
+        // close menues when clicking somewhere
+        $('body').click(function(event) {
+            if (event.target.id != 'main-menue' && event.target.id != 'main-menue-avatar' && event.target.id != 'fileDialog') {
+                $('#main-menue-dropdown li').show();
+                $('#main-menue-avatar-croper').hide();
+                $('#main-menue-dropdown').hide();
+            }
+            
+            if (event.target.id != 'message-add-menue' && event.target.id != 'message-add-menue-code') {
+                $('#message-add-menue-dropdown').hide();
+            }
+            
+            if (event.target.id != 'message-add-code-box' && event.target.id != 'message-add-code-box-inner' && event.target.id != 'message-add-code-box-area'
+                && event.target.id != 'message-add-menue-code' && event.target.id != 'message-add-code-box-send' && event.target.id != 'message-add-code-box-cancel') {
+                
+                $('#message-add-code-box').hide();
+                $('#message-add-code-box-area').val('');
+            }
+        });
+        
         // menue: toggle
         $('#main-menue').click(function() {
             $('#main-menue-dropdown').toggle();
@@ -97,6 +117,42 @@ sim.frontend.events = {
         // close
         $('#main-close').click(function() {
             backend.close();
+        });
+        
+        // message-add-menue: toggle
+        $('#message-add-menue').click(function() {
+            $('#message-add-menue-dropdown').toggle();
+        });
+        
+        // message-add-menue-code
+        $('#message-add-menue-code').click(sim.frontend.events.showCodeBox);
+        
+        // menue: send code block
+        $('#message-add-code-box-send').click(function() {
+            var message = '[code]' + $('#message-add-code-box-area').val() + '[/code]';
+            
+            // message given?
+            if (message.trim().length==0) {
+                alertify.error('bitte eine Nachricht eingeben');
+                return;
+            }
+            
+            // chat channel selected?
+            if (sim.frontend.currentConversation==false) {
+                alertify.error('bitte einen Chat Kanal ausw&auml;hlen');
+                return;
+            }
+            
+            // send message
+            $('#message-add-code-box').hide();
+            $('#message-add-code-box-area').val('');
+            backend.sendMessage(sim.frontend.currentConversation, message);
+        });
+        
+        // menue: cancel code block
+        $('#message-add-code-box-cancel').click(function() {
+            $('#message-add-code-box').hide();
+            $('#message-add-code-box-area').val('');
         });
         
         // toggle emoticons
@@ -366,6 +422,15 @@ sim.frontend.events = {
         }
         
         return select;
+    },
+    
+    
+    /**
+     * show codeBox with textarea for code
+     */
+    showCodeBox: function() {
+        $('#message-add-menue-dropdown').hide();
+        $('#message-add-code-box').show();
     },
     
     

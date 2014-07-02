@@ -99,6 +99,35 @@ sim.frontend.helpers = {
     
     
     /**
+     * search for BB-Tag "code"
+     * @return (boolean) true or false
+     * @param text (string) text with BB-Tags
+     */
+    hasCode: function(text) {        
+        
+        if (text.search(/\[code\]/) != -1) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    
+
+    /**
+     * Remove BB-Tag "code"
+     * @return (string) text surounded with code-block (<pre><code>)
+     * @param text (string) text with bb-tag "code"
+     */
+    removeBBCode: function(text) {
+        
+        text = text.replace(/\[code\]/g, "");
+        text = text.replace(/\[\/code\]/g, "");
+        
+        return text;
+    },
+    
+    
+    /**
      * resize image to smaller size in frontend
      * @param img (DOMNode) image for resizing
      * @param maxWidth (int) maximal allowed width
