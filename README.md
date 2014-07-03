@@ -44,6 +44,7 @@ Following configuration parameters are available:
 * ``lock_retry_maximum``: retry in maximum random ms when file is locked
 * ``room_all``: name of the default room for all users
 * ``excluded_ips``: ips which will be ignored on creating server
+* ``highlight_languages``: supported highlight.js languages in code input selection
 
 You can access the debugger by setting ``"toolbar": true`` in ``package.json``
 
