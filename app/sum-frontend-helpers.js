@@ -190,9 +190,20 @@ var FrontendHelpers = Class.extend({
      */
     formatMessage: function(message) {
         // format message as sourcecode if [code] tag was given (highlight.js escapes)
-        if (message.search(/\[code\]/) != -1) {
-            message = message.replace(/\[\/?code\]/g, ""); // remove [code] tags
-            message = '<pre><code>' + hljs.highlightAuto(message).value + '</code></pre>';
+        if (message.search(/\[code.*\]/g) != -1) {
+            // extract usergiven language
+            var language = this.extractLanguageFromCode(message);
+            
+            // remove [code] tags
+            message = message.replace(/\[\/?code\s*(language=([^\]]+))?\]/g, "");
+            
+            // format code
+            if (language !== false && language != 'auto')
+                message = hljs.highlight(language, message).value;
+            else
+                message = hljs.highlightAuto(message).value;
+            
+            message = '<pre><code>' + message + '</code></pre>';
         
         // format message as text with emoticons, urls, ...
         } else {
@@ -201,5 +212,17 @@ var FrontendHelpers = Class.extend({
             message = this.urlify(message);
         }
         return message;
+    },
+    
+    
+    /**
+     * extract language value from [code language=java] tag
+     * @return (string) the language or undefined
+     * @param message (string) message with [code language=...] tag
+     */
+    extractLanguageFromCode: function(message) {
+        var regex = /(?:\[code\s*language=)([^\]]+)/g;
+        var result = regex.exec(message);
+        return result.length>1 ? result[1] : false;
     }
 });

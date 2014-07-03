@@ -27,5 +27,17 @@ var config = {
     room_all: "Alle",
     
     // ips which will be ignored
-    excluded_ips: "127.0.0.1"
+    excluded_ips: "127.0.0.1",
+    
+    // available languages for syntax highlighting
+    highlight_languages: {
+        auto: 'Autoselect Syntax-Highlighting',
+        xml: 'HTML und XML',
+        css: 'CSS',
+        javascript: 'JavaScript',
+        php: 'PHP',
+        json: 'JSON',
+        java: 'Java',
+        sql: 'SQL'
+    }
 };

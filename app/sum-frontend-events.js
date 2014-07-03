@@ -70,17 +70,15 @@ var FrontendEvents = Class.extend({
             // no click inside main menue: close it
             if ($(event.target).parents('#main-menue-dropdown').length==0 && event.target.id != 'main-menue' && event.target.id != 'fileDialog') {
                 $('#main-menue-dropdown li').show();
-                $('#main-menue-avatar-croper').hide();
-                $('#main-menue-dropdown').hide();
+                $('#main-menue-avatar-croper, #main-menue-dropdown').hide();
             }
             
             // no click inside add menue: close it
-            if (event.target.id != 'message-add-menue' && event.target.id != 'message-add-menue-code') {
+            if ($(event.target).parents('#message-add-menue-dropdown').length==0 && event.target.id != 'message-add-menue')
                 $('#message-add-menue-dropdown').hide();
-            }
             
             // no click inside add code box: close it
-            if ($(event.target).parents('#message-add-code-box').length==0 && event.target.id != 'message-add-menue-code') {
+            if ($(event.target).parents('#message-add-code-box, #message-add-menue-dropdown').length==0 && event.target.id != 'message-add-menue') {
                 $('#message-add-code-box').hide();
                 $('#message-add-code-box-area').val('');
             }
@@ -164,10 +162,8 @@ var FrontendEvents = Class.extend({
         
         // menue: send code block
         $('#message-add-code-box-send').click(function() {
-            var message = '[code]' + $('#message-add-code-box-area').val() + '[/code]';
-            
-            // message given?
-            if (message.trim().length==0) {
+            // code given?
+            if ($('#message-add-code-box-area').val().trim().length==0) {
                 alertify.error('bitte eine Nachricht eingeben');
                 return;
             }
@@ -177,6 +173,9 @@ var FrontendEvents = Class.extend({
                 alertify.error('bitte einen Chat Kanal ausw&auml;hlen');
                 return;
             }
+            
+            var language = $('#message-add-code-box-language').val();
+            var message = '[code language=' + language + '] ' + $('#message-add-code-box-area').val() + ' [/code]';
             
             // send message
             $('#message-add-code-box').hide();

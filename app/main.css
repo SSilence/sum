@@ -650,7 +650,7 @@ body {
     }
     
     #message-add-code-box {
-        display: none;
+        display:none;
         position: absolute;
         background: #f7f7f7;
         border: 1px solid #dadada;
@@ -697,12 +697,17 @@ body {
         
             #message-add-code-box-area {
                 resize:none;
-                height:330px;
+                height:290px;
                 width:505px;
                 overflow:auto;
                 margin-bottom:5px;
             }
-    
+        
+        #message-add-code-box-language {
+            width:300px;
+            float:right;
+        }
+ 
     #message-add-menue-dropdown {
         display: none;
         position: absolute;

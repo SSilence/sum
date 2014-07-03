@@ -50,6 +50,9 @@ var Frontend = Class.extend({
         // load emoticons
         this.initEmoticons();
         
+        // initialize language-selection for syntax-highlighting
+        this.initSelectForCodeBoxLanguage();
+        
         // initialize all events
         frontendEvents.initAllEvents(backend, backendHelpers, this, frontendHelpers);
         
@@ -153,6 +156,25 @@ var Frontend = Class.extend({
             if(lastEmot != emoticon)
                 emotbox.append('<img src="'+ emoticon +'" title="' + shortcut + '"/>');
             lastEmot = emoticon;
+        });
+    },
+    
+    
+    /**
+     * create a select input for code box language
+     */
+    initSelectForCodeBoxLanguage: function() {
+        var select = $('#message-add-code-box-language');
+
+        $.each(config.highlight_languages, function(key, value) {
+            var option = document.createElement("option");
+            option.setAttribute('value', key);
+            option.innerHTML = value;
+            select.append(option);
+        });
+        
+        $(select).selectize({
+            create: true
         });
     },
     
