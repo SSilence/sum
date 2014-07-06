@@ -4,13 +4,13 @@ var os = require('os');
 var lockFile = require('lockfile');
 
 /**
- * static helpers for backend
+ * helpers for backend
  *
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-sim.backend.helpers = {
-
+var BackendHelpers = Class.extend({
+    
     /**
      * sort userlist by username
      * @param userlist (array) unsorted userlist
@@ -270,4 +270,4 @@ sim.backend.helpers = {
         }
         return notInList;
     }
-};
+});

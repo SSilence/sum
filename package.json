@@ -1,6 +1,6 @@
 {
   "single-instance": false,
-  "name": "SUM",
+  "name": "S Ultimate Messenger",
   "description": "S Ultimate Messenger",
   "version": "0.1",
   "main": "app/index.html",

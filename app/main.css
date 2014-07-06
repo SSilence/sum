@@ -650,7 +650,11 @@ body {
     }
     
     #message-add-code-box {
+<<<<<<< HEAD
         
+=======
+        display:none;
+>>>>>>> 4942596550f5a557a3528e0bc5ee250fe34a0034
         position: absolute;
         background: #f7f7f7;
         border: 1px solid #dadada;
@@ -697,11 +701,12 @@ body {
         
             #message-add-code-box-area {
                 resize:none;
-                height:330px;
+                height:290px;
                 width:505px;
                 overflow:auto;
                 margin-bottom:5px;
             }
+<<<<<<< HEAD
             
             #message-add-code-box-select {
                 width: 300px;
@@ -712,6 +717,14 @@ body {
                 max-height: 80px;
             }
     
+=======
+        
+        #message-add-code-box-language {
+            width:300px;
+            float:right;
+        }
+ 
+>>>>>>> 4942596550f5a557a3528e0bc5ee250fe34a0034
     #message-add-menue-dropdown {
         display: none;
         position: absolute;

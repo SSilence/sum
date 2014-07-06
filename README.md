@@ -4,7 +4,7 @@ SUM - S Ultimate Messenger
 Copyright (c) 2013 Tobias Zeising, tobias.zeising@aditu.de  
 http://www.aditu.de  
 Licensed under the GPLv3 license  
-Version 0.1-SNAPSHOT
+Version 0.3alpha
 
 
 SUM is a simple instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a file which will be stored at a shared network folder.
@@ -44,6 +44,7 @@ Following configuration parameters are available:
 * ``lock_retry_maximum``: retry in maximum random ms when file is locked
 * ``room_all``: name of the default room for all users
 * ``excluded_ips``: ips which will be ignored on creating server
+* ``highlight_languages``: supported highlight.js languages in code input selection
 
 You can access the debugger by setting ``"toolbar": true`` in ``package.json``
 
@@ -75,5 +76,7 @@ Special thanks to the great programmers of this libraries which will be used in 
 * jCrop: http://deepliquid.com/content/Jcrop.html
 * selectize.js: http://brianreavis.github.io/selectize.js/
 * crypto-js: https://code.google.com/p/crypto-js/
+* highlight.js: http://highlightjs.org/
+* Simple Class Creation and Inheritance: http://ejohn.org/blog/simple-javascript-inheritance/
 * WebIconset.com Emoticons: http://www.webiconset.com/emoticons-smilies-icon-set/
 * Website Template: http://html5up.net/

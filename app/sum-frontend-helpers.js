@@ -1,11 +1,10 @@
 /**
- * static helpers for the frontend
+ * helpers for the frontend
  *
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-sim.frontend.helpers = {
-
+var FrontendHelpers = Class.extend({
 
     /**
      * updates ago during element is visible
@@ -45,11 +44,12 @@ sim.frontend.helpers = {
             return;
         
         // update element
-        $(element).html(sim.frontend.helpers.dateAgo(dateInSeconds));
+        $(element).html(this.dateAgo(dateInSeconds));
         
         // trigger next update
+        var that = this;
         window.setTimeout(function() {
-            sim.frontend.helpers.startDateAgoUpdater(date, element);
+            that.startDateAgoUpdater(date, element);
         }, timeout);
     },
     
@@ -99,6 +99,7 @@ sim.frontend.helpers = {
     
     
     /**
+<<<<<<< HEAD:app/sim-frontend-helpers.js
      * search for BB-Tag "code"
      * @return (boolean) true or false
      * @param text (string) text with BB-Tags
@@ -143,6 +144,8 @@ sim.frontend.helpers = {
     
     
     /**
+=======
+>>>>>>> 4942596550f5a557a3528e0bc5ee250fe34a0034:app/sum-frontend-helpers.js
      * resize image to smaller size in frontend
      * @param img (DOMNode) image for resizing
      * @param maxWidth (int) maximal allowed width
@@ -203,7 +206,7 @@ sim.frontend.helpers = {
     
     
     /**
-     * crop and resize image with canvas.
+     * crop and resize image with canvas
      * @return (string) base64 encoded png
      * @param image (element) img element
      * @param left (int) start cropping from left
@@ -224,5 +227,49 @@ sim.frontend.helpers = {
         var context = canvas.getContext('2d');
         context.drawImage(image, left * factorX, top * factorY, width * factorX, height * factorY, 0, 0, 200, 200);
         return canvas.toDataURL();
+    },
+    
+    
+    /**
+     * format message for display it in conversation stream
+     * @return (string) formatted message
+     * @param message (string) unformatted message
+     */
+    formatMessage: function(message) {
+        // format message as sourcecode if [code] tag was given (highlight.js escapes)
+        if (message.search(/\[code.*\]/g) != -1) {
+            // extract usergiven language
+            var language = this.extractLanguageFromCode(message);
+            
+            // remove [code] tags
+            message = message.replace(/\[\/?code\s*(language=([^\]]+))?\]/g, "");
+            
+            // format code
+            if (language !== false && language != 'auto')
+                message = hljs.highlight(language, message).value;
+            else
+                message = hljs.highlightAuto(message).value;
+            
+            message = '<pre><code>' + message + '</code></pre>';
+        
+        // format message as text with emoticons, urls, ...
+        } else {
+            message = message.escape();
+            message = this.emoticons(message);
+            message = this.urlify(message);
+        }
+        return message;
+    },
+    
+    
+    /**
+     * extract language value from [code language=java] tag
+     * @return (string) the language or undefined
+     * @param message (string) message with [code language=...] tag
+     */
+    extractLanguageFromCode: function(message) {
+        var regex = /(?:\[code\s*language=)([^\]]+)/g;
+        var result = regex.exec(message);
+        return result.length>1 ? result[1] : false;
     }
-}
+});
