@@ -5,37 +5,37 @@
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
 var FrontendEvents = Class.extend({
-    
+
     /**
      * the current backend
      */
     backend: false,
-    
-    
+
+
     /**
      * the current backend helpers
      */
     backendHelpers: false,
-    
-    
+
+
     /**
      * the current frontend
      */
     frontend: false,
-    
-    
+
+
     /**
      * the current frontend helpers
      */
     frontendHelpers: false,
-    
-    
+
+
     /**
      * the jcrop selection
      */
     selection: false,
-    
-    
+
+
     /**
      * initialize events (clicks, ...)
      * @param backend (object) the current backend
@@ -45,13 +45,13 @@ var FrontendEvents = Class.extend({
      */
     initAllEvents: function(backend, backendHelpers, frontend, frontendHelpers) {
         var that = this;
-    
+
         // save instances for later use
         this.backend = backend;
         this.frontend = frontend;
         this.frontendHelpers = frontendHelpers;
         this.backendHelpers = backendHelpers;
-        
+
         // initialize window resize handler
         $(window).bind("resize", function() {
             that.resize();
@@ -64,64 +64,64 @@ var FrontendEvents = Class.extend({
             e.preventDefault();
             return false;
         });
-        
+
         // close menues when clicking somewhere
         $('body').click(function(event) {
             // no click inside main menue: close it
-            if ($(event.target).parents('#main-menue-dropdown').length==0 && event.target.id != 'main-menue' && event.target.id != 'fileDialog') {
+            if ($(event.target).parents('#main-menue-dropdown').length===0 && event.target.id != 'main-menue' && event.target.id != 'fileDialog') {
                 $('#main-menue-dropdown li').show();
                 $('#main-menue-avatar-croper, #main-menue-dropdown').hide();
             }
-            
+
             // no click inside add menue: close it
-            if ($(event.target).parents('#message-add-menue-dropdown').length==0 && event.target.id != 'message-add-menue')
+            if ($(event.target).parents('#message-add-menue-dropdown').length===0 && event.target.id != 'message-add-menue')
                 $('#message-add-menue-dropdown').hide();
-            
+
             // no click inside add code box: close it
-            if ($(event.target).parents('#message-add-code-box, #message-add-menue-dropdown').length==0 && event.target.id != 'message-add-menue') {
+            if ($(event.target).parents('#message-add-code-box, #message-add-menue-dropdown').length===0 && event.target.id != 'message-add-menue') {
                 $('#message-add-code-box').hide();
                 $('#message-add-code-box-area').val('');
             }
         });
-        
+
         // menue: toggle
         $('#main-menue').click(function() {
             $('#main-menue-dropdown').toggle();
         });
-        
+
         // menue: select avatar
-        $('#main-menue-avatar').click(function() { 
+        $('#main-menue-avatar').click(function() {
             that.selectAvatar();
         });
-        
+
         // menue: save avatar
         $('#main-menue-avatar-croper .save').click(function() {
-            if (that.selection==false) {
+            if (that.selection===false) {
                 alertify.error('Bitte einen sichtbaren Bereich w&auml;hlen');
                 return;
             }
             $('#main-menue-dropdown li').show();
             $('#main-menue-avatar-croper').hide();
-            
+
             var image = frontendHelpers.cropAndResize(
-                $('#main-menue-avatar-croper img')[0], 
+                $('#main-menue-avatar-croper img')[0],
                 that.selection.x,
                 that.selection.y,
                 that.selection.w,
                 that.selection.h);
-            
+
             backend.saveAvatar(image);
             $('#main-menue-dropdown').hide();
             backend.updateUserlist(frontend.currentConversation);
         });
-        
+
         // menue: cancel avatar
         $('#main-menue-avatar-croper .cancel').click(function() {
             $('#main-menue-dropdown li').show();
             $('#main-menue-avatar-croper').hide();
             $('#main-menue-dropdown').hide();
         });
-        
+
         // menue: notification status
         $('#main-menue-status').click(function() {
             if($(this).hasClass('inactive')) {
@@ -133,62 +133,62 @@ var FrontendEvents = Class.extend({
             }
             $('#main-menue-dropdown').hide();
         });
-        
+
         // menue: about
         $('#main-menue-quit').click(function() {
             backend.quit();
         });
-        
+
         // menue: about
         $('#main-menue-about').click(function() {
             gui.Shell.openExternal('http://www.sum-messenger.org');
             $('#main-menue-dropdown').hide();
         });
-        
+
         // close
         $('#main-close').click(function() {
             backend.close();
         });
-        
+
         // message-add-menue: toggle
         $('#message-add-menue').click(function() {
             $('#message-add-menue-dropdown').toggle();
         });
-        
+
         // message-add-menue-code
         $('#message-add-menue-code').click(function() {
             that.showCodeBox();
         });
-        
+
         // menue: send code block
         $('#message-add-code-box-send').click(function() {
             // code given?
-            if ($('#message-add-code-box-area').val().trim().length==0) {
+            if ($('#message-add-code-box-area').val().trim().length===0) {
                 alertify.error('bitte eine Nachricht eingeben');
                 return;
             }
-            
+
             // chat channel selected?
-            if (frontend.currentConversation==false) {
+            if (frontend.currentConversation===false) {
                 alertify.error('bitte einen Chat Kanal ausw&auml;hlen');
                 return;
             }
-            
+
             var language = $('#message-add-code-box-language').val();
             var message = '[code language=' + language + '] ' + $('#message-add-code-box-area').val() + ' [/code]';
-            
+
             // send message
             $('#message-add-code-box').hide();
             $('#message-add-code-box-area').val('');
             backend.sendMessage(frontend.currentConversation, message);
         });
-        
+
         // menue: cancel code block
         $('#message-add-code-box-cancel').click(function() {
             $('#message-add-code-box').hide();
             $('#message-add-code-box-area').val('');
         });
-        
+
         // toggle emoticons
         $('#message-toggleemots').click(function() {
             var emoticonsPopup = $('#message-emoticons');
@@ -200,15 +200,16 @@ var FrontendEvents = Class.extend({
                 emoticonsPopup.hide();
             }
         });
-        
+
         // emoticons click
         $('#message-emoticons').delegate("img", "click", function() {
             $('#message-input-textfield').val(
                 $('#message-input-textfield').val() + " " + $(this).attr('title')
             );
             $('#message-toggleemots').click();
+            $('#message-input-textfield').focus();
         });
-        
+
         // select user
         $('.contacts').delegate("li", "click", function() {
             var user = $(this).find('.contacts-name').html();
@@ -219,7 +220,7 @@ var FrontendEvents = Class.extend({
             backend.updateUserlist(frontend.currentConversation);
             $('#main-metadata').css('visibility', 'visible');
         });
-        
+
         // select room
         $('.rooms').delegate("li", "click", function() {
             if ( $(this).find('.rooms-outside').length>0 ) {
@@ -234,119 +235,119 @@ var FrontendEvents = Class.extend({
             backend.updateUserlist(frontend.currentConversation);
             $('#main-metadata').css('visibility', 'visible');
         });
-        
+
         // send message
         $('#message-send').click(function() {
             var message = $('#message-input-textfield').val();
-            
+
             // message given?
-            if (message.trim().length==0) {
+            if (message.trim().length===0) {
                 alertify.error('bitte eine Nachricht eingeben');
                 return;
             }
-            
+
             // chat channel selected?
-            if (frontend.currentConversation==false) {
+            if (frontend.currentConversation===false) {
                 alertify.error('bitte einen Chat Kanal ausw&auml;hlen');
                 return;
             }
-            
+
             // send message
             $('#message-input-textfield').val("");
             backend.sendMessage(frontend.currentConversation, message);
         });
-        
+
         // send message by enter
         $('#message-input-textfield').keypress(function(e) {
             if(e.which == 13) {
                 $('#message-send').click();
             }
         });
-        
+
         // rooms add: show dialog
         $('#rooms-add').click(function() {
             that.showAddRoomsDialog(this);
         });
-        
+
         // rooms add: cancel
         $('body').delegate(".rooms-popup.add .cancel", "click", function(e) {
             $('.rooms-popup.add').remove();
         });
-        
+
         // rooms add: save
         $('body').delegate(".rooms-popup.add .save", "click", function(e) {
             var room = $(this).parent().find('.name').val();
             var users = $(this).parent().find('select').val();
-            
+
             // room name given?
-            if($.trim(room).length==0) {
+            if($.trim(room).length===0) {
                 alertify.error('Bitte einen Namen für den Raum angeben');
                 return;
             }
-            
+
             // don't add room with same name
             if(backend.doesRoomExists(room)) {
                 alertify.error('Raum mit dem Namen existiert bereits');
                 return;
             }
-            
+
             // don't add room of name of a user
-            if(backend.getUser(room)!=false) {
+            if(backend.getUser(room)!==false) {
                 alertify.error('Es existiert bereits ein Benutzer mit diesem Namen');
                 return;
             }
-            
+
             // add room
             backend.addRoom(room, users);
-            
+
             // hide popup
             $('.rooms-popup.add').remove();
             alertify.log('Raum erfolgreich erstellt');
         });
-        
+
         // rooms invitation: accept
         $('body').delegate(".rooms-popup.invite .save", "click", function(e) {
             var room = $(this).parent().find('.name').val();
             backend.acceptInvitation(room);
             $(this).parent().remove();
         });
-        
+
         // rooms invitation: decline
         $('body').delegate(".rooms-popup.invite .cancel", "click", function(e) {
             var room = $(this).parent().find('.name').val();
             backend.declineInvitation(room);
             $(this).parent().remove();
         });
-        
+
         // rooms: invite user
         $('.rooms').delegate("li .rooms-invite", "click", function() {
             that.showInviteRoomsDialog(this);
         });
-        
+
         // rooms: invite user save
         $('body').delegate(".rooms-popup.edit .save", "click", function(e) {
             var room = $(this).parent().find('.name').val();
             var users = $(this).parent().find('select').val();
-            
+
             backend.inviteUsers(room, users);
-            
+
             $('.rooms-popup.edit').remove();
             alertify.log('Einladungen versendet');
         });
-        
+
         // rooms: invite user cancel
         $('body').delegate(".rooms-popup.edit .cancel", "click", function(e) {
             $('.rooms-popup.edit').remove();
         });
-        
+
         // rooms: leave
         $('.rooms').delegate("li .rooms-leave", "click", function(e) {
             var room = $(this).parent().find('.name').html();
             backend.leaveRoom(room);
         });
     },
-    
-    
+
+
     /**
      * select new avatar
      * @param evt (object) event
@@ -355,18 +356,18 @@ var FrontendEvents = Class.extend({
         var that = this;
         $('#fileDialog').change(function(evt) {
             // check file given?
-            if ($(this).val() == '')
+            if ($(this).val() === '')
                 return;
-            
+
             // show cropper
             $('#main-menue-dropdown li').hide();
             $('#main-menue-avatar-croper').show();
-            
+
             // load file
             var file = $(this).val();
             $(this).val('');
             that.backendHelpers.readFile(
-                file, 
+                file,
                 function(data) {
                     // check filetype
                     var filetype = file.split('.').pop();
@@ -375,14 +376,14 @@ var FrontendEvents = Class.extend({
                         $('#main-menue-avatar-croper .cancel').click();
                         return;
                     }
-                    
+
                     // init jCrop
                     $('#main-menue-avatar-croper *:not(input)').remove();
                     $('#main-menue-avatar-croper').prepend('<img />');
                     $('#main-menue-avatar-croper img').attr('src', 'data:image/' + filetype + ';base64,' + data.toString('base64'));
                     that.frontendHelpers.resizeImage($('#main-menue-avatar-croper img'), 200, 200);
                     that.selection = false;
-                    
+
                     var img = $('#main-menue-avatar-croper img');
                     var max = img.width()>img.height() ? img.height() : img.width();
                     $('#main-menue-avatar-croper img').Jcrop({
@@ -392,63 +393,63 @@ var FrontendEvents = Class.extend({
                         setSelect: [max*0.1, max*0.1, max*0.9, max*0.9],
                         aspectRatio: 1
                     });
-                }, 
+                },
                 alertify.error
             );
         });
         $('#fileDialog').trigger('click');
     },
-    
-    
+
+
     /**
      * show add room dialog popup
      */
     showAddRoomsDialog: function(element) {
         // remove existing popups
         $('.rooms-popup.add, .rooms-popup.edit').remove();
-        
+
         // create select with all users
         var select = this.createSelectForAllUsers();
-        
+
         // create popup with text and buttons
         var div = $(this.frontendHelpers.createRoomsPopup(element, "add"));
         div.append('<input type="text" class="name selectize-input" placeholder="Name des Raums">');
         div.append(select);
         div.append('<input class="save" type="button" value="speichern" /> <input class="cancel" type="button" value="abbrechen" />');
-        
+
         // make user select selectize.js
         $(select).selectize({plugins: ['remove_button']});
     },
-    
-    
+
+
     /**
      * shows the invite more users dialog
      */
     showInviteRoomsDialog: function(element) {
         var room = $(element).parent().find('.name').html();
-        
+
         // create select with all users
         var select = this.createSelectForAllUsers();
-        
+
         // create popup with text and buttons
         var div = $(this.frontendHelpers.createRoomsPopup($('#rooms-add'), "edit"));
         div.append('<p>Weitere Mitglieder in Gruppe einladen:</p>');
         div.append('<input class="name" type="hidden" value="' + room.escape() + '" />');
         div.append(select);
         div.append('<input class="save" type="button" value="einladen" /> <input class="cancel" type="button" value="abbrechen" />');
-        
+
         // make user select selectize.js
         $(select).selectize({plugins: ['remove_button']});
     },
-    
-    
+
+
     /**
      * create a select input for all users
      */
     createSelectForAllUsers: function() {
         // get all users from backend
         var users = this.backend.getAllUsers(true);
-        
+
         // create select with all users
         var select = document.createElement("select");
         select.setAttribute('placeholder', 'Mitglieder...');
@@ -459,11 +460,11 @@ var FrontendEvents = Class.extend({
             option.innerHTML = users[i];
             select.appendChild(option);
         }
-        
+
         return select;
     },
-    
-    
+
+
     /**
      * show codeBox with textarea for code
      */
@@ -471,8 +472,8 @@ var FrontendEvents = Class.extend({
         $('#message-add-menue-dropdown').hide();
         $('#message-add-code-box').show();
     },
-    
-    
+
+
     /**
      * set automatically the height of the tags and set scrollbar for div scrolling
      */
@@ -483,13 +484,13 @@ var FrontendEvents = Class.extend({
         $('#contacts-wrapper').height(windowHeight - start - roomsHeight);
         $("#contacts-wrapper").mCustomScrollbar("update");
         $('#contacts-wrapper').show();
-        
+
         var headerHeight = $('#main-header').outerHeight();
         var messageHeight = $('#message').outerHeight();
         var padding = parseInt($('#content').css('padding-bottom')) * 2;
-        
+
         $('#content-wrapper').height(windowHeight - headerHeight - messageHeight - padding);
-        
+
         // set new position for rooms popups
         var diff = windowHeight - this.frontend.lastWindowHeight;
         this.frontend.lastWindowHeight = windowHeight;

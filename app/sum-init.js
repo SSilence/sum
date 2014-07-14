@@ -10,7 +10,7 @@ $(document).ready(function() {
     var backendServer = new BackendServer();
     var backendClient = new BackendClient(backendHelpers);
     var backend = new Backend(backendHelpers, backendServer, backendClient);
-    
+
     // initialize frontend
     var frontendEvents = new FrontendEvents();
     var frontendHelpers = new FrontendHelpers();

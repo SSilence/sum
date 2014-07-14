@@ -12,7 +12,7 @@ var FrontendHelpers = Class.extend({
      * @param element (DOMNode) HTML Element which should holds the time
      */
     startDateAgoUpdater: function(date, element) {
-        
+
         // no longer update removed elements
         var found = false;
         $('#content .entry-datetime').each(function(index, item) {
@@ -21,10 +21,10 @@ var FrontendHelpers = Class.extend({
                 return false;
             }
         });
-        
-        if(found==false)
+
+        if(found===false)
             return;
-        
+
         // calculate update interval
         var dateInSeconds = date / 1000;
         var now = new Date().getTime() / 1000;
@@ -32,7 +32,7 @@ var FrontendHelpers = Class.extend({
         var ageInMinutes = ageInSeconds / 60;
         var ageInHours = ageInMinutes / 60;
         var ageInDays = ageInHours / 24;
-        
+
         var timeout = 1000;
         if(ageInMinutes<1)
             timeout = 1000;
@@ -42,18 +42,18 @@ var FrontendHelpers = Class.extend({
             timeout = 1000 * 60 * 60;
         else
             return;
-        
+
         // update element
         $(element).html(this.dateAgo(dateInSeconds));
-        
+
         // trigger next update
         var that = this;
         window.setTimeout(function() {
             that.startDateAgoUpdater(date, element);
         }, timeout);
     },
-    
-    
+
+
     /**
      * convert date in vor n Minuten
      * @return (string) formatted date
@@ -61,24 +61,24 @@ var FrontendHelpers = Class.extend({
      */
     dateAgo: function(date) {
         var now = new Date().getTime() / 1000;
-        
+
         var ageInSeconds = now - date;
         var ageInMinutes = ageInSeconds / 60;
         var ageInHours = ageInMinutes / 60;
         var ageInDays = ageInHours / 24;
-        
+
         if(ageInMinutes<1)
             return 'vor ' + Math.floor(ageInSeconds) + ' Sekunden';
         if(ageInHours<1)
             return 'vor ' + Math.floor(ageInMinutes) + ' Minuten';
         if(ageInDays<1)
             return 'vor ' + Math.floor(ageInHours) + ' Stunden';
-        
+
         var dateObj = new Date(date*1000);
         return dateObj.getHours() + ':' + dateObj.getMinutes() + ':' + dateObj.getSeconds();
     },
-    
-    
+
+
     /**
      * insert emoticons
      * @return (string) text with emoticons images
@@ -88,16 +88,16 @@ var FrontendHelpers = Class.extend({
         $.each(emoticons, function(shortcut, emoticon) {
             // escape shortcut
             shortcut = shortcut.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-            
+
             // replace shortcut
             var re = new RegExp(shortcut, 'g');
             text = text.replace(re, '<img src="'+ emoticon +'" title="' + shortcut + '"/>');
         });
-        
+
         return text;
     },
-    
-    
+
+
     /**
      * resize image to smaller size in frontend
      * @param img (DOMNode) image for resizing
@@ -119,7 +119,7 @@ var FrontendHelpers = Class.extend({
 
         width = $(img).width();    // Current image width
         height = $(img).height();  // Current image height
-        
+
         // Check if current height is larger than max
         if(height > maxHeight){
             ratio = maxHeight / height; // get ratio for scaling image
@@ -128,8 +128,8 @@ var FrontendHelpers = Class.extend({
             width = width * ratio;    // Reset width to match scaled image
         }
     },
-    
-    
+
+
     /**
      * create popup for rooms messages
      * @param e (DOMNode) HTML Element for positioning of the popup
@@ -144,8 +144,8 @@ var FrontendHelpers = Class.extend({
         $(document.body).append(div);
         return div;
     },
-    
-    
+
+
     /**
      * detects links an replace it with a tag
      * @return (string) text with a tags
@@ -156,8 +156,8 @@ var FrontendHelpers = Class.extend({
             return '<a href="' + url + '" class="extern">' + url + '</a>';
         });
     },
-    
-    
+
+
     /**
      * crop and resize image with canvas
      * @return (string) base64 encoded png
@@ -170,10 +170,10 @@ var FrontendHelpers = Class.extend({
     cropAndResize: function(image, left, top, width, height) {
         var ori = new Image();
         ori.src = $(image).attr('src');
-        
+
         factorX = ori.width / $(image).width();
         factorY = ori.height / $(image).height();
-        
+
         var canvas = document.createElement("canvas");
         canvas.width  = "200";
         canvas.height = "200";
@@ -181,8 +181,8 @@ var FrontendHelpers = Class.extend({
         context.drawImage(image, left * factorX, top * factorY, width * factorX, height * factorY, 0, 0, 200, 200);
         return canvas.toDataURL();
     },
-    
-    
+
+
     /**
      * format message for display it in conversation stream
      * @return (string) formatted message
@@ -193,18 +193,18 @@ var FrontendHelpers = Class.extend({
         if (message.search(/\[code.*\]/g) != -1) {
             // extract usergiven language
             var language = this.extractLanguageFromCode(message);
-            
+
             // remove [code] tags
             message = message.replace(/\[\/?code\s*(language=([^\]]+))?\]/g, "");
-            
+
             // format code
             if (language !== false && language != 'auto')
                 message = hljs.highlight(language, message).value;
             else
                 message = hljs.highlightAuto(message).value;
-            
+
             message = '<pre><code>' + message + '</code></pre>';
-        
+
         // format message as text with emoticons, urls, ...
         } else {
             message = message.escape();
@@ -213,8 +213,8 @@ var FrontendHelpers = Class.extend({
         }
         return message;
     },
-    
-    
+
+
     /**
      * extract language value from [code language=java] tag
      * @return (string) the language or undefined

@@ -1,5 +1,5 @@
 #define MyAppName "S Ultimate Messenger"
-#define MyAppVersion "0.1alpha"
+#define MyAppVersion "0.0.4"
 #define MyAppPublisher "Tobias Zeising"
 #define MyAppURL "http://www.sum-messenger.org"
 #define LaunchProgram "Starte S Ultimate Messenger nach der Installation"
@@ -25,16 +25,16 @@ OutputBaseFilename=sum-setup-{#MyAppVersion}
 Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 
 [Files]
-Source: "*"; Excludes: ".git,setup.iss,config_ext*,sum-setup*,website*" ; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "bin/releases/SUM/win/SUM/*"; Excludes: "ffmpegsumo.dll,libEGL.dll,libGLESv2.dll" ; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 Source: "app/favicon.ico"; DestDir: "{app}"; DestName: "icon.ico"; Flags: ignoreversion
 
 [Tasks]
 Name: "desktopicon"; Description: "{#CreateDesktopIcon}"; GroupDescription: "{#DesktopIcon}"
 
 [Icons]
-Name: "{group}\SUM - S Ultimate Messenger"; Filename: "{app}\nw.exe"; WorkingDir: "{app}"; IconFilename: "{app}/icon.ico"
-Name: "{userstartup}\SUM - S Ultimate Messenger"; Filename: "{app}\nw.exe"; WorkingDir: "{app}"; IconFilename: "{app}/icon.ico"
-Name: "{userdesktop}\SUM - S Ultimate Messenger"; Filename: "{app}\nw.exe"; WorkingDir: "{app}"; IconFilename: "{app}/icon.ico"; Tasks: desktopicon
+Name: "{group}\SUM - S Ultimate Messenger"; Filename: "{app}\SUM.exe"; WorkingDir: "{app}"; IconFilename: "{app}/icon.ico"
+Name: "{userstartup}\SUM - S Ultimate Messenger"; Filename: "{app}\SUM.exe"; WorkingDir: "{app}"; IconFilename: "{app}/icon.ico"
+Name: "{userdesktop}\SUM - S Ultimate Messenger"; Filename: "{app}\SUM.exe"; WorkingDir: "{app}"; IconFilename: "{app}/icon.ico"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\nw.exe"; WorkingDir: "{app}"; Description: {#LaunchProgram}; Flags: postinstall shellexec
+Filename: "{app}\SUM.exe"; WorkingDir: "{app}"; Description: {#LaunchProgram}; Flags: postinstall shellexec
