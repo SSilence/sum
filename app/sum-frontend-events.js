@@ -160,6 +160,11 @@ var FrontendEvents = Class.extend({
             that.showCodeBox();
         });
 
+        // send file
+        $('#message-add-menue-file').click(function() {
+            alertify.error('Diese Funktion ist noch nicht implementiert');
+        });
+
         // menue: send code block
         $('#message-add-code-box-send').click(function() {
             // code given?
@@ -344,6 +349,9 @@ var FrontendEvents = Class.extend({
         $('.rooms').delegate("li .rooms-leave", "click", function(e) {
             var room = $(this).parent().find('.name').html();
             backend.leaveRoom(room);
+            $('.rooms li:first').click();
+            e.preventDefault();
+            return false;
         });
     },
 

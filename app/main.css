@@ -517,7 +517,7 @@ body {
             color:#5d5d5d;
             padding:0;
             left:100%;
-            top:60px;
+            top:40px;
             width:230px;
             margin-left:-235px;
             border-radius: 3px;
@@ -539,15 +539,15 @@ body {
             #main-menue-dropdown:after {
                 border-color: rgba(241, 241, 241, 0);
                 border-bottom-color: #f7f7f7;
-                border-width: 30px;
-                margin-left: -30px;
+                border-width: 15px;
+                margin-left: -15px;
             }
 
             #main-menue-dropdown:before {
                 border-color: rgba(218, 218, 218, 0);
                 border-bottom-color: #dadada;
-                border-width: 31px;
-                margin-left: -31px;
+                border-width: 16px;
+                margin-left: -16px;
             }
 
             #main-menue-dropdown li {
@@ -641,8 +641,8 @@ body {
         margin-top:2px;
         margin-bottom:2px;
         padding-top:7px;
-        padding-left:20px;
-        padding-right:20px;
+        padding-left:10px;
+        padding-right:14px;
         font-size:1.5em;
         color:#fff;
         border-bottom-left-radius: 4px;
@@ -716,9 +716,9 @@ body {
         color:#5d5d5d;
         padding:0;
         right:100%;
-        top:-80px;
+        top:-95px;
         width:175px;
-        margin-right:-182px;
+        margin-right:-172px;
         border-radius: 3px;
         z-index:30;
         -webkit-app-region: no-drag;
@@ -738,15 +738,15 @@ body {
         #message-add-menue-dropdown:after {
             border-color: rgba(241, 241, 241, 0);
             border-top-color: #f7f7f7;
-            border-width: 30px;
-            margin-left: -30px;
+            border-width: 15px;
+            margin-left: -15px;
         }
 
         #message-add-menue-dropdown:before {
             border-color: rgba(218, 218, 218, 0);
             border-top-color: #dadada;
-            border-width: 31px;
-            margin-left: -31px;
+            border-width: 16px;
+            margin-left: -16px;
         }
 
             #message-add-menue-dropdown li {
@@ -764,6 +764,11 @@ body {
                 #message-add-menue-dropdown li.inactive {
                     color:#A0A0A0;
                 }
+
+        #message-add-menue-file .ion-paperclip {
+            font-size:1.4em;
+        }
+
 
     #message-emoticons {
         display:none;
@@ -799,6 +804,8 @@ body {
             transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
             border: 1px solid #ccc;
             margin-right:0;
+            margin-left: 0;
+            border-left: 0;
         }
 
         #message-input-textfield:focus {
