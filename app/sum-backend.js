@@ -116,6 +116,9 @@ var Backend = Class.extend({
         // init node webkit tray icon
         this.initTray();
 
+        // load rooms where user was in on last logout
+        this.roomlist = this.loadRoomlist();
+
         // start backend server for chat communication
         var that = this;
         backendServer.start(this, backendHelpers, function(port) {
@@ -569,6 +572,26 @@ var Backend = Class.extend({
 
 
     /**
+     * save given roomlist
+     * @param (array) rooms
+     */
+    saveRoomlist: function(roomlist) {
+        localStorage.roomlist = JSON.stringify(roomlist);
+    },
+
+
+    /**
+     * load roomlist from local storage
+     * @return (array) roomlist
+     */
+    loadRoomlist: function() {
+        if (typeof localStorage.roomlist != 'undefined' && localStorage.roomlist !== null)
+            return JSON.parse(localStorage.roomlist);
+        return [];
+    },
+
+
+    /**
      * get avatar of a given user or default avatar avatar.png
      * @return (string) base64 encoded avatar of the user (if available)
      * @param username (string) the username
@@ -673,6 +696,7 @@ var Backend = Class.extend({
 
         // add room to roomlist
         this.roomlist[this.roomlist.length] = { 'name': room };
+        this.saveRoomlist(this.roomlist);
         this.updateRoomlist();
     },
 
@@ -686,6 +710,7 @@ var Backend = Class.extend({
         room = room.trim();
         this.inviteUsers(room, users);
         this.roomlist[this.roomlist.length] = { 'name': room };
+        this.saveRoomlist(this.roomlist);
         this.updateRoomlist();
     },
 
@@ -731,6 +756,7 @@ var Backend = Class.extend({
             }
         }
         this.roomlist = newRoomlist;
+        this.saveRoomlist(this.roomlist);
         this.updateRoomlist();
     },
 
