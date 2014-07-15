@@ -4,20 +4,45 @@ SUM - S Ultimate Messenger
 Copyright (c) 2013 Tobias Zeising, tobias.zeising@aditu.de  
 http://www.aditu.de  
 Licensed under the GPLv3 license  
-Version 0.3alpha
+Version 0.0.4
 
 
 SUM is a simple instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a file which will be stored at a shared network folder.
 
 
 
-CONFIG AND DEBUGGING
---------------------
+RUN SUM
+-------
+
+ 1. install [node.js][1]
+ 2. install node webkit: ```npm install nodewebkit -g```
+ 3. now you can start sum with ```nodewebkit``` from command line
+
+
+
+BUILD RELEASE (only Windows)
+----------------------------
+
+this has to be done only once:
+ 1. install [InnoSetup][2]
+ 2. add InnoSetup program directory to path variable
+ 3. install [node.js][1]
+ 5. install grunt: ```npm install -g grunt-cli```
+
+for creating a new build you have to do following:
+ 1. set version in ```README.md```, ```index.html``` (title), ```package.json``` and ```setup.iss```
+ 2. build sum: ```grunt``` (you can find the sum application in ```bin/releases/SUM/win/SUM/```)
+ 3. build setup: ```grunt setup``` creates the setup file
+
+
+
+CONFIG
+------
 
 You can configure SUM by changing app/config.js. You can also give a other config as command line argument:
 
 ```
-nw.exe ./../config_ext.js
+nodewebkit ./../config_ext.js
 ```
 
 config_ext.js content could be:
@@ -30,7 +55,7 @@ exports.extend = function(config) {
 
 For only setting another username just use a username as parameter:
 ```
-nw.exe KarlMustermann
+nodewebkit KarlMustermann
 ```
 
 Following configuration parameters are available:
@@ -48,13 +73,6 @@ Following configuration parameters are available:
 
 You can access the debugger by setting ``"toolbar": true`` in ``package.json``
 
-
-
-SETUP
------
-
-Setup file can be created with Inno Setup: http://www.jrsoftware.org/isinfo.php
-Use the setup.iss configuration file.
 
 
 
@@ -80,3 +98,9 @@ Special thanks to the great programmers of this libraries which will be used in 
 * Simple Class Creation and Inheritance: http://ejohn.org/blog/simple-javascript-inheritance/
 * WebIconset.com Emoticons: http://www.webiconset.com/emoticons-smilies-icon-set/
 * Website Template: http://html5up.net/
+* grunt: http://gruntjs.com/
+* grunt node webkit builder: https://github.com/mllrsohn/grunt-node-webkit-builder
+* grunt shell: https://github.com/sindresorhus/grunt-shell
+
+  [1]: http://nodejs.org/
+  [2]: http://www.jrsoftware.org/isinfo.php

@@ -10,7 +10,7 @@ var lockFile = require('lockfile');
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
 var BackendHelpers = Class.extend({
-    
+
     /**
      * sort userlist by username
      * @param userlist (array) unsorted userlist
@@ -25,8 +25,8 @@ var BackendHelpers = Class.extend({
             return 0;
         });
     },
-    
-    
+
+
     /**
      * merge user and extended userinfos (as avatar, ip, ...)
      * @return (object) with user and userinfos data
@@ -37,10 +37,10 @@ var BackendHelpers = Class.extend({
         user.ip = userinfos.ip;
         user.port = userinfos.port;
         user.key = userinfos.key;
-        
+
         if (typeof userinfos.avatar != 'undefined')
             user.avatar = userinfos.avatar;
-        
+
         return user;
     },
 
@@ -52,8 +52,8 @@ var BackendHelpers = Class.extend({
     generateKeypair: function() {
         return new NodeRSA({b: 2048});
     },
-    
-    
+
+
     /**
      * returns current ip
      * @return (string) the ip of the current user
@@ -66,20 +66,20 @@ var BackendHelpers = Class.extend({
             ifaces[dev].forEach(function(details){
                 if (details.family!='IPv4')
                     return;
-                
+
                 for (var i = 0; i<excluded.length; i++) {
-                    if (details.address.indexOf(excluded[i])==0) {
+                    if (details.address.indexOf(excluded[i])===0) {
                         return;
                     }
                 }
-                
+
                 ip = details.address;
             });
         }
         return ip;
     },
-    
-    
+
+
     /**
      * returns current systems username
      * @return (string) the username of the current user (from System environment variables)
@@ -90,8 +90,8 @@ var BackendHelpers = Class.extend({
         else
             return config.username;
     },
-    
-    
+
+
     /**
      * write object as json in file
      * @param file (string) filename for writing the content
@@ -104,7 +104,7 @@ var BackendHelpers = Class.extend({
             error = function(error) {
                 throw new Error(error);
             };
-            
+
         fs.writeFile(file, JSON.stringify(content, null, 4), 'utf8', function(err) {
             if(err)
                 error('Fehler beim Schreiben der Userliste: ' + err);
@@ -112,8 +112,8 @@ var BackendHelpers = Class.extend({
                 success();
         });
     },
-    
-    
+
+
     /**
      * read json encoded file and return as object
      * @param file (string) path and filename
@@ -125,7 +125,7 @@ var BackendHelpers = Class.extend({
             error = function() {
                 success([]);
             };
-        
+
         fs.readFile(file, 'utf8', function (err, data) {
             var res = [];
             if (err) {
@@ -143,7 +143,7 @@ var BackendHelpers = Class.extend({
         });
     },
 
-    
+
     /**
      * read file and return as ByteBuffer
      * @param file (string) path and filenam
@@ -160,8 +160,8 @@ var BackendHelpers = Class.extend({
             success(data);
         });
     },
-    
-    
+
+
     /**
      * get lock for user list file.
      * @param callback (function) callback after locking successfully or not successfully the file
@@ -169,16 +169,16 @@ var BackendHelpers = Class.extend({
     lock: function(callback) {
         lockFile.lock(config.lock_file, { stale: config.lock_stale }, callback);
     },
-    
-    
+
+
     /**
      * release lock for user list file
      */
     unlock: function() {
         lockFile.unlock(config.lock_file, function(err) {});
     },
-    
-    
+
+
     /**
      * encrypt with RSA
      * @return encrypted string
@@ -188,8 +188,8 @@ var BackendHelpers = Class.extend({
     encrypt: function(key, data) {
         return key.encrypt(data, 'base64');
     },
-    
-    
+
+
     /**
      * decrypt with RSA
      * @return decrypted string
@@ -199,8 +199,8 @@ var BackendHelpers = Class.extend({
     decrypt: function(key, data) {
         return key.decrypt(data).toString();
     },
-    
-    
+
+
     /**
      * search user in userlist
      * @return (object or boolean) user object or false if none was found
@@ -216,8 +216,8 @@ var BackendHelpers = Class.extend({
         }
         return false;
     },
-    
-    
+
+
     /**
      * removes a room from given list
      * @return (array) list without given room
@@ -233,8 +233,8 @@ var BackendHelpers = Class.extend({
         }
         return newList;
     },
-    
-    
+
+
     /**
      * returns true if user is in list
      * @return (boolean) true if user was found, false otherwise
@@ -249,8 +249,8 @@ var BackendHelpers = Class.extend({
         }
         return false;
     },
-    
-    
+
+
     /**
      * returns all users, which are not in list but in compare
      * @return (array) list with all users, which are in the first list but not in the second
@@ -265,7 +265,7 @@ var BackendHelpers = Class.extend({
                 if(compare[i].username==list[n].username)
                     inList = true;
             }
-            if (inList==false)
+            if (inList===false)
                 notInList[notInList.length] = compare[i];
         }
         return notInList;

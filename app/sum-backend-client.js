@@ -5,13 +5,13 @@
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
 var BackendClient = Class.extend({
-    
+
     /**
      * backends helpers
      */
     backendHelpers: false,
-    
-    
+
+
     /**
      * initialize client
      * @param backendHelpers (object) the current backendHelpers
@@ -19,8 +19,8 @@ var BackendClient = Class.extend({
     init: function(backendHelpers) {
         this.backendHelpers = backendHelpers;
     },
-    
-    
+
+
     /**
      * send new message or information to another user
      * @param receiver (mixed) the target user (with ip, port and key)
@@ -31,7 +31,7 @@ var BackendClient = Class.extend({
     send: function(receiver, message, success, error) {
         // encrypt message
         var encMessage = this.backendHelpers.encrypt(new NodeRSA(receiver.key), message);
-        
+
         // send message
         var req = http.request({
             host: receiver.ip,
@@ -52,12 +52,12 @@ var BackendClient = Class.extend({
                 error('Bei der Kommunikation mit ' + receiver.username.escape() + ' ist ein Fehler aufgetreten');
             }
         });
-        
+
         // on error
         req.on('error', function(e) {
             error('Der Benutzer ' + receiver.username.escape() + ' ist nicht erreichber. Fehler: ' + e);
         });
-        
+
         req.write(encMessage);
         req.end();
     },

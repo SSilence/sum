@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>S ultimate messenger 0.3alpha</title>
+        <title>S ultimate messenger 0.0.4</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="libs/ionicons/ionicons.min.css">
@@ -16,32 +16,32 @@
         <link rel="stylesheet" href="main.css">
     </head>
     <body>
-    
+
         <!-- left menue -->
         <div id="nav">
-            
+
             <!-- header -->
             <div class="heading" href="#"><span class="ion-speakerphone"></span>SUM Messenger</div>
-            
+
             <!-- contact list -->
             <div id="contacts-wrapper">
                 <ul class="contacts">
-                    
+
                 </ul>
             </div>
-            
+
             <!-- rooms -->
             <div id="rooms">
                 <h1>R&auml;ume <span id="rooms-add" class="ion-plus-round"></span></h1>
-                
+
                 <div id="rooms-wrapper">
                     <ul class="rooms">
-                        
+
                     </ul>
                 </div>
             </div>
         </div>
-        
+
         <!-- chat area -->
         <div id="main">
             <!-- chat header -->
@@ -67,58 +67,56 @@
             <!-- chat conversation -->
             <div id="content-wrapper">
                 <ul id="content">
-                    
+
                 </ul>
             </div>
-            
+
             <!-- input area for new messages -->
             <div id="message">
                 <!-- emoticons popup -->
                 <div id="message-emoticons"></div>
-                
+
                 <!-- input area -->
                 <div id="message-input">
                     <!-- button: inserting code -->
                     <div id="message-add-menue" class="ion-chevron-up"></div>
-                    
+
                     <!-- input field/text -->
                     <input type="text" id="message-input-textfield" placeholder="schreibe eine Nachricht..." />
-                    
+
                     <!-- button: show/hide emoticons popup -->
                     <div id="message-toggleemots"></div>
-                    
+
                     <!-- send message -->
                     <div id="message-send" class="ion-paper-airplane"></div>
-                    
+
                     <!-- popup for inserting code -->
                     <div id="message-add-code-box">
                         <div id="message-add-code-box-inner">
                             <div id="message-add-code-box-select"><select id="message-add-code-box-language" placeholder="Syntax-Highlighting"></select></div>
-                            
+
                             <textarea id="message-add-code-box-area"></textarea>
-<<<<<<< HEAD
-                            <input id="message-add-code-box-send" class="save" type="button" value="senden" /> <input id="message-add-code-box-cancel" class="cancel" type="button" value="abbrechen" /> <div id="message-add-code-box-select"><select id="message-add-code-box-language" placeholder="Syntax-Highlighting"></select></div>
-=======
-                            
+
                             <input id="message-add-code-box-send" class="save" type="button" value="senden" /> <input id="message-add-code-box-cancel" class="cancel" type="button" value="abbrechen" />
->>>>>>> 4942596550f5a557a3528e0bc5ee250fe34a0034
                         </div>
                     </div>
-                    
+
                     <!-- menue for inserting code, files, ... -->
                     <ul id="message-add-menue-dropdown">
                         <li id="message-add-menue-code"><span class="ion-android-developer"></span> Code senden</li>
+                        <li id="message-add-menue-file"><span class="ion-paperclip"></span> Datei senden</li>
+                        <li id="message-add-menue-clear"><span class="ion-trash-b"></span> Konversation l&ouml;schen</li>
                     </ul>
                 </div>
             </div>
         </div>
-               
+
         <!-- hidden file input dialog -->
         <input style="display:none;" id="fileDialog" accept=".jpg,.jpeg,.png,.gif" type="file" />
-        
+
         <!-- javascripts -->
         <script src="config.js"></script>
-        
+
         <script src="nw-desktop-notifications.js"></script>
         <script src="string-escape.js"></script>
         <script src="libs/class.js"></script>
@@ -130,7 +128,7 @@
         <script src="libs/selectize/selectize.js"></script>
         <script src="libs/crypto-js/md5.js"></script>
         <script src="libs/highlight/highlight.pack.js"></script>
-        
+
         <script src="sum-init.js"></script>
         <script src="sum-emoticons.js"></script>
         <script src="sum-backend.js"></script>

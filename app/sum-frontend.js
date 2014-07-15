@@ -10,26 +10,26 @@ var Frontend = Class.extend({
      * frontends helpers
      */
     frontendHelpers: false,
-    
-    
+
+
     /**
      * counts unread messages for every room/person
      */
     unreadMessagesCounter: {},
-    
-    
+
+
     /**
      * id of current visible conversation (on app startup user is in room all)
      */
     currentConversation: config.room_all,
-    
-    
+
+
     /**
      * window height before last resize event
      */
     lastWindowHeight: $(window).height(),
-    
-    
+
+
     /**
      * initialize frontend
      * @param backend (object) the current backend
@@ -37,38 +37,28 @@ var Frontend = Class.extend({
      * @param frontendEvents (object) the event handling of frontend
      * @param frontendHelpers (object) the helpers of frontend
      */
-    init: function(backend, backendHelpers, frontendEvents, frontendHelpers) {    
+    init: function(backend, backendHelpers, frontendEvents, frontendHelpers) {
        this.frontendHelpers = frontendHelpers;
-       
+
         // initialize div inline scroller
         $("#contacts-wrapper, #rooms-wrapper, #content-wrapper").mCustomScrollbar({
             advanced:{
                 updateOnContentResize: true,
             }
         });
-        
+
         // load emoticons
         this.initEmoticons();
-        
+
         // initialize language-selection for syntax-highlighting
         this.initSelectForCodeBoxLanguage();
-        
+
         // initialize all events
         frontendEvents.initAllEvents(backend, backendHelpers, this, frontendHelpers);
-        
+
         // initialize backend callbacks
-<<<<<<< HEAD:app/sim-frontend.js
-        sim.frontend.initBackendCallbacks(backend);
-        
-        // initialize language-selection for syntax-highlighting
-        sim.frontend.initSelectForCodeBoxLanguage();
-        
-        // set room_all as default conversation
-        sim.frontend.currentConversation = config.room_all;
-=======
         this.initBackendCallbacks(backend);
->>>>>>> 4942596550f5a557a3528e0bc5ee250fe34a0034:app/sum-frontend.js
-        
+
         // Userliste und Rooms updaten
         backend.updateUserlist(this.currentConversation);
         backend.updateRoomlist();
@@ -82,45 +72,45 @@ var Frontend = Class.extend({
      */
     initBackendCallbacks: function(backend) {
         var that = this;
-        
+
         // register callback for errors
         backend.onError(function(error) {
             alertify.error(error);
         });
-        
+
         // new room invite
         backend.onRoomInvite(function(room, user) {
             var text = user.escape() + ' hat dich in den Raum ' + room.escape() + ' eingeladen';
             alertify.log(text);
             backend.notification("group.png", text);
         });
-        
+
         // user is now online
         backend.onUserOnlineNotice(function(avatar, text) {
             text = text.escape() + ' ist jetzt online';
             alertify.log(text);
             backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", text);
         });
-        
+
         // register callback for a user goes offline
         backend.onUserOfflineNotice(function(avatar, text) {
             text = text.escape() + ' ist jetzt offline';
             alertify.log(text);
             backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", text);
         });
-        
+
         // register callback for incoming new message
         backend.onNewMessage(function(message) {
             if (message.sender != backend.getUsername())
                 backend.notification(backend.getAvatar(message.sender), "Neue Nachricht von " + message.sender.escape(), message.text);
-            
+
             // conversation = sender
             var conversationId = message.sender;
-            
+
             // conversation = receiver if it is a room
             if (backend.doesRoomExists(message.receiver))
                 conversationId = message.receiver;
-            
+
             if(that.currentConversation == conversationId)
                 backend.getConversation(that.currentConversation);
             else {
@@ -132,30 +122,30 @@ var Frontend = Class.extend({
                 backend.updateRoomlist();
             }
         });
-        
+
         // register callback for room list update
         backend.onGetRoomlistResponse(function(rooms, invitedRooms) {
             that.updateRoomlist(rooms, invitedRooms);
         });
-        
+
         // register callback for user list update
         backend.onGetUserlistResponse(function(users) {
             that.updateUserlist(users);
         });
-        
+
         // register callback for getting conversation
         backend.onGetContentResponse(function(id, messages) {
             if (id==that.currentConversation)
                 that.updateConversation(messages, backend);
         });
-        
+
         // backend has update for userlist
         backend.onHasUserlistUpdate(function() {
             backend.updateUserlist(that.currentConversation);
         });
     },
-    
-    
+
+
     /**
      * load all available emoticons
      */
@@ -168,41 +158,12 @@ var Frontend = Class.extend({
             lastEmot = emoticon;
         });
     },
-    
-    
+
+
     /**
      * create a select input for code box language
      */
     initSelectForCodeBoxLanguage: function() {
-<<<<<<< HEAD:app/sim-frontend.js
-        // get all users from backend
-        var languages = {
-            xml: 'HTML und XML',
-            css: 'CSS',
-            javascript: 'JavaScript',
-            php: 'PHP',
-            json: 'JSON',
-            java: 'Java',
-            sql: 'SQL'
-        }
-        
-        // create select with all users
-        var select = $('#message-add-code-box-language');
-        
-        var option = document.createElement("option");
-            option.setAttribute('value', '');
-            option.innerHTML = "Syntax-Highlighting";
-            select.append(option);
-            
-        for (var languageName in languages) {
-            var option = document.createElement("option");
-            option.setAttribute('value', languageName);
-            option.innerHTML = languages[languageName];
-            select.append(option);
-        }
-        
-         $(select).selectize({
-=======
         var select = $('#message-add-code-box-language');
 
         $.each(config.highlight_languages, function(key, value) {
@@ -211,14 +172,13 @@ var Frontend = Class.extend({
             option.innerHTML = value;
             select.append(option);
         });
-        
+
         $(select).selectize({
->>>>>>> 4942596550f5a557a3528e0bc5ee250fe34a0034:app/sum-frontend.js
             create: true
         });
     },
-    
-    
+
+
     /**
      * update current userlist
      * @param users (array) list of users for updating
@@ -226,7 +186,7 @@ var Frontend = Class.extend({
     updateUserlist: function(users) {
         // save scroll state
         var scrollPosition = $("#contacts-wrapper").scrollTop();
-        
+
         // update userlist
         $('.contacts').html('');
         var that = this;
@@ -235,17 +195,17 @@ var Frontend = Class.extend({
             var unread = "";
             if (typeof that.unreadMessagesCounter[user.username] != "undefined")
                 unread = '<div class="contacts-unread">' + that.unreadMessagesCounter[user.username] + '</div>';
-            
+
             // avatar url
             var avatar = "avatar.png";
             if (typeof user.avatar != "undefined")
                 avatar = user.avatar;
-            
+
             // active
             var active = '';
             if(that.currentConversation==user.username)
                 active = 'class="active"';
-            
+
             $('.contacts').append('<li ' + active + '>\
                 <div class="online contacts-state"></div>\
                 <img src="' + avatar + '" class="contacts-avatar avatar" />\
@@ -253,12 +213,12 @@ var Frontend = Class.extend({
                 ' + unread + '\
             </li>');
         });
-        
+
         // restore scroll state
         $("#contacts-wrapper").mCustomScrollbar("scrollTo", scrollPosition);
     },
-    
-    
+
+
     /**
      * update roomlist
      * @param rooms (array) list of rooms for updating
@@ -266,7 +226,7 @@ var Frontend = Class.extend({
     updateRoomlist: function(rooms) {
         // save scroll state
         var scrollPosition = $("#rooms-wrapper").scrollTop();
-        
+
         // update roomlist
         $('.rooms').html('');
         var invited = [];
@@ -283,7 +243,7 @@ var Frontend = Class.extend({
             } else {
                 invited[invited.length] = room;
             }
-            
+
             // unread
             var unread = "";
             if (typeof that.unreadMessagesCounter[room.name] != "undefined")
@@ -293,17 +253,17 @@ var Frontend = Class.extend({
             var active = '';
             if(that.currentConversation == room.name)
                 active = 'class="active"';
-                
+
             $('.rooms').append('<li ' + active + '>\
                 <div class="' + state + '"></div> \
                 <div class="rooms-name"><span class="name">' + room.name.escape() + '</span> ' + edit + ' </div>\
                 ' + unread + '\
             </li>');
         });
-        
+
         // remove all room invite popups on redraw
         $('.rooms-popup.invite').remove();
-        
+
         // show invite dialog
         $.each(invited, function(index, room) {
             var div = $(that.frontendHelpers.createRoomsPopup($('#rooms-add'), "invite"));
@@ -311,12 +271,12 @@ var Frontend = Class.extend({
             div.append('<input class="name" type="hidden" value="' + room.name.escape() + '" />');
             div.append('<input class="save" type="button" value="annehmen" /> <input class="cancel" type="button" value="ablehnen" />');
         });
-        
+
         // restore scroll state
         $("#rooms-wrapper").mCustomScrollbar("scrollTo", scrollPosition);
     },
-    
-    
+
+
     /**
      * update current conversation
      * @param messages (array) list of all messages
@@ -328,13 +288,13 @@ var Frontend = Class.extend({
         delete this.unreadMessagesCounter[this.currentConversation];
         backend.updateUserlist(this.currentConversation);
         backend.updateRoomlist();
-        
+
         // set metadata: avatar
         var avatar = 'group.png';
         if($('.contacts .active').length > 0)
             avatar = $('.contacts .active .avatar').attr('src');
         avatar = '<img src="' + avatar + '" class="avatar" />';
-        
+
         // set metadata: state
         var state = 'online';
         var stateElement = $('.active > div:first');
@@ -345,35 +305,14 @@ var Frontend = Class.extend({
                 state = 'notavailable';
             }
         }
-        
+
         // write metadata
         $('#main-metadata').html(avatar + '<span>' + this.currentConversation + '</span><span class="' + state + '"></span>');
-        
+
         // show messages (highlite new messages)
         $('#content').html('');
         var that = this;
         $.each(messages, function(index, message) {
-<<<<<<< HEAD:app/sim-frontend.js
-            var messageText = message.text;
-            if (sim.frontend.helpers.hasCode(messageText)) {
-                var language = sim.frontend.helpers.getBBCodeLanguage(messageText);
-                messageText = sim.frontend.helpers.removeBBCode(messageText);
-                if (language == "auto") {
-                    messageText = '<pre><code>' + hljs.highlightAuto(messageText).value + '</code></pre>';
-                    //alertify.log("auto:" + messageText);
-                    //alertify.log(hljs.highlightAuto(messageText).language);
-                } else {
-                    messageText = '<pre><code>' + hljs.highlight(language, messageText).value + '</code></pre>';
-                    //alertify.log(language + ": " + messageText);
-                    //alertify.log(hljs.highlight(language, messageText).language);
-                }
-            } else {        
-                messageText = messageText.escape();
-                messageText = sim.frontend.helpers.emoticons(messageText);
-                messageText = sim.frontend.helpers.urlify(messageText);
-            }
-=======
->>>>>>> 4942596550f5a557a3528e0bc5ee250fe34a0034:app/sum-frontend.js
             $('#content').append('<li class="entry">\
                 <div class="entry-metadata">\
                     <img src="' + backend.getAvatar(message.sender) + '" class="avatar" />\
@@ -384,16 +323,16 @@ var Frontend = Class.extend({
                     ' + that.frontendHelpers.formatMessage(message.text) + '\
                 </div>\
             </li>');
-            
+
             // set time ago updater
             var dateTimeElement = $('#content .entry-datetime:last');
             that.frontendHelpers.startDateAgoUpdater(message.datetime, dateTimeElement);
-            
+
             // scroll 2 bottom
             if(index==messages.length-1) {
                 window.setTimeout(function() { $("#content-wrapper").mCustomScrollbar("scrollTo","bottom"); }, 500);
             }
         });
     }
-    
+
 });

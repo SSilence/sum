@@ -4,7 +4,7 @@
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-var emoticons = {   
+var emoticons = {
     ':)': 'emoticons/smile.png',
     ':-)': 'emoticons/smile.png',
     ':(': 'emoticons/sad.png',
