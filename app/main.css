@@ -716,9 +716,9 @@ body {
         color:#5d5d5d;
         padding:0;
         right:100%;
-        top:-95px;
-        width:175px;
-        margin-right:-172px;
+        top:-135px;
+        width:210px;
+        margin-right:-202px;
         border-radius: 3px;
         z-index:30;
         -webkit-app-region: no-drag;
@@ -765,7 +765,7 @@ body {
                     color:#A0A0A0;
                 }
 
-        #message-add-menue-file .ion-paperclip {
+        #message-add-menue-file span {
             font-size:1.4em;
         }
 

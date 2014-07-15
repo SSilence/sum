@@ -797,5 +797,14 @@ var Backend = Class.extend({
      */
     getUsername: function() {
         return this.backendHelpers.getUsername();
+    },
+
+
+    /**
+     * clear given conversation
+     * @param (string) conversation for purging
+     */
+    clearConversation: function(conversation) {
+        this.conversations[conversation] = [];
     }
 });

@@ -145,27 +145,33 @@ var FrontendEvents = Class.extend({
             $('#main-menue-dropdown').hide();
         });
 
-        // close
+        // menue: quit
         $('#main-close').click(function() {
             backend.close();
         });
 
-        // message-add-menue: toggle
+        // message menue: toggle
         $('#message-add-menue').click(function() {
             $('#message-add-menue-dropdown').toggle();
         });
 
-        // message-add-menue-code
+        // message menue: add code
         $('#message-add-menue-code').click(function() {
             that.showCodeBox();
         });
 
-        // send file
+        // message menue: send file
         $('#message-add-menue-file').click(function() {
             alertify.error('Diese Funktion ist noch nicht implementiert');
         });
 
-        // menue: send code block
+        // message menue: clear conversation
+        $('#message-add-menue-clear').click(function() {
+            backend.clearConversation(frontend.currentConversation);
+            backend.getConversation(frontend.currentConversation);
+        });
+
+        // message menue: send code block
         $('#message-add-code-box-send').click(function() {
             // code given?
             if ($('#message-add-code-box-area').val().trim().length===0) {
@@ -188,7 +194,7 @@ var FrontendEvents = Class.extend({
             backend.sendMessage(frontend.currentConversation, message);
         });
 
-        // menue: cancel code block
+        // message menue: cancel code block
         $('#message-add-code-box-cancel').click(function() {
             $('#message-add-code-box').hide();
             $('#message-add-code-box-area').val('');
