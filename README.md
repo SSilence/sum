@@ -34,6 +34,14 @@ for creating a new build you have to do following:
  2. build sum: ```grunt``` (you can find the sum application in ```bin/releases/SUM/win/SUM/```)
  3. build setup: ```grunt setup``` creates the setup file
 
+If you are behind a proxy you have to set your proxy server for npm and nodewebkit in c:\Users\username\.npmrc
+```
+proxy = http://username:secret@yourproxy.de:8080/
+https-proxy = https://username:secret@yourproxy.de:8080/
+```
+
+You need also proxy settings for installing nodewebkit and using grunt. You have to set ```http_proxy``` as environment variable.
+
 
 
 CONFIG
@@ -72,7 +80,6 @@ Following configuration parameters are available:
 * ``highlight_languages``: supported highlight.js languages in code input selection
 
 You can access the debugger by setting ``"toolbar": true`` in ``package.json``
-
 
 
 
