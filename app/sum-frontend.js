@@ -108,15 +108,15 @@ var Frontend = Class.extend({
 
         // register callback for incoming new message
         backend.onNewMessage(function(message) {
-            if (message.sender != backend.getUsername())
-                backend.notification(backend.getAvatar(message.sender), "Neue Nachricht von " + message.sender.escape(), message.text);
-
-            // conversation = sender
+			// conversation = sender
             var conversationId = message.sender;
 
             // conversation = receiver if it is a room
             if (backend.doesRoomExists(message.receiver))
                 conversationId = message.receiver;
+		
+            if (message.sender != backend.getUsername())
+                backend.notification(backend.getAvatar(message.sender), "Neue Nachricht von " + message.sender.escape(), message.text, conversationId);
 
             if(that.currentConversation == conversationId)
                 backend.getConversation(that.currentConversation);
@@ -158,6 +158,15 @@ var Frontend = Class.extend({
 			if  (that.currentConversation == user.username) {
 				// ...if so, switch conversation to "room_all"
 				that.currentConversation = config.room_all;
+				backend.getConversation(that.currentConversation);
+				backend.updateUserlist(that.currentConversation);
+			}
+		});
+		
+		//switchConversation to user or room
+		backend.onSwitchConversation(function(conversationName) {
+			if  (that.currentConversation != conversationName) {
+				that.currentConversation = conversationName;
 				backend.getConversation(that.currentConversation);
 				backend.updateUserlist(that.currentConversation);
 			}
