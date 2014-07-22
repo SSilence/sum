@@ -99,6 +99,53 @@ var FrontendHelpers = Class.extend({
 
 
     /**
+<<<<<<< HEAD:app/sim-frontend-helpers.js
+     * search for BB-Tag "code"
+     * @return (boolean) true or false
+     * @param text (string) text with BB-Tags
+     */
+    hasCode: function(text) {        
+        
+        if (text.search(/\[code.*\]/) != -1) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    
+
+    /**
+     * Remove BB-Tag "code"
+     * @return (string) text surounded with code-block (<pre><code>)
+     * @param text (string) text with bb-tag "code"
+     */
+    removeBBCode: function(text) {
+        
+        text = text.replace(/\[code.*\] /g, "");
+        text = text.replace(/ \[\/code\]/g, "");
+        
+        return text;
+    },
+    
+    
+    /**
+     * Remove BB-Tag "code"
+     * @return (string) text surounded with code-block (<pre><code>)
+     * @param text (string) text with bb-tag "code"
+     */
+    getBBCodeLanguage: function(text) {
+        
+        text = text.match(/\[code language=.*\] /g, "");
+        text = text[0].replace(/\[code language\=/g, "");
+        text = text.replace(/\] /g, "");
+        
+        return text;
+    },
+    
+    
+    /**
+=======
+>>>>>>> 4942596550f5a557a3528e0bc5ee250fe34a0034:app/sum-frontend-helpers.js
      * resize image to smaller size in frontend
      * @param img (DOMNode) image for resizing
      * @param maxWidth (int) maximal allowed width

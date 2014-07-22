@@ -169,6 +169,7 @@ var FrontendEvents = Class.extend({
         $('#message-add-menue-clear').click(function() {
             backend.clearConversation(frontend.currentConversation);
             backend.getConversation(frontend.currentConversation);
+            $('#message-add-menue-dropdown').hide();
         });
 
         // message menue: send code block
