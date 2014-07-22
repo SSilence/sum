@@ -235,6 +235,14 @@ var Backend = Class.extend({
     onUserIsRemoved: function(callback) {
         this.userIsRemoved = callback;
     },
+    
+    
+    /**
+     * register callback for when user is removed
+     */
+    onSwitchConversation: function(callback) {
+        this.switchConversation = callback;
+    },
 
 
 
@@ -420,12 +428,18 @@ var Backend = Class.extend({
      * @param image (string) little image shown in the notification
      * @param title (string) title of the notification
      * @param text (string) text of the notification
+     * @param conversation (string) conversation for showing on click on notification window
      */
-    notification: function(image, title, text) {
-        if(this.enableNotifications===true)
-            window.LOCAL_NW.desktopNotifications.notify(image, title, text, function(){
+    notification: function(image, title, text, conversation) {
+        if(this.enableNotifications===true) {
+            var that = this;        
+            window.LOCAL_NW.desktopNotifications.notify(image, title, text, function() {
                 gui.Window.get().show();
+                if (typeof conversation != 'undefined') {
+                    that.switchConversation(conversation);
+                }
             });
+        }
     },
 
 
