@@ -255,7 +255,7 @@ var BackendHelpers = Class.extend({
      * returns all users, which are not in list but in compare
      * @return (array) list with all users, which are in the first list but not in the second
      * @param list (array) with users with property username
-     * @param room (array) with users with property username
+     * @param compare (array) with users with property username
      */
     getUsersNotInListOne: function(list, compare) {
         var notInList = [];

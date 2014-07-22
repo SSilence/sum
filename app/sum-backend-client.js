@@ -60,5 +60,5 @@ var BackendClient = Class.extend({
 
         req.write(encMessage);
         req.end();
-    },
+    }
 });

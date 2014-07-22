@@ -114,7 +114,6 @@ var FrontendHelpers = Class.extend({
             ratio = maxWidth / width;   // get ratio for scaling image
             $(img).css("width", maxWidth); // Set new width
             $(img).css("height", height * ratio);  // Scale height based on ratio
-            height = height * ratio;    // Reset height to match scaled image
         }
 
         width = $(img).width();    // Current image width
@@ -125,7 +124,6 @@ var FrontendHelpers = Class.extend({
             ratio = maxHeight / height; // get ratio for scaling image
             $(img).css("height", maxHeight);   // Set new height
             $(img).css("width", width * ratio);    // Scale width based on ratio
-            width = width * ratio;    // Reset width to match scaled image
         }
     },
 
@@ -171,8 +169,8 @@ var FrontendHelpers = Class.extend({
         var ori = new Image();
         ori.src = $(image).attr('src');
 
-        factorX = ori.width / $(image).width();
-        factorY = ori.height / $(image).height();
+        var factorX = ori.width / $(image).width();
+        var factorY = ori.height / $(image).height();
 
         var canvas = document.createElement("canvas");
         canvas.width  = "200";

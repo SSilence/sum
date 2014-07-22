@@ -43,7 +43,7 @@ var Frontend = Class.extend({
         // initialize div inline scroller
         $("#contacts-wrapper, #rooms-wrapper, #content-wrapper").mCustomScrollbar({
             advanced:{
-                updateOnContentResize: true,
+                updateOnContentResize: true
             }
         });
 
@@ -82,21 +82,21 @@ var Frontend = Class.extend({
         backend.onRoomInvite(function(room, user) {
             var text = user.escape() + ' hat dich in den Raum ' + room.escape() + ' eingeladen';
             alertify.log(text);
-            backend.notification("group.png", text);
+            backend.notification("group.png", "", text);
         });
 
         // user is now online
         backend.onUserOnlineNotice(function(avatar, text) {
             text = text.escape() + ' ist jetzt online';
             alertify.log(text);
-            backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", text);
+            backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", "", text);
         });
 
         // register callback for a user goes offline
         backend.onUserOfflineNotice(function(avatar, text) {
             text = text.escape() + ' ist jetzt offline';
             alertify.log(text);
-            backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", text);
+            backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", "", text);
         });
 
         // register callback for incoming new message
@@ -124,8 +124,8 @@ var Frontend = Class.extend({
         });
 
         // register callback for room list update
-        backend.onGetRoomlistResponse(function(rooms, invitedRooms) {
-            that.updateRoomlist(rooms, invitedRooms);
+        backend.onGetRoomlistResponse(function(rooms) {
+            that.updateRoomlist(rooms);
         });
 
         // register callback for user list update
@@ -185,7 +185,8 @@ var Frontend = Class.extend({
      */
     updateUserlist: function(users) {
         // save scroll state
-        var scrollPosition = $("#contacts-wrapper").scrollTop();
+        var contactsWrapper = $("#contacts-wrapper");
+        var scrollPosition = contactsWrapper.scrollTop();
 
         // update userlist
         $('.contacts').html('');
@@ -215,7 +216,7 @@ var Frontend = Class.extend({
         });
 
         // restore scroll state
-        $("#contacts-wrapper").mCustomScrollbar("scrollTo", scrollPosition);
+        contactsWrapper.mCustomScrollbar("scrollTo", scrollPosition);
     },
 
 
@@ -225,7 +226,8 @@ var Frontend = Class.extend({
      */
     updateRoomlist: function(rooms) {
         // save scroll state
-        var scrollPosition = $("#rooms-wrapper").scrollTop();
+        var roomsWrapper = $("#rooms-wrapper");
+        var scrollPosition = roomsWrapper.scrollTop();
 
         // update roomlist
         $('.rooms').html('');
@@ -273,7 +275,7 @@ var Frontend = Class.extend({
         });
 
         // restore scroll state
-        $("#rooms-wrapper").mCustomScrollbar("scrollTo", scrollPosition);
+        roomsWrapper.mCustomScrollbar("scrollTo", scrollPosition);
     },
 
 
@@ -284,7 +286,6 @@ var Frontend = Class.extend({
      */
     updateConversation: function(messages, backend) {
         // set unreadcounter to 0
-        var unread = this.unreadMessagesCounter[this.currentConversation];
         delete this.unreadMessagesCounter[this.currentConversation];
         backend.updateUserlist(this.currentConversation);
         backend.updateRoomlist();

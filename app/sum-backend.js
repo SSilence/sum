@@ -573,7 +573,7 @@ var Backend = Class.extend({
 
     /**
      * save given roomlist
-     * @param (array) rooms
+     * @param (array) roomlist current rooms user is in
      */
     saveRoomlist: function(roomlist) {
         localStorage.roomlist = JSON.stringify(roomlist);
@@ -623,7 +623,7 @@ var Backend = Class.extend({
     /**
      * returns array with all known users
      * @return (array) of all users
-     * @param whithourCurrentUser (boolean) include current user in result or not
+     * @param withoutCurrentUser (boolean) include current user in result or not
      */
     getAllUsers: function(withoutCurrentUser) {
         var currentuser = this.backendHelpers.getUsername();

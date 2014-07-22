@@ -281,12 +281,12 @@ var FrontendEvents = Class.extend({
         });
 
         // rooms add: cancel
-        $('body').delegate(".rooms-popup.add .cancel", "click", function(e) {
+        $('body').delegate(".rooms-popup.add .cancel", "click", function() {
             $('.rooms-popup.add').remove();
         });
 
         // rooms add: save
-        $('body').delegate(".rooms-popup.add .save", "click", function(e) {
+        $('body').delegate(".rooms-popup.add .save", "click", function() {
             var room = $(this).parent().find('.name').val();
             var users = $(this).parent().find('select').val();
 
@@ -336,7 +336,7 @@ var FrontendEvents = Class.extend({
         });
 
         // rooms: invite user save
-        $('body').delegate(".rooms-popup.edit .save", "click", function(e) {
+        $('body').delegate(".rooms-popup.edit .save", "click", function() {
             var room = $(this).parent().find('.name').val();
             var users = $(this).parent().find('select').val();
 
@@ -347,7 +347,7 @@ var FrontendEvents = Class.extend({
         });
 
         // rooms: invite user cancel
-        $('body').delegate(".rooms-popup.edit .cancel", "click", function(e) {
+        $('body').delegate(".rooms-popup.edit .cancel", "click", function() {
             $('.rooms-popup.edit').remove();
         });
 
@@ -368,7 +368,7 @@ var FrontendEvents = Class.extend({
      */
     selectAvatar: function(evt) {
         var that = this;
-        $('#fileDialog').change(function(evt) {
+        $('#fileDialog').change(function() {
             // check file given?
             if ($(this).val() === '')
                 return;
