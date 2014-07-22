@@ -10,10 +10,10 @@ var config = {
     
     // set user status to "offline"
     user_timeout: 60000,
-	
-	// remove users from list after ms inactivity
+
+    // remove users from list after ms inactivity
     user_remove: 86400000,
-	
+
     // update every n seconds users entry in userlist file
     user_list_update_intervall: 15000,
     
