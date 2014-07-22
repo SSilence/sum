@@ -70,7 +70,8 @@ Following configuration parameters are available:
 * ``user_file``: path of the file where all users register themself
 * ``user_file_extended``: file per user where avatar and key will be stored. # will be replaced by the md5 hash of the username
 * ``lock_file``: path of the lock file for the user file. ensures that only one user access the user file
-* ``user_timeout``: remove users from list after ms inactivity
+* ``user_timeout``: set user status to offline after ms inactivity
+* ``user_remove``: remove users from list after ms inactivity
 * ``user_list_update_intervall``: update every n seconds users entry in userlist file
 * ``lock_stale``: max age in milliseconds of lock file
 * ``lock_retry_minimum``: retry in minimum random ms when file is locked
