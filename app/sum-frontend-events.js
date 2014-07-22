@@ -317,14 +317,14 @@ var FrontendEvents = Class.extend({
         });
 
         // rooms invitation: accept
-        $('body').delegate(".rooms-popup.invite .save", "click", function(e) {
+        $('body').delegate(".rooms-popup.invite .save", "click", function() {
             var room = $(this).parent().find('.name').val();
             backend.acceptInvitation(room);
             $(this).parent().remove();
         });
 
         // rooms invitation: decline
-        $('body').delegate(".rooms-popup.invite .cancel", "click", function(e) {
+        $('body').delegate(".rooms-popup.invite .cancel", "click", function() {
             var room = $(this).parent().find('.name').val();
             backend.declineInvitation(room);
             $(this).parent().remove();
@@ -364,9 +364,8 @@ var FrontendEvents = Class.extend({
 
     /**
      * select new avatar
-     * @param evt (object) event
      */
-    selectAvatar: function(evt) {
+    selectAvatar: function() {
         var that = this;
         $('#fileDialog').change(function() {
             // check file given?

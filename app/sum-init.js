@@ -14,5 +14,5 @@ $(document).ready(function() {
     // initialize frontend
     var frontendEvents = new FrontendEvents();
     var frontendHelpers = new FrontendHelpers();
-    var frontend = new Frontend(backend, backendHelpers, frontendEvents, frontendHelpers);
+    new Frontend(backend, backendHelpers, frontendEvents, frontendHelpers);
 });

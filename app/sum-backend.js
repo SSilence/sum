@@ -573,7 +573,7 @@ var Backend = Class.extend({
 
     /**
      * save given roomlist
-     * @param (array) roomlist current rooms user is in
+     * @param (Array) roomlist current rooms user is in
      */
     saveRoomlist: function(roomlist) {
         localStorage.roomlist = JSON.stringify(roomlist);
@@ -582,7 +582,7 @@ var Backend = Class.extend({
 
     /**
      * load roomlist from local storage
-     * @return (array) roomlist
+     * @return (Array) roomlist
      */
     loadRoomlist: function() {
         if (typeof localStorage.roomlist != 'undefined' && localStorage.roomlist !== null)
@@ -622,7 +622,7 @@ var Backend = Class.extend({
 
     /**
      * returns array with all known users
-     * @return (array) of all users
+     * @return (Array) of all users
      * @param withoutCurrentUser (boolean) include current user in result or not
      */
     getAllUsers: function(withoutCurrentUser) {
@@ -649,7 +649,7 @@ var Backend = Class.extend({
 
     /**
      * returns all users which are in a given room
-     * @return (array) of all users in a given room
+     * @return (Array) of all users in a given room
      * @param room (string) roomname
      */
     getUsersInRoom: function(room) {
