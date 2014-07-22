@@ -35,7 +35,7 @@ var FrontendHelpers = Class.extend({
 
         var timeout = 1000;
         if(ageInMinutes<1)
-            timeout = 1000;
+            timeout = 61000;
         else if(ageInHours<1)
             timeout = 1000 * 60;
         else if(ageInDays<1)
@@ -68,7 +68,7 @@ var FrontendHelpers = Class.extend({
         var ageInDays = ageInHours / 24;
 
         if(ageInMinutes<1)
-            return 'vor ' + Math.floor(ageInSeconds) + ' Sekunden';
+            return ' vor wenigen Sekunden';
         if(ageInHours<1)
             return 'vor ' + Math.floor(ageInMinutes) + ' Minuten';
         if(ageInDays<1)

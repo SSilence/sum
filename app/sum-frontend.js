@@ -315,13 +315,15 @@ var Frontend = Class.extend({
         var that = this;
         $.each(messages, function(index, message) {
             $('#content').append('<li class="entry">\
-                <div class="entry-metadata">\
+                <div class="entry-avatar">\
                     <img src="' + backend.getAvatar(message.sender) + '" class="avatar" />\
-                    <span>' + message.sender.escape() + '</span>\
-                    <span class="entry-datetime">' + that.frontendHelpers.dateAgo(message.datetime) + '</span>\
                 </div>\
-                <div class="entry-content">\
-                    ' + that.frontendHelpers.formatMessage(message.text) + '\
+                <div class="entry-contentarea">\
+                    <span class="entry-sender">' + message.sender.escape() + '</span>\
+                    <span class="entry-datetime">' + that.frontendHelpers.dateAgo(message.datetime) + '</span>\
+                    <div class="entry-content">\
+                        ' + that.frontendHelpers.formatMessage(message.text) + '\
+                    </div>\
                 </div>\
             </li>');
 

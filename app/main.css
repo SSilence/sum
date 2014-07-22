@@ -590,36 +590,42 @@ body {
     }
 
     .entry {
-        margin-bottom:20px;
+        margin-bottom:10px;
         font-size:0.8em;
         color:#666;
         padding-bottom:10px;
         border-bottom:1px solid #dadada;
+        display: flex;
     }
 
         .entry:last-child {
             border-bottom:0;
         }
 
-        .entry-metadata {
-            display: flex;
-            align-items: center;
-            font-weight:bold;
-            margin-bottom:10px;
+        .entry-sender {
+            font-size:0.8em;
+            font-weight: bold;
         }
 
-            .entry-metadata > * {
-                margin-right:10px;
-            }
+        .entry-datetime {
+            font-weight:normal;
+            font-size:0.8em;
+            color:#AAA;
+        }
 
-            .entry-datetime {
-                font-weight:normal;
-                font-size:0.8em;
-            }
+        .entry-content pre code {
+            font-size: 1.2em;
+        }
 
-            .entry-content pre code {
-                font-size: 1.2em;
-            }
+        .entry-avatar {
+            width:40px;
+        }
+
+        .entry-contentarea {
+            -webkit-box-flex: 1;
+            box-flex: 1;
+            flex:1;
+        }
 
 
 
