@@ -211,14 +211,24 @@ var Backend = Class.extend({
                     continue;
 
                 // only save active users
-                if (users[i].timestamp + config.user_timeout > now)
+                if (users[i].timestamp + config.user_remove > now) {
+					// if user has a timeout, set status to offline
+					if (users[i].status == 'online' && users[i].timestamp + config.user_timeout < now) {
+						users[i].status = 'offline';
+					}
+						
                     userlist[userlist.length] = users[i];
+				} else {
+					if (typeof that.userIsRemoved != 'undefined')
+						that.userIsRemoved(users[i]);
+				}					
             }
 
             // add current user
             userlist[userlist.length] = {
                 username: currentuser,
                 timestamp: now,
+				status: 'online',
                 userfileTimestamp: that.userfileTimestamp,
                 rooms: that.roomlist
             };
@@ -304,10 +314,11 @@ var Backend = Class.extend({
         // sort userlist by username
         users = this.backendHelpers.sortUserlistByUsername(users);
 
-        // show notification for users which are now online/offline
+        // show notification for users which are now online/offline/removed
         if (this.firstUpdate===false) {
-            var online = this.backendHelpers.getUsersNotInListOne(this.userlist, users);
-            var offline = this.backendHelpers.getUsersNotInListOne(users, this.userlist);
+            var online = this.backendHelpers.getUsersNotInListOne(this.backendHelpers.getUsersByStatus(this.userlist, 'online'), this.backendHelpers.getUsersByStatus(users, 'online'));
+            var offline = this.backendHelpers.getUsersNotInListOne(this.backendHelpers.getUsersByStatus(this.userlist, 'offline'), this.backendHelpers.getUsersByStatus(users, 'offline'));
+			var removed = this.backendHelpers.getUsersNotInListOne(users, this.userlist);
             var i=0;
 
             if (typeof this.userOnlineNotice != 'undefined')
@@ -317,6 +328,10 @@ var Backend = Class.extend({
             if (typeof this.userOfflineNotice != 'undefined')
                 for(i=0; i<offline.length; i++)
                     this.userOfflineNotice(offline[i].avatar, offline[i].username);
+					
+			if (typeof this.userRemovedNotice != 'undefined')
+                for(i=0; i<removed.length; i++)
+                    this.userRemovedNotice(removed[i].avatar, removed[i].username);
         }
         this.firstUpdate = false;
 
@@ -388,6 +403,13 @@ var Backend = Class.extend({
     },
 
     /**
+     * register callback for a user has been removed
+     */
+    onUserRemovedNotice: function(callback) {
+        this.userRemovedNotice = callback;
+    },
+
+    /**
      * register callback for incoming new message
      */
     onNewMessage: function(callback) {
@@ -427,6 +449,13 @@ var Backend = Class.extend({
      */
     onHasUserlistUpdate: function(callback) {
         this.hasUserlistUpdate = callback;
+    },
+	
+	/**
+     * register callback for when user is removed
+     */
+    onUserIsRemoved: function(callback) {
+        this.userIsRemoved = callback;
     },
 
 
@@ -540,6 +569,7 @@ var Backend = Class.extend({
      * quit application
      */
     quit: function() {
+		
         gui.App.quit();
     },
 

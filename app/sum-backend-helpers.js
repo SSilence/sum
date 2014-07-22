@@ -269,5 +269,21 @@ var BackendHelpers = Class.extend({
                 notInList[notInList.length] = compare[i];
         }
         return notInList;
+    },
+	
+	
+	/**
+     * returns all users, which have the same status
+     * @return (array) list with all users, which have the same status
+     * @param list (array) with users
+     * @param status (string) the user status
+     */
+    getUsersByStatus: function(list, status) {
+        var usersWithStatus = [];
+        for(var i=0; i<list.length; i++) {
+            if (list[i].status === status)
+                usersWithStatus[usersWithStatus.length] = list[i];
+        }
+        return usersWithStatus;
     }
 });
