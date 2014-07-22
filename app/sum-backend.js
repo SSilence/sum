@@ -646,7 +646,9 @@ var Backend = Class.extend({
      */
     notification: function(image, title, text) {
         if(this.enableNotifications===true)
-            window.LOCAL_NW.desktopNotifications.notify(image, title, text);
+            window.LOCAL_NW.desktopNotifications.notify(image, title, text, function(){
+				gui.Window.get().show();
+			});
     },
 
 
