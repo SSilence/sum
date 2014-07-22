@@ -320,6 +320,11 @@ var Backend = Class.extend({
             return;
         }
 
+        if (users.length==1 && users[0].status == 'offline') {
+            this.error('Der Benutzer ist nicht online');
+            return;
+        }
+
         // create new message
         var currentuser = this.backendHelpers.getUsername();
         var message = {
@@ -339,6 +344,10 @@ var Backend = Class.extend({
         // send message to all users
         var that = this;
         for (var i=0; i<users.length; i++) {
+            // don't send message to offline users
+            if (users[i].status = 'offline')
+                continue;
+
             // don't send message to this user
             if (users[i].username == currentuser)
                 continue;
