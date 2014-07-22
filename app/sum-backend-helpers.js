@@ -270,9 +270,9 @@ var BackendHelpers = Class.extend({
         }
         return notInList;
     },
-	
-	
-	/**
+
+
+    /**
      * returns all users, which have the same status
      * @return (array) list with all users, which have the same status
      * @param list (array) with users

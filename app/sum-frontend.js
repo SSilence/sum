@@ -98,8 +98,8 @@ var Frontend = Class.extend({
             alertify.log(text);
             backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", "", text);
         });
-		
-		// register callback for a user has been removed
+
+        // register callback for a user has been removed
         backend.onUserRemovedNotice(function(avatar, text) {
             text = text.escape() + ' verlaesst uns';
             alertify.log(text);
@@ -148,20 +148,20 @@ var Frontend = Class.extend({
 
         // backend has update for userlist
         backend.onHasUserlistUpdate(function() {
-			backend.getConversation(that.currentConversation);
+            backend.getConversation(that.currentConversation);
             backend.updateUserlist(that.currentConversation);
         });
-		
-		// backend has removed an user
-		backend.onUserIsRemoved(function(user) {
-			// check if the currentConversation is the Conversation with the removed user...
-			if  (that.currentConversation == user.username) {
-				// ...if so, switch conversation to "room_all"
-				that.currentConversation = config.room_all;
-				backend.getConversation(that.currentConversation);
-				backend.updateUserlist(that.currentConversation);
-			}
-		});
+        
+        // backend has removed an user
+        backend.onUserIsRemoved(function(user) {
+            // check if the currentConversation is the Conversation with the removed user...
+            if  (that.currentConversation == user.username) {
+                // ...if so, switch conversation to "room_all"
+                that.currentConversation = config.room_all;
+                backend.getConversation(that.currentConversation);
+                backend.updateUserlist(that.currentConversation);
+            }
+        });
     },
 
 

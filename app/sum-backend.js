@@ -21,6 +21,12 @@ var Backend = Class.extend({
 
 
     /**
+     * backends client
+     */
+    backendUserlist: false,
+
+
+    /**
      * RSA Key
      */
     key: false,
@@ -39,21 +45,9 @@ var Backend = Class.extend({
 
 
     /**
-     * timestamp userfile was written
-     */
-    userfileTimestamp: false,
-
-
-    /**
      * current userlist
      */
     userlist: [],
-
-
-    /**
-     * cache for all additional userinfos
-     */
-    userinfos: {},
 
 
     /**
@@ -81,21 +75,17 @@ var Backend = Class.extend({
 
 
     /**
-     * don't send notifications on first update run on program startup
-     */
-    firstUpdate: true,
-
-
-    /**
      * initialize backend
      * @param backendHelpers (object) the current backends helpers
-     * @param backendServer (object) the server of the backend
-     * @param backendClient (object) the client of the backend
+     * @param backendClient (object) the current backends client
+     * @param backendServer (object) the current backends server
+     * @param backendUserlist (object) the current backends userlist
      */
-    init: function(backendHelpers, backendServer, backendClient) {
+    init: function(backendHelpers, backendClient, backendServer, backendUserlist) {
         // save instances
         this.backendHelpers = backendHelpers;
         this.backendClient = backendClient;
+        this.backendUserlist = backendUserlist;
 
         // load alternative config given by command line?
         if (gui.App.argv.length > 0) {
@@ -122,13 +112,13 @@ var Backend = Class.extend({
         // start backend server for chat communication
         var that = this;
         backendServer.start(this, backendHelpers, function(port) {
-            // save port
+            // save port which server uses for userfile
             that.port = port;
 
             // create/update userfile (holds additional information as avatar, key, ip, ...)
-            // afterwards start updating the userlist
-            that.userlistUpdateUsersOwnFile(function() {
-                that.userlistUpdateTimer();
+            that.backendUserlist.userlistUpdateUsersOwnFile(that.ip, that.port, that.key, that.loadAvatar(), function() {
+                // afterwards start userlist updater
+                that.backendUserlist.userlistUpdateTimer(that);
             });
         });
     },
@@ -162,218 +152,6 @@ var Backend = Class.extend({
         });
     },
 
-
-
-    ////////////////////////////
-    // userlist file handling //
-    ////////////////////////////
-
-    /**
-     * timer: regular userfile and userlist update for current user
-     */
-    userlistUpdateTimer: function() {
-        var that = this;
-        this.backendHelpers.lock(function(err) {
-            // can't get lock for exclusive userfile access? retry in random timeout
-            if (typeof err != 'undefined') {
-                var randomTimeout = Math.floor(Math.random() * config.lock_retry_maximum) + config.lock_retry_minimum;
-                window.setTimeout(function() {
-                    that.userlistUpdateTimer();
-                }, randomTimeout);
-                return;
-            }
-
-            // have lock? Update userlist
-            that.userlistUpdater();
-        });
-    },
-
-
-    /**
-     * all users are registered in a single json file. This method updates or adds
-     * an entry of the current user.
-     */
-    userlistUpdater: function() {
-        var that = this;
-        that.backendHelpers.readJsonFile(config.user_file, function(users) {
-            var currentuser = that.backendHelpers.getUsername();
-            var now = new Date().getTime();
-
-            // remove orphaned user entries
-            var userlist = [];
-            for(var i=0; i<users.length; i++) {
-                // ignore entries without username and timestamp
-                if (typeof users[i].username == 'undefined' || typeof users[i].timestamp == 'undefined')
-                    continue;
-
-                // current user will be added later
-                if (users[i].username == currentuser)
-                    continue;
-
-                // only save active users
-                if (users[i].timestamp + config.user_remove > now) {
-					// if user has a timeout, set status to offline
-					if (users[i].status == 'online' && users[i].timestamp + config.user_timeout < now) {
-						users[i].status = 'offline';
-					}
-						
-                    userlist[userlist.length] = users[i];
-				} else {
-					if (typeof that.userIsRemoved != 'undefined')
-						that.userIsRemoved(users[i]);
-				}					
-            }
-
-            // add current user
-            userlist[userlist.length] = {
-                username: currentuser,
-                timestamp: now,
-				status: 'online',
-                userfileTimestamp: that.userfileTimestamp,
-                rooms: that.roomlist
-            };
-
-            // write back updated userfile
-            that.backendHelpers.writeJsonFile(
-                config.user_file,
-                userlist,
-                function() {
-                    // release lock
-                    that.backendHelpers.unlock();
-                },
-                that.error
-            );
-
-            // load additional userinfos and update local userlist
-            that.userlistLoadAdditionalUserinfos(userlist);
-        });
-    },
-
-
-    /**
-     * loads all additional userinfos from users single files
-     * @param users (array) fetched users
-     */
-    userlistLoadAdditionalUserinfos: function(users) {
-        var that = this;
-
-        // next step will be executed if all additonal informations of all users was loaded (toMerge == 0)
-        var toMerge = users.length;
-
-        // checks whether all userinfos was fetched
-        var checkAllHandledThenExecuteRefreshUserlist = function() {
-            toMerge--;
-            if(toMerge===0)
-                that.userlistRefreshFrontend(users);
-        };
-
-        // loads current userinfos for a single user
-        var loadUserinfos = function(currentIndex) {
-            // load from users file if not in cache or newer one available
-            if (typeof that.userinfos[users[currentIndex].username] == 'undefined' ||
-                users[currentIndex].userfileTimestamp != that.userinfos[users[currentIndex].username].timestamp) {
-
-                // read userinfos from file
-                var file = config.user_file_extended.replace(/#/, CryptoJS.MD5(users[currentIndex].username));
-                that.backendHelpers.readJsonFile(
-                    file,
-                    function(userinfos) {
-                        // merge user and userinfos
-                        if (typeof userinfos.ip != 'undefined' && typeof userinfos.port != 'undefined' && typeof userinfos.key != 'undefined') {
-                            users[currentIndex] = that.backendHelpers.mergeUserAndUserinfos(users[currentIndex], userinfos);
-
-                            // save userinfos in cache
-                            userinfos.timestamp = users[currentIndex].userfileTimestamp;
-                            that.userinfos[users[currentIndex].username] = userinfos;
-                        }
-                        checkAllHandledThenExecuteRefreshUserlist();
-                    },
-                    function() {
-                        checkAllHandledThenExecuteRefreshUserlist();
-                    }
-                );
-
-            // load from cache
-            } else {
-                users[currentIndex] = that.backendHelpers.mergeUserAndUserinfos(users[currentIndex], that.userinfos[users[currentIndex].username]);
-                checkAllHandledThenExecuteRefreshUserlist();
-            }
-        };
-
-        // load additional infos per user from users own files
-        for (var i=0; i<users.length; i++)
-            loadUserinfos(i);
-    },
-
-
-    /**
-     * refresh current userlist after reading userfile
-     * @param users (array) fetched users
-     */
-    userlistRefreshFrontend: function(users) {
-        // sort userlist by username
-        users = this.backendHelpers.sortUserlistByUsername(users);
-
-        // show notification for users which are now online/offline/removed
-        if (this.firstUpdate===false) {
-            var online = this.backendHelpers.getUsersNotInListOne(this.backendHelpers.getUsersByStatus(this.userlist, 'online'), this.backendHelpers.getUsersByStatus(users, 'online'));
-            var offline = this.backendHelpers.getUsersNotInListOne(this.backendHelpers.getUsersByStatus(this.userlist, 'offline'), this.backendHelpers.getUsersByStatus(users, 'offline'));
-			var removed = this.backendHelpers.getUsersNotInListOne(users, this.userlist);
-            var i=0;
-
-            if (typeof this.userOnlineNotice != 'undefined')
-                for(i=0; i<online.length; i++)
-                    this.userOnlineNotice(online[i].avatar, online[i].username);
-
-            if (typeof this.userOfflineNotice != 'undefined')
-                for(i=0; i<offline.length; i++)
-                    this.userOfflineNotice(offline[i].avatar, offline[i].username);
-					
-			if (typeof this.userRemovedNotice != 'undefined')
-                for(i=0; i<removed.length; i++)
-                    this.userRemovedNotice(removed[i].avatar, removed[i].username);
-        }
-        this.firstUpdate = false;
-
-        // save userlist
-        this.userlist = users;
-
-        // inform frontend that new userlist is available
-        if(typeof this.hasUserlistUpdate != "undefined")
-            this.hasUserlistUpdate();
-
-        // initialize next update
-        var that = this;
-        window.setTimeout(function() {
-            that.userlistUpdateTimer();
-        }, config.user_list_update_intervall);
-    },
-
-
-    /**
-     * write extended userfile with avatar, ip, chatport and other less frequently updated information
-     * @param success (callback) will be executed after successfully writing file
-     */
-    userlistUpdateUsersOwnFile: function(success) {
-        var file = config.user_file_extended.replace(/#/, CryptoJS.MD5(this.backendHelpers.getUsername()));
-        var that = this;
-        this.backendHelpers.writeJsonFile(
-            file,
-            {
-                ip: that.ip,
-                port: that.port,
-                key: that.key.getPublicPEM(),
-                avatar: that.loadAvatar()
-            },
-            function() {
-                that.userfileTimestamp = new Date().getTime();
-                if (typeof success != 'undefined')
-                    success();
-            },
-            that.error
-        );
-
-    },
 
 
 
@@ -450,8 +228,8 @@ var Backend = Class.extend({
     onHasUserlistUpdate: function(callback) {
         this.hasUserlistUpdate = callback;
     },
-	
-	/**
+
+    /**
      * register callback for when user is removed
      */
     onUserIsRemoved: function(callback) {
@@ -569,7 +347,6 @@ var Backend = Class.extend({
      * quit application
      */
     quit: function() {
-		
         gui.App.quit();
     },
 
@@ -588,7 +365,7 @@ var Backend = Class.extend({
      */
     saveAvatar: function(avatar) {
         window.localStorage.avatar = avatar;
-        this.userlistUpdateUsersOwnFile();
+        this.backendUserlist.userlistUpdateUsersOwnFile(this.ip, this.port, this.key, avatar);
     },
 
 
@@ -647,8 +424,8 @@ var Backend = Class.extend({
     notification: function(image, title, text) {
         if(this.enableNotifications===true)
             window.LOCAL_NW.desktopNotifications.notify(image, title, text, function(){
-				gui.Window.get().show();
-			});
+                gui.Window.get().show();
+            });
     },
 
 
