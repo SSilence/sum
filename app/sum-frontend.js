@@ -350,7 +350,7 @@ var Frontend = Class.extend({
                 <div class="entry-avatar">\
                     <img src="' + backend.getAvatar(message.sender) + '" class="avatar" />\
                 </div>\
-                <div class="entry-contentarea">\
+                <div class="entry-contentarea hyphenate" lang="de">\
                     <span class="entry-sender">' + message.sender.escape() + '</span>\
                     <span class="entry-datetime">' + that.frontendHelpers.dateAgo(message.datetime) + '</span>\
                     <div class="entry-content">\
@@ -372,6 +372,25 @@ var Frontend = Class.extend({
         $("#content").waitForImages(function() {
             $("#content-wrapper").mCustomScrollbar("update");
             $("#content-wrapper").mCustomScrollbar("scrollTo","bottom");
+        });
+
+        // start hyphenator
+        Hyphenator.run();
+
+        //numbering for pre>code blocks
+        $(function(){
+            $('pre code').each(function(){
+                //var lines = $(this).text().split('\n').length;
+                var lines = $(this).text().split(/\r\n|\r|\n/).length;
+                var $numbering = $('<ul/>').addClass('pre-numbering');
+                $(this)
+                    .addClass('has-numbering')
+                    .parent()
+                    .append($numbering);
+                for(i=1;i<=lines;i++){
+                    $numbering.append($('<li/>').text(i));
+                }
+            });
         });
     }
 

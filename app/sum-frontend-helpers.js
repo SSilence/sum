@@ -201,7 +201,7 @@ var FrontendHelpers = Class.extend({
             else
                 message = hljs.highlightAuto(message).value;
 
-            message = '<pre><code>' + message + '</code></pre>';
+            message = '<pre><code class="donthyphenate has-numbering">' + message + '</code></pre>';
 
         // format message as text with emoticons, urls, ...
         } else {
