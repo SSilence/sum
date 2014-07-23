@@ -4,30 +4,30 @@
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-var FrontendEvents = Class.extend({
+define('sum-frontend-events', Class.extend({
 
     /**
      * the current backend
      */
-    backend: false,
+    backend: '@inject:sum-backend',
 
 
     /**
      * the current backend helpers
      */
-    backendHelpers: false,
+    backendHelpers: '@inject:sum-backend-helpers',
 
 
     /**
      * the current frontend
      */
-    frontend: false,
+    frontend: '@inject:sum-frontend',
 
 
     /**
      * the current frontend helpers
      */
-    frontendHelpers: false,
+    frontendHelpers: '@inject:sum-frontend-helpers',
 
 
     /**
@@ -38,19 +38,9 @@ var FrontendEvents = Class.extend({
 
     /**
      * initialize events (clicks, ...)
-     * @param backend (object) the current backend
-     * @param backendHelpers (object) the helpers of backend
-     * @param frontend (object) the current frontend
-     * @param frontendHelpers (object) the helpers of frontend
      */
-    initAllEvents: function(backend, backendHelpers, frontend, frontendHelpers) {
+    initialize: function() {
         var that = this;
-
-        // save instances for later use
-        this.backend = backend;
-        this.frontend = frontend;
-        this.frontendHelpers = frontendHelpers;
-        this.backendHelpers = backendHelpers;
 
         // initialize window resize handler
         $(window).bind("resize", function() {
@@ -103,16 +93,16 @@ var FrontendEvents = Class.extend({
             $('#main-menue-dropdown li').show();
             $('#main-menue-avatar-croper').hide();
 
-            var image = frontendHelpers.cropAndResize(
+            var image = that.frontendHelpers.cropAndResize(
                 $('#main-menue-avatar-croper img')[0],
                 that.selection.x,
                 that.selection.y,
                 that.selection.w,
                 that.selection.h);
 
-            backend.saveAvatar(image);
+            that.backend.saveAvatar(image);
             $('#main-menue-dropdown').hide();
-            backend.updateUserlist(frontend.currentConversation);
+            that.backend.updateUserlist(that.frontend.currentConversation);
         });
 
         // menue: cancel avatar
@@ -126,17 +116,17 @@ var FrontendEvents = Class.extend({
         $('#main-menue-status').click(function() {
             if($(this).hasClass('inactive')) {
                 $(this).removeClass('inactive');
-                backend.notifications(true);
+                that.backend.notifications(true);
             } else {
                 $(this).addClass('inactive');
-                backend.notifications(false);
+                that.backend.notifications(false);
             }
             $('#main-menue-dropdown').hide();
         });
 
         // menue: about
         $('#main-menue-quit').click(function() {
-            backend.quit();
+            that.backend.quit();
         });
 
         // menue: about
@@ -147,7 +137,7 @@ var FrontendEvents = Class.extend({
 
         // menue: quit
         $('#main-close').click(function() {
-            backend.close();
+            that.backend.close();
         });
 
         // message menue: toggle
@@ -167,8 +157,8 @@ var FrontendEvents = Class.extend({
 
         // message menue: clear conversation
         $('#message-add-menue-clear').click(function() {
-            backend.clearConversation(frontend.currentConversation);
-            backend.getConversation(frontend.currentConversation);
+            that.backend.clearConversation(that.frontend.currentConversation);
+            that.backend.getConversation(that.frontend.currentConversation);
             $('#message-add-menue-dropdown').hide();
         });
 
@@ -181,7 +171,7 @@ var FrontendEvents = Class.extend({
             }
 
             // chat channel selected?
-            if (frontend.currentConversation===false) {
+            if (that.frontend.currentConversation===false) {
                 alertify.error('bitte einen Chat Kanal ausw&auml;hlen');
                 return;
             }
@@ -192,7 +182,7 @@ var FrontendEvents = Class.extend({
             // send message
             $('#message-add-code-box').hide();
             $('#message-add-code-box-area').val('');
-            backend.sendMessage(frontend.currentConversation, message);
+            that.backend.sendMessage(that.frontend.currentConversation, message);
         });
 
         // message menue: cancel code block
@@ -227,9 +217,9 @@ var FrontendEvents = Class.extend({
             var user = $(this).find('.contacts-name').html();
             $('.rooms li, .contacts li').removeClass('active');
             $(this).addClass('active');
-            frontend.currentConversation = user;
-            backend.getConversation(user);
-            backend.updateUserlist(frontend.currentConversation);
+            that.frontend.currentConversation = user;
+            that.backend.getConversation(user);
+            that.backend.updateUserlist(that.frontend.currentConversation);
             $('#main-metadata').css('visibility', 'visible');
         });
 
@@ -242,9 +232,9 @@ var FrontendEvents = Class.extend({
             var room = $(this).find('.name').html();
             $('.rooms li, .contacts li').removeClass('active');
             $(this).addClass('active');
-            frontend.currentConversation = room;
-            backend.getConversation(frontend.currentConversation);
-            backend.updateUserlist(frontend.currentConversation);
+            that.frontend.currentConversation = room;
+            that.backend.getConversation(that.frontend.currentConversation);
+            that.backend.updateUserlist(that.frontend.currentConversation);
             $('#main-metadata').css('visibility', 'visible');
         });
 
@@ -259,14 +249,14 @@ var FrontendEvents = Class.extend({
             }
 
             // chat channel selected?
-            if (frontend.currentConversation===false) {
+            if (that.frontend.currentConversation===false) {
                 alertify.error('bitte einen Chat Kanal ausw&auml;hlen');
                 return;
             }
 
             // send message
             $('#message-input-textfield').val("");
-            backend.sendMessage(frontend.currentConversation, message);
+            that.backend.sendMessage(that.frontend.currentConversation, message);
         });
 
         // send message by enter
@@ -298,19 +288,19 @@ var FrontendEvents = Class.extend({
             }
 
             // don't add room with same name
-            if(backend.doesRoomExists(room)) {
+            if(that.backend.doesRoomExists(room)) {
                 alertify.error('Raum mit dem Namen existiert bereits');
                 return;
             }
 
             // don't add room of name of a user
-            if(backend.getUser(room)!==false) {
+            if(that.backend.getUser(room)!==false) {
                 alertify.error('Es existiert bereits ein Benutzer mit diesem Namen');
                 return;
             }
 
             // add room
-            backend.addRoom(room, users);
+            that.backend.addRoom(room, users);
 
             // hide popup
             $('.rooms-popup.add').remove();
@@ -320,14 +310,14 @@ var FrontendEvents = Class.extend({
         // rooms invitation: accept
         $('body').delegate(".rooms-popup.invite .save", "click", function() {
             var room = $(this).parent().find('.name').val();
-            backend.acceptInvitation(room);
+            that.backend.acceptInvitation(room);
             $(this).parent().remove();
         });
 
         // rooms invitation: decline
         $('body').delegate(".rooms-popup.invite .cancel", "click", function() {
             var room = $(this).parent().find('.name').val();
-            backend.declineInvitation(room);
+            that.backend.declineInvitation(room);
             $(this).parent().remove();
         });
 
@@ -341,7 +331,7 @@ var FrontendEvents = Class.extend({
             var room = $(this).parent().find('.name').val();
             var users = $(this).parent().find('select').val();
 
-            backend.inviteUsers(room, users);
+            that.backend.inviteUsers(room, users);
 
             $('.rooms-popup.edit').remove();
             alertify.log('Einladungen versendet');
@@ -355,7 +345,7 @@ var FrontendEvents = Class.extend({
         // rooms: leave
         $('.rooms').delegate("li .rooms-leave", "click", function(e) {
             var room = $(this).parent().find('.name').html();
-            backend.leaveRoom(room);
+            that.backend.leaveRoom(room);
             $('.rooms li:first').click();
             e.preventDefault();
             return false;
@@ -512,4 +502,4 @@ var FrontendEvents = Class.extend({
             $(item).css('top', parseInt($(item).css('top')) + diff);
         });
     }
-});
+}));

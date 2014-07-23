@@ -4,12 +4,24 @@
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-var Frontend = Class.extend({
+define('sum-frontend', Class.extend({
 
     /**
      * frontends helpers
      */
-    frontendHelpers: false,
+    frontendHelpers: '@inject:sum-frontend-helpers',
+
+
+    /**
+     * frontends events
+     */
+    frontendEvents: '@inject:sum-frontend-events',
+
+
+    /**
+     *  the current backend
+     */
+    backend: '@inject:sum-backend',
 
 
     /**
@@ -32,14 +44,8 @@ var Frontend = Class.extend({
 
     /**
      * initialize frontend
-     * @param backend (object) the current backend
-     * @param backendHelpers (object) the helpers of backend
-     * @param frontendEvents (object) the event handling of frontend
-     * @param frontendHelpers (object) the helpers of frontend
      */
-    init: function(backend, backendHelpers, frontendEvents, frontendHelpers) {
-       this.frontendHelpers = frontendHelpers;
-
+    initialize: function() {
         // initialize div inline scroller
         $("#contacts-wrapper, #rooms-wrapper, #content-wrapper").mCustomScrollbar({
             advanced:{
@@ -58,120 +64,119 @@ var Frontend = Class.extend({
         this.initSelectForCodeBoxLanguage();
 
         // initialize all events
-        frontendEvents.initAllEvents(backend, backendHelpers, this, frontendHelpers);
+        this.frontendEvents.initialize();
 
         // initialize backend callbacks
-        this.initBackendCallbacks(backend);
+        this.initBackendCallbacks();
 
         // Userliste und Rooms updaten
-        backend.updateUserlist(this.currentConversation);
-        backend.updateRoomlist();
-        backend.getConversation(this.currentConversation);
+        this.backend.updateUserlist(this.currentConversation);
+        this.backend.updateRoomlist();
+        this.backend.getConversation(this.currentConversation);
     },
 
 
     /**
      * set callbacks which will update the frontend on backend action (e.g. receiving a new message)
-     * @param backend (object) the current backend
      */
-    initBackendCallbacks: function(backend) {
+    initBackendCallbacks: function() {
         var that = this;
 
         // register callback for errors
-        backend.onError(function(error) {
+        this.backend.onError(function(error) {
             alertify.error(error);
         });
 
         // new room invite
-        backend.onRoomInvite(function(room, user) {
+        this.backend.onRoomInvite(function(room, user) {
             var text = user.escape() + ' hat dich in den Raum ' + room.escape() + ' eingeladen';
             alertify.log(text);
-            backend.notification("group.png", "", text);
+            that.backend.notification("group.png", "", text);
         });
 
         // user is now online
-        backend.onUserOnlineNotice(function(avatar, text) {
+        this.backend.onUserOnlineNotice(function(avatar, text) {
             text = text.escape() + ' ist jetzt online';
             alertify.log(text);
-            backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", "", text);
+            that.backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", "", text);
         });
 
         // register callback for a user goes offline
-        backend.onUserOfflineNotice(function(avatar, text) {
+        this.backend.onUserOfflineNotice(function(avatar, text) {
             text = text.escape() + ' ist jetzt offline';
             alertify.log(text);
-            backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", "", text);
+            that.backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", "", text);
         });
 
         // register callback for a user has been removed
-        backend.onUserRemovedNotice(function(avatar, text) {
+        this.backend.onUserRemovedNotice(function(avatar, text) {
             text = text.escape() + ' verlaesst uns';
             alertify.log(text);
-            backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", text);
+            that.backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", text);
         });
 
         // register callback for incoming new message
-        backend.onNewMessage(function(message) {
+        this.backend.onNewMessage(function(message) {
             // conversation = sender
             var conversationId = message.sender;
 
             // conversation = receiver if it is a room
-            if (backend.doesRoomExists(message.receiver))
+            if (that.backend.doesRoomExists(message.receiver))
                 conversationId = message.receiver;
         
-            if (message.sender != backend.getUsername())
-                backend.notification(backend.getAvatar(message.sender), "Neue Nachricht von " + message.sender.escape(), message.text, conversationId);
+            if (message.sender != that.backend.getUsername())
+                that.backend.notification(that.backend.getAvatar(message.sender), "Neue Nachricht von " + message.sender.escape(), message.text, conversationId);
 
             if(that.currentConversation == conversationId)
-                backend.getConversation(that.currentConversation);
+                that.backend.getConversation(that.currentConversation);
             else {
                 if (typeof that.unreadMessagesCounter[conversationId] == "undefined") {
                     that.unreadMessagesCounter[conversationId] = 0;
                 }
                 that.unreadMessagesCounter[conversationId]++;
-                backend.updateUserlist(that.currentConversation);
-                backend.updateRoomlist();
+                that.backend.updateUserlist(that.currentConversation);
+                that.backend.updateRoomlist();
             }
         });
 
         // register callback for room list update
-        backend.onGetRoomlistResponse(function(rooms) {
+        this.backend.onGetRoomlistResponse(function(rooms) {
             that.updateRoomlist(rooms);
         });
 
         // register callback for user list update
-        backend.onGetUserlistResponse(function(users) {
+        this.backend.onGetUserlistResponse(function(users) {
             that.updateUserlist(users);
         });
 
         // register callback for getting conversation
-        backend.onGetContentResponse(function(id, messages) {
+        this.backend.onGetContentResponse(function(id, messages) {
             if (id==that.currentConversation)
-                that.updateConversation(messages, backend);
+                that.updateConversation(messages, that.backend);
         });
 
         // backend has update for userlist
-        backend.onHasUserlistUpdate(function() {
-            backend.updateUserlist(that.currentConversation);
+        this.backend.onHasUserlistUpdate(function() {
+            that.backend.updateUserlist(that.currentConversation);
         });
         
         // backend has removed an user
-        backend.onUserIsRemoved(function(user) {
+        this.backend.onUserIsRemoved(function(user) {
             // check if the currentConversation is the Conversation with the removed user...
             if  (that.currentConversation == user.username) {
                 // ...if so, switch conversation to "room_all"
                 that.currentConversation = config.room_all;
-                backend.getConversation(that.currentConversation);
-                backend.updateUserlist(that.currentConversation);
+                that.backend.getConversation(that.currentConversation);
+                that.backend.updateUserlist(that.currentConversation);
             }
         });
         
         //switchConversation to user or room
-        backend.onSwitchConversation(function(conversationName) {
+        this.backend.onSwitchConversation(function(conversationName) {
             if  (that.currentConversation != conversationName) {
                 that.currentConversation = conversationName;
-                backend.getConversation(that.currentConversation);
-                backend.updateUserlist(that.currentConversation);
+                that.backend.getConversation(that.currentConversation);
+                that.backend.updateUserlist(that.currentConversation);
             }
         });
     },
@@ -394,4 +399,4 @@ var Frontend = Class.extend({
         });
     }
 
-});
+}));

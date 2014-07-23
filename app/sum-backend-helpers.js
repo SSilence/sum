@@ -9,7 +9,7 @@ var lockFile = require('lockfile');
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-var BackendHelpers = Class.extend({
+define('sum-backend-helpers', Class.extend({
 
     /**
      * sort userlist by username
@@ -286,4 +286,4 @@ var BackendHelpers = Class.extend({
         }
         return usersWithStatus;
     }
-});
+}));

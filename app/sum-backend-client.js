@@ -4,21 +4,12 @@
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-var BackendClient = Class.extend({
+define('sum-backend-client', Class.extend({
 
     /**
      * backends helpers
      */
-    backendHelpers: false,
-
-
-    /**
-     * initialize client
-     * @param backendHelpers (object) the current backendHelpers
-     */
-    init: function(backendHelpers) {
-        this.backendHelpers = backendHelpers;
-    },
+    backendHelpers: '@inject:sum-backend-helpers',
 
 
     /**
@@ -61,4 +52,4 @@ var BackendClient = Class.extend({
         req.write(encMessage);
         req.end();
     }
-});
+}));

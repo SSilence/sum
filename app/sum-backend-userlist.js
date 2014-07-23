@@ -6,18 +6,18 @@ var gui = require('nw.gui');
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-var BackendUserlist = Class.extend({
+define('sum-backend-userlist', Class.extend({
 
     /**
      * backends
      */
-    backend: false,
+    backend: '@inject:sum-backend',
 
 
     /**
      * backends helpers
      */
-    backendHelpers: false,
+    backendHelpers: '@inject:sum-backend-helpers',
 
 
     /**
@@ -36,16 +36,6 @@ var BackendUserlist = Class.extend({
      * don't send notifications on first update run on program startup
      */
     firstUpdate: true,
-
-
-    /**
-     * initialize backend
-     * @param backend (object) the current backend
-     * @param backendHelpers (object) the current backends helpers
-     */
-    init: function(backendHelpers) {
-        this.backendHelpers = backendHelpers;
-    },
 
 
     /**
@@ -80,18 +70,15 @@ var BackendUserlist = Class.extend({
 
     /**
      * timer: regular userfile and userlist update for current user
-     * @param backend (object) the current backend object for further information and userlist storage
      */
-    userlistUpdateTimer: function(backend) {
-        this.backend = backend;
-
+    userlistUpdateTimer: function() {
         var that = this;
         this.backendHelpers.lock(function(err) {
             // can't get lock for exclusive userfile access? retry in random timeout
             if (typeof err != 'undefined') {
                 var randomTimeout = Math.floor(Math.random() * config.lock_retry_maximum) + config.lock_retry_minimum;
                 window.setTimeout(function() {
-                    that.userlistUpdateTimer(backend);
+                    that.userlistUpdateTimer();
                 }, randomTimeout);
                 return;
             }
@@ -258,7 +245,7 @@ var BackendUserlist = Class.extend({
         // initialize next update
         var that = this;
         window.setTimeout(function() {
-            that.userlistUpdateTimer(that.backend);
+            that.userlistUpdateTimer();
         }, config.user_list_update_intervall);
     }
-});
+}));

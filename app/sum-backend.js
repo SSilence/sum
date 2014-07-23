@@ -6,24 +6,30 @@ var gui = require('nw.gui');
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-var Backend = Class.extend({
+define('sum-backend', Class.extend({
 
     /**
      * backends helpers
      */
-    backendHelpers: false,
+    backendHelpers: '@inject:sum-backend-helpers',
 
 
     /**
      * backends client
      */
-    backendClient: false,
+    backendClient: '@inject:sum-backend-client',
 
 
     /**
      * backends client
      */
-    backendUserlist: false,
+    backendUserlist: '@inject:sum-backend-userlist',
+
+
+    /**
+     * backends server
+     */
+    backendServer: '@inject:sum-backend-server',
 
 
     /**
@@ -76,17 +82,8 @@ var Backend = Class.extend({
 
     /**
      * initialize backend
-     * @param backendHelpers (object) the current backends helpers
-     * @param backendClient (object) the current backends client
-     * @param backendServer (object) the current backends server
-     * @param backendUserlist (object) the current backends userlist
      */
-    init: function(backendHelpers, backendClient, backendServer, backendUserlist) {
-        // save instances
-        this.backendHelpers = backendHelpers;
-        this.backendClient = backendClient;
-        this.backendUserlist = backendUserlist;
-
+    initialize: function() {
         // load alternative config given by command line?
         if (gui.App.argv.length > 0) {
             try {
@@ -98,10 +95,10 @@ var Backend = Class.extend({
         }
 
         // initial generate rsa keys
-        this.key = backendHelpers.generateKeypair();
+        this.key = this.backendHelpers.generateKeypair();
 
         // set ip
-        this.ip = backendHelpers.getIp();
+        this.ip = this.backendHelpers.getIp();
 
         // init node webkit tray icon
         this.initTray();
@@ -111,7 +108,7 @@ var Backend = Class.extend({
 
         // start backend server for chat communication
         var that = this;
-        backendServer.start(this, backendHelpers, function(port) {
+        this.backendServer.start(function(port) {
             // save port which server uses for userfile
             that.port = port;
 
@@ -235,8 +232,8 @@ var Backend = Class.extend({
     onUserIsRemoved: function(callback) {
         this.userIsRemoved = callback;
     },
-    
-    
+
+
     /**
      * register callback for when user is removed
      */
@@ -441,7 +438,7 @@ var Backend = Class.extend({
      */
     notification: function(image, title, text, conversation) {
         if(this.enableNotifications===true) {
-            var that = this;        
+            var that = this;
             window.LOCAL_NW.desktopNotifications.notify(image, title, text, function() {
                 gui.Window.get().show();
                 if (typeof conversation != 'undefined') {
@@ -639,4 +636,4 @@ var Backend = Class.extend({
     clearConversation: function(conversation) {
         this.conversations[conversation] = [];
     }
-});
+}));

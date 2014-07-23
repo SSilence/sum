@@ -7,15 +7,25 @@ var http = require('http');
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-var BackendServer = Class.extend({
+define('sum-backend-server', Class.extend({
+
+    /**
+     * backend
+     */
+    backend: '@inject:sum-backend',
+
+
+    /**
+     * backends helpers
+     */
+    backendHelpers: '@inject:sum-backend-helpers',
+
 
     /**
      * start chat message server
-     * @param backend (object) the current backend
-     * @param backendHelpers (object) the current backends helpers
      * @param success (function) callback with port
      */
-    start: function(backend, backendHelpers, success) {
+    start: function(success) {
         var that = this;
 
         // create new http server
@@ -29,7 +39,7 @@ var BackendServer = Class.extend({
 
             // error occured
             request.addListener('error', function(error){
-                backend.error('server init error: ' + error);
+                that.backend.error('server init error: ' + error);
                 next(error);
             });
 
@@ -41,10 +51,10 @@ var BackendServer = Class.extend({
                 // parse decrypted json
                 var req = {};
                 try {
-                    var reqStr = backendHelpers.decrypt(backend.key, body);
+                    var reqStr = that.backendHelpers.decrypt(that.backend.key, body);
                     req = JSON.parse(reqStr);
                 } catch(e) {
-                    backend.error('Ungueltige Nachricht erhalten (verschluesselung oder JSON konnte nicht verarbeitet werden)');
+                    that.backend.error('Ungueltige Nachricht erhalten (verschluesselung oder JSON konnte nicht verarbeitet werden)');
                     response.writeHeader(400, {"Content-Type": "text/plain"});
                     response.end();
                     return;
@@ -52,10 +62,10 @@ var BackendServer = Class.extend({
 
                 // is type given?
                 if(typeof req.type != "undefined") {
-                    that.handle(backend, backendHelpers, req);
+                    that.handle(req);
                     response.writeHeader(200, {"Content-Type": "text/plain"});
                 } else {
-                    backend.error('invalid request received');
+                    that.backend.error('invalid request received');
                     response.writeHeader(400, {"Content-Type": "text/plain"});
                 }
 
@@ -74,11 +84,9 @@ var BackendServer = Class.extend({
 
     /**
      * handle request
-     * @param backend the current backend
-     * @param backendHelpers (object) the current backends helpers
      * @param request object with the type
      */
-    handle: function(backend, backendHelpers, request) {
+    handle: function(request) {
         // new message
         // {
         //    'type': 'message',
@@ -88,29 +96,29 @@ var BackendServer = Class.extend({
         //};
         if (request.type == 'message') {
             if (typeof request.text == 'undefined' || typeof request.sender == 'undefined' || typeof request.receiver == 'undefined') {
-                backend.error('Ungültige Nachricht erhalten: ' + JSON.stringify(request));
+                this.backend.error('Ungültige Nachricht erhalten: ' + JSON.stringify(request));
             }
 
             // conversation = sender
             var conversationId = request.sender;
 
             // conversation = receiver if it is a room
-            if (backend.doesRoomExists(request.receiver))
+            if (this.backend.doesRoomExists(request.receiver))
                 conversationId = request.receiver;
 
-            if (typeof backend.conversations[conversationId] == 'undefined')
-                backend.conversations[conversationId] = [];
+            if (typeof this.backend.conversations[conversationId] == 'undefined')
+                this.backend.conversations[conversationId] = [];
 
-            var conversation = backend.conversations[conversationId];
-            backend.conversations[conversationId][conversation.length] = {
+            var conversation = this.backend.conversations[conversationId];
+            this.backend.conversations[conversationId][conversation.length] = {
                 'datetime': new Date().getTime(),
                 'sender': request.sender,
                 'receiver': request.receiver,
                 'text': request.text
             };
 
-            if(typeof backend.newMessage != "undefined")
-                backend.newMessage(backend.conversations[conversationId][conversation.length-1]);
+            if(typeof this.backend.newMessage != "undefined")
+                this.backend.newMessage(this.backend.conversations[conversationId][conversation.length-1]);
 
         // room invite
         // {
@@ -121,26 +129,26 @@ var BackendServer = Class.extend({
         // };
         } else if(request.type == 'invite') {
             if (typeof request.room == 'undefined' || typeof request.sender == 'undefined' || typeof request.receiver == 'undefined') {
-                backend.error('Ungültige Nachricht erhalten: ' + JSON.stringify(request));
+                this.backend.error('Ungültige Nachricht erhalten: ' + JSON.stringify(request));
             }
 
             // only accept one invitation per room
-            if (backendHelpers.isUserInRoomList(backend.invited, request.room)) {
+            if (this.backendHelpers.isUserInRoomList(this.backend.invited, request.room)) {
                 return;
             }
 
             // insert invitation
-            backend.invited[backend.invited.length] = {
+            this.backend.invited[this.backend.invited.length] = {
                 name: request.room,
                 invited: request.sender
             };
 
             // show notification
-            if(typeof backend.roomInvite != "undefined")
-                backend.roomInvite(request.room, request.sender);
+            if(typeof this.backend.roomInvite != "undefined")
+                this.backend.roomInvite(request.room, request.sender);
 
             // update roomlist
-            backend.updateRoomlist();
+            this.backend.updateRoomlist();
         }
     },
 
@@ -164,4 +172,4 @@ var BackendServer = Class.extend({
 
         server.listen(0);
     }
-});
+}));

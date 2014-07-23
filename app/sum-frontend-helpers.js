@@ -4,7 +4,7 @@
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-var FrontendHelpers = Class.extend({
+define('sum-frontend-helpers', Class.extend({
 
     /**
      * updates ago during element is visible
@@ -225,4 +225,4 @@ var FrontendHelpers = Class.extend({
             return false;
         return result.length>1 ? result[1] : false;
     }
-});
+}));
