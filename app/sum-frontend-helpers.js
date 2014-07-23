@@ -193,7 +193,7 @@ var FrontendHelpers = Class.extend({
             var language = this.extractLanguageFromCode(message);
 
             // remove [code] tags
-            message = message.replace(/\[\/?code\s*(language=([^\]]+))?\]/g, "");
+            message = message.replace(/\[\/?code\s*(language=([^\]]+))?\]/g, "").trim();
 
             // format code
             if (language !== false && language != 'auto')
