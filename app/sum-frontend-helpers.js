@@ -91,7 +91,7 @@ var FrontendHelpers = Class.extend({
 
             // replace shortcut
             var re = new RegExp(shortcut, 'g');
-            text = text.replace(re, '<img src="'+ emoticon +'" title="' + shortcut + '"/>');
+            text = text.replace(re, '<img class="emoticons" src="'+ emoticon +'" title="' + shortcut + '"/>');
         });
 
         return text;
