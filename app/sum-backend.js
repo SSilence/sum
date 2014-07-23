@@ -345,7 +345,7 @@ var Backend = Class.extend({
         var that = this;
         for (var i=0; i<users.length; i++) {
             // don't send message to offline users
-            if (users[i].status = 'offline')
+            if (users[i].status == 'offline')
                 continue;
 
             // don't send message to this user
