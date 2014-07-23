@@ -581,7 +581,7 @@ body {
     #content {
         padding:20px;
         padding-top:0;
-        padding-bottom:10px;
+        padding-bottom:0;
         list-style:none;
     }
 
@@ -590,36 +590,93 @@ body {
     }
 
     .entry {
-        margin-bottom:20px;
+        margin-bottom:10px;
         font-size:0.8em;
         color:#666;
         padding-bottom:10px;
         border-bottom:1px solid #dadada;
+        display: flex;
     }
 
         .entry:last-child {
             border-bottom:0;
         }
 
-        .entry-metadata {
-            display: flex;
-            align-items: center;
-            font-weight:bold;
-            margin-bottom:10px;
+        .entry-sender {
+            font-size:0.9em;
+            font-weight: bold;
         }
 
-            .entry-metadata > * {
-                margin-right:10px;
-            }
+        .entry-datetime {
+            font-weight:normal;
+            font-size:0.8em;
+            color:#AAA;
+        }
+		
+		.entry-content {
+			line-height: 135%;
+			padding-top: 5px;
+		}
+		
+		.entry-content img.emoticons {
+			width: 20px;
+			margin-top: -3px;
+			margin-bottom: -2px;
+		}
 
-            .entry-datetime {
-                font-weight:normal;
-                font-size:0.8em;
-            }
+        .entry-content pre {
+            overflow: scroll;
+            position: relative;
+            margin-bottom: 24px;
+            border-radius: 3px;
+            border: 1px solid #C3CCD0;
+            background: #FFF;
+            overflow: hidden;
+        }
 
-            .entry-content pre code {
-                font-size: 1.2em;
-            }
+        .entry-content pre code {
+            font-size: 1.0em;
+            display: block;
+            padding: 12px 24px;
+            overflow-y: auto;
+            font-weight: 300;
+            font-family: Menlo, monospace;
+        }
+
+        code.has-numbering {
+            margin-left: 21px;
+        }
+
+        .pre-numbering {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: auto;
+            padding: 12.8px 2px 12.8px 0;
+            border-right: 1px solid #C3CCD0;
+            border-radius: 3px 0 0 3px;
+            background-color: #EEE;
+            text-align: right;
+            font-family: Menlo, monospace;
+            font-size: 1.2em;
+            color: #AAA;
+        }
+
+        .entry-avatar {
+            width:40px;
+        }
+
+        .entry-contentarea {
+            -webkit-box-flex: 1;
+            box-flex: 1;
+            flex:1;
+        }
+		
+		.entry-contentarea {
+            -webkit-box-flex: 1;
+            box-flex: 1;
+            flex:1;
+        }
 
 
 

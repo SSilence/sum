@@ -4,7 +4,7 @@ SUM - S Ultimate Messenger
 Copyright (c) 2013 Tobias Zeising, tobias.zeising@aditu.de  
 http://www.aditu.de  
 Licensed under the GPLv3 license  
-Version 0.0.4
+Version 0.0.6-SNAPSHOT
 
 
 SUM is a simple instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a file which will be stored at a shared network folder.
@@ -34,6 +34,14 @@ for creating a new build you have to do following:
  2. build sum: ```grunt``` (you can find the sum application in ```bin/releases/SUM/win/SUM/```)
  3. build setup: ```grunt setup``` creates the setup file
 
+If you are behind a proxy you have to set your proxy server for npm and nodewebkit in c:\Users\username\.npmrc
+```
+proxy = http://username:secret@yourproxy.de:8080/
+https-proxy = https://username:secret@yourproxy.de:8080/
+```
+
+You need also proxy settings for installing nodewebkit and using grunt. You have to set ```http_proxy``` as environment variable.
+
 
 
 CONFIG
@@ -42,7 +50,7 @@ CONFIG
 You can configure SUM by changing app/config.js. You can also give a other config as command line argument:
 
 ```
-nodewebkit ./../config_ext.js
+nodewebkit ./ ./../config_ext.js
 ```
 
 config_ext.js content could be:
@@ -62,7 +70,8 @@ Following configuration parameters are available:
 * ``user_file``: path of the file where all users register themself
 * ``user_file_extended``: file per user where avatar and key will be stored. # will be replaced by the md5 hash of the username
 * ``lock_file``: path of the lock file for the user file. ensures that only one user access the user file
-* ``user_timeout``: remove users from list after ms inactivity
+* ``user_timeout``: set user status to offline after ms inactivity
+* ``user_remove``: remove users from list after ms inactivity
 * ``user_list_update_intervall``: update every n seconds users entry in userlist file
 * ``lock_stale``: max age in milliseconds of lock file
 * ``lock_retry_minimum``: retry in minimum random ms when file is locked
@@ -72,7 +81,6 @@ Following configuration parameters are available:
 * ``highlight_languages``: supported highlight.js languages in code input selection
 
 You can access the debugger by setting ``"toolbar": true`` in ``package.json``
-
 
 
 
@@ -101,6 +109,7 @@ Special thanks to the great programmers of this libraries which will be used in 
 * grunt: http://gruntjs.com/
 * grunt node webkit builder: https://github.com/mllrsohn/grunt-node-webkit-builder
 * grunt shell: https://github.com/sindresorhus/grunt-shell
+* wait for images: https://github.com/alexanderdickson/waitForImages
 
   [1]: http://nodejs.org/
   [2]: http://www.jrsoftware.org/isinfo.php

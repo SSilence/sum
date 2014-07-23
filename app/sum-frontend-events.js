@@ -282,12 +282,12 @@ var FrontendEvents = Class.extend({
         });
 
         // rooms add: cancel
-        $('body').delegate(".rooms-popup.add .cancel", "click", function(e) {
+        $('body').delegate(".rooms-popup.add .cancel", "click", function() {
             $('.rooms-popup.add').remove();
         });
 
         // rooms add: save
-        $('body').delegate(".rooms-popup.add .save", "click", function(e) {
+        $('body').delegate(".rooms-popup.add .save", "click", function() {
             var room = $(this).parent().find('.name').val();
             var users = $(this).parent().find('select').val();
 
@@ -318,14 +318,14 @@ var FrontendEvents = Class.extend({
         });
 
         // rooms invitation: accept
-        $('body').delegate(".rooms-popup.invite .save", "click", function(e) {
+        $('body').delegate(".rooms-popup.invite .save", "click", function() {
             var room = $(this).parent().find('.name').val();
             backend.acceptInvitation(room);
             $(this).parent().remove();
         });
 
         // rooms invitation: decline
-        $('body').delegate(".rooms-popup.invite .cancel", "click", function(e) {
+        $('body').delegate(".rooms-popup.invite .cancel", "click", function() {
             var room = $(this).parent().find('.name').val();
             backend.declineInvitation(room);
             $(this).parent().remove();
@@ -337,7 +337,7 @@ var FrontendEvents = Class.extend({
         });
 
         // rooms: invite user save
-        $('body').delegate(".rooms-popup.edit .save", "click", function(e) {
+        $('body').delegate(".rooms-popup.edit .save", "click", function() {
             var room = $(this).parent().find('.name').val();
             var users = $(this).parent().find('select').val();
 
@@ -348,7 +348,7 @@ var FrontendEvents = Class.extend({
         });
 
         // rooms: invite user cancel
-        $('body').delegate(".rooms-popup.edit .cancel", "click", function(e) {
+        $('body').delegate(".rooms-popup.edit .cancel", "click", function() {
             $('.rooms-popup.edit').remove();
         });
 
@@ -365,11 +365,10 @@ var FrontendEvents = Class.extend({
 
     /**
      * select new avatar
-     * @param evt (object) event
      */
-    selectAvatar: function(evt) {
+    selectAvatar: function() {
         var that = this;
-        $('#fileDialog').change(function(evt) {
+        $('#fileDialog').change(function() {
             // check file given?
             if ($(this).val() === '')
                 return;
@@ -502,7 +501,7 @@ var FrontendEvents = Class.extend({
 
         var headerHeight = $('#main-header').outerHeight();
         var messageHeight = $('#message').outerHeight();
-        var padding = parseInt($('#content').css('padding-bottom')) * 2;
+        var padding = parseInt($('#content').css('padding-bottom'));
 
         $('#content-wrapper').height(windowHeight - headerHeight - messageHeight - padding);
 

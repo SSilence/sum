@@ -43,7 +43,11 @@ var Frontend = Class.extend({
         // initialize div inline scroller
         $("#contacts-wrapper, #rooms-wrapper, #content-wrapper").mCustomScrollbar({
             advanced:{
-                updateOnContentResize: true,
+                updateOnContentResize: true
+            },
+            scrollInertia: 0,
+            mouseWheel: {
+                scrollAmount: 350
             }
         });
 
@@ -82,24 +86,24 @@ var Frontend = Class.extend({
         backend.onRoomInvite(function(room, user) {
             var text = user.escape() + ' hat dich in den Raum ' + room.escape() + ' eingeladen';
             alertify.log(text);
-            backend.notification("group.png", text);
+            backend.notification("group.png", "", text);
         });
 
         // user is now online
         backend.onUserOnlineNotice(function(avatar, text) {
             text = text.escape() + ' ist jetzt online';
             alertify.log(text);
-            backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", text);
+            backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", "", text);
         });
 
         // register callback for a user goes offline
         backend.onUserOfflineNotice(function(avatar, text) {
             text = text.escape() + ' ist jetzt offline';
             alertify.log(text);
-            backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", text);
+            backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", "", text);
         });
-		
-		// register callback for a user has been removed
+
+        // register callback for a user has been removed
         backend.onUserRemovedNotice(function(avatar, text) {
             text = text.escape() + ' verlaesst uns';
             alertify.log(text);
@@ -108,13 +112,13 @@ var Frontend = Class.extend({
 
         // register callback for incoming new message
         backend.onNewMessage(function(message) {
-			// conversation = sender
+            // conversation = sender
             var conversationId = message.sender;
 
             // conversation = receiver if it is a room
             if (backend.doesRoomExists(message.receiver))
                 conversationId = message.receiver;
-		
+        
             if (message.sender != backend.getUsername())
                 backend.notification(backend.getAvatar(message.sender), "Neue Nachricht von " + message.sender.escape(), message.text, conversationId);
 
@@ -131,8 +135,8 @@ var Frontend = Class.extend({
         });
 
         // register callback for room list update
-        backend.onGetRoomlistResponse(function(rooms, invitedRooms) {
-            that.updateRoomlist(rooms, invitedRooms);
+        backend.onGetRoomlistResponse(function(rooms) {
+            that.updateRoomlist(rooms);
         });
 
         // register callback for user list update
@@ -148,29 +152,28 @@ var Frontend = Class.extend({
 
         // backend has update for userlist
         backend.onHasUserlistUpdate(function() {
-			backend.getConversation(that.currentConversation);
             backend.updateUserlist(that.currentConversation);
         });
-		
-		// backend has removed an user
-		backend.onUserIsRemoved(function(user) {
-			// check if the currentConversation is the Conversation with the removed user...
-			if  (that.currentConversation == user.username) {
-				// ...if so, switch conversation to "room_all"
-				that.currentConversation = config.room_all;
-				backend.getConversation(that.currentConversation);
-				backend.updateUserlist(that.currentConversation);
-			}
-		});
-		
-		//switchConversation to user or room
-		backend.onSwitchConversation(function(conversationName) {
-			if  (that.currentConversation != conversationName) {
-				that.currentConversation = conversationName;
-				backend.getConversation(that.currentConversation);
-				backend.updateUserlist(that.currentConversation);
-			}
-		});
+        
+        // backend has removed an user
+        backend.onUserIsRemoved(function(user) {
+            // check if the currentConversation is the Conversation with the removed user...
+            if  (that.currentConversation == user.username) {
+                // ...if so, switch conversation to "room_all"
+                that.currentConversation = config.room_all;
+                backend.getConversation(that.currentConversation);
+                backend.updateUserlist(that.currentConversation);
+            }
+        });
+        
+        //switchConversation to user or room
+        backend.onSwitchConversation(function(conversationName) {
+            if  (that.currentConversation != conversationName) {
+                that.currentConversation = conversationName;
+                backend.getConversation(that.currentConversation);
+                backend.updateUserlist(that.currentConversation);
+            }
+        });
     },
 
 
@@ -182,7 +185,7 @@ var Frontend = Class.extend({
         var lastEmot = "";
         $.each(emoticons, function(shortcut, emoticon) {
             if(lastEmot != emoticon)
-                emotbox.append('<img src="'+ emoticon +'" title="' + shortcut + '"/>');
+                emotbox.append('<img class="emoticons" src="'+ emoticon +'" title="' + shortcut + '"/>');
             lastEmot = emoticon;
         });
     },
@@ -213,7 +216,8 @@ var Frontend = Class.extend({
      */
     updateUserlist: function(users) {
         // save scroll state
-        var scrollPosition = $("#contacts-wrapper").scrollTop();
+        var contactsWrapper = $("#contacts-wrapper");
+        var scrollPosition = contactsWrapper.scrollTop();
 
         // update userlist
         $('.contacts').html('');
@@ -243,7 +247,7 @@ var Frontend = Class.extend({
         });
 
         // restore scroll state
-        $("#contacts-wrapper").mCustomScrollbar("scrollTo", scrollPosition);
+        contactsWrapper.mCustomScrollbar("scrollTo", scrollPosition);
     },
 
 
@@ -253,7 +257,8 @@ var Frontend = Class.extend({
      */
     updateRoomlist: function(rooms) {
         // save scroll state
-        var scrollPosition = $("#rooms-wrapper").scrollTop();
+        var roomsWrapper = $("#rooms-wrapper");
+        var scrollPosition = roomsWrapper.scrollTop();
 
         // update roomlist
         $('.rooms').html('');
@@ -301,7 +306,7 @@ var Frontend = Class.extend({
         });
 
         // restore scroll state
-        $("#rooms-wrapper").mCustomScrollbar("scrollTo", scrollPosition);
+        roomsWrapper.mCustomScrollbar("scrollTo", scrollPosition);
     },
 
 
@@ -312,7 +317,6 @@ var Frontend = Class.extend({
      */
     updateConversation: function(messages, backend) {
         // set unreadcounter to 0
-        var unread = this.unreadMessagesCounter[this.currentConversation];
         delete this.unreadMessagesCounter[this.currentConversation];
         backend.updateUserlist(this.currentConversation);
         backend.updateRoomlist();
@@ -337,29 +341,56 @@ var Frontend = Class.extend({
         // write metadata
         $('#main-metadata').html(avatar + '<span>' + this.currentConversation + '</span><span class="' + state + '"></span>');
 
-        // show messages (highlite new messages)
+        // show messages
         $('#content').html('');
         var that = this;
+        var html = '';
         $.each(messages, function(index, message) {
-            $('#content').append('<li class="entry">\
-                <div class="entry-metadata">\
+            html = html + '<li class="entry">\
+                <div class="entry-avatar">\
                     <img src="' + backend.getAvatar(message.sender) + '" class="avatar" />\
-                    <span>' + message.sender.escape() + '</span>\
+                </div>\
+                <div class="entry-contentarea hyphenate" lang="de">\
+                    <span class="entry-sender">' + message.sender.escape() + '</span>\
                     <span class="entry-datetime">' + that.frontendHelpers.dateAgo(message.datetime) + '</span>\
+                    <div class="entry-content">\
+                        ' + that.frontendHelpers.formatMessage(message.text) + '\
+                    </div>\
                 </div>\
-                <div class="entry-content">\
-                    ' + that.frontendHelpers.formatMessage(message.text) + '\
-                </div>\
-            </li>');
+            </li>';
+        });
 
-            // set time ago updater
-            var dateTimeElement = $('#content .entry-datetime:last');
+        $('#content').append(html);
+
+        // start time ago updater
+        $.each(messages, function(index, message) {
+            var dateTimeElement = $('#content .entry-datetime:nth-child(' + index + ')');
             that.frontendHelpers.startDateAgoUpdater(message.datetime, dateTimeElement);
+        });
 
-            // scroll 2 bottom
-            if(index==messages.length-1) {
-                window.setTimeout(function() { $("#content-wrapper").mCustomScrollbar("scrollTo","bottom"); }, 500);
-            }
+        // scroll 2 bottom
+        $("#content").waitForImages(function() {
+            $("#content-wrapper").mCustomScrollbar("update");
+            $("#content-wrapper").mCustomScrollbar("scrollTo","bottom");
+        });
+
+        // start hyphenator
+        Hyphenator.run();
+
+        //numbering for pre>code blocks
+        $(function(){
+            $('pre code').each(function(){
+                //var lines = $(this).text().split('\n').length;
+                var lines = $(this).text().split(/\r\n|\r|\n/).length;
+                var $numbering = $('<ul/>').addClass('pre-numbering');
+                $(this)
+                    .addClass('has-numbering')
+                    .parent()
+                    .append($numbering);
+                for(i=1;i<=lines;i++){
+                    $numbering.append($('<li/>').text(i));
+                }
+            });
         });
     }
 

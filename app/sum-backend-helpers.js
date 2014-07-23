@@ -56,7 +56,7 @@ var BackendHelpers = Class.extend({
 
     /**
      * returns current ip
-     * @return (string) the ip of the current user
+     * @return (string or boolean) the ip of the current user
      */
     getIp: function() {
         var ifaces=os.networkInterfaces();
@@ -192,7 +192,7 @@ var BackendHelpers = Class.extend({
 
     /**
      * decrypt with RSA
-     * @return decrypted string
+     * @return (string) decrypted string
      * @param key (string) public key for decryption
      * @param data (mixed) data for decryption
      */
@@ -220,7 +220,7 @@ var BackendHelpers = Class.extend({
 
     /**
      * removes a room from given list
-     * @return (array) list without given room
+     * @return (Array) list without given room
      * @param list (array) with objects with property name
      * @param room (string) roomname which should be removed
      */
@@ -253,9 +253,9 @@ var BackendHelpers = Class.extend({
 
     /**
      * returns all users, which are not in list but in compare
-     * @return (array) list with all users, which are in the first list but not in the second
+     * @return (Array) list with all users, which are in the first list but not in the second
      * @param list (array) with users with property username
-     * @param room (array) with users with property username
+     * @param compare (array) with users with property username
      */
     getUsersNotInListOne: function(list, compare) {
         var notInList = [];
@@ -270,9 +270,9 @@ var BackendHelpers = Class.extend({
         }
         return notInList;
     },
-	
-	
-	/**
+
+
+    /**
      * returns all users, which have the same status
      * @return (array) list with all users, which have the same status
      * @param list (array) with users

@@ -9,10 +9,11 @@ $(document).ready(function() {
     var backendHelpers = new BackendHelpers();
     var backendServer = new BackendServer();
     var backendClient = new BackendClient(backendHelpers);
-    var backend = new Backend(backendHelpers, backendServer, backendClient);
+    var backendUserlist = new BackendUserlist(backendHelpers);
+    var backend = new Backend(backendHelpers, backendClient, backendServer, backendUserlist);
 
     // initialize frontend
     var frontendEvents = new FrontendEvents();
     var frontendHelpers = new FrontendHelpers();
-    var frontend = new Frontend(backend, backendHelpers, frontendEvents, frontendHelpers);
+    new Frontend(backend, backendHelpers, frontendEvents, frontendHelpers);
 });

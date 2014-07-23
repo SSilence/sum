@@ -35,7 +35,7 @@ var FrontendHelpers = Class.extend({
 
         var timeout = 1000;
         if(ageInMinutes<1)
-            timeout = 1000;
+            timeout = 61000;
         else if(ageInHours<1)
             timeout = 1000 * 60;
         else if(ageInDays<1)
@@ -68,7 +68,7 @@ var FrontendHelpers = Class.extend({
         var ageInDays = ageInHours / 24;
 
         if(ageInMinutes<1)
-            return 'vor ' + Math.floor(ageInSeconds) + ' Sekunden';
+            return ' vor wenigen Sekunden';
         if(ageInHours<1)
             return 'vor ' + Math.floor(ageInMinutes) + ' Minuten';
         if(ageInDays<1)
@@ -91,7 +91,7 @@ var FrontendHelpers = Class.extend({
 
             // replace shortcut
             var re = new RegExp(shortcut, 'g');
-            text = text.replace(re, '<img src="'+ emoticon +'" title="' + shortcut + '"/>');
+            text = text.replace(re, '<img class="emoticons" src="'+ emoticon +'" title="' + shortcut + '"/>');
         });
 
         return text;
@@ -99,53 +99,6 @@ var FrontendHelpers = Class.extend({
 
 
     /**
-<<<<<<< HEAD:app/sim-frontend-helpers.js
-     * search for BB-Tag "code"
-     * @return (boolean) true or false
-     * @param text (string) text with BB-Tags
-     */
-    hasCode: function(text) {        
-        
-        if (text.search(/\[code.*\]/) != -1) {
-            return true;
-        } else {
-            return false;
-        }
-    },
-    
-
-    /**
-     * Remove BB-Tag "code"
-     * @return (string) text surounded with code-block (<pre><code>)
-     * @param text (string) text with bb-tag "code"
-     */
-    removeBBCode: function(text) {
-        
-        text = text.replace(/\[code.*\] /g, "");
-        text = text.replace(/ \[\/code\]/g, "");
-        
-        return text;
-    },
-    
-    
-    /**
-     * Remove BB-Tag "code"
-     * @return (string) text surounded with code-block (<pre><code>)
-     * @param text (string) text with bb-tag "code"
-     */
-    getBBCodeLanguage: function(text) {
-        
-        text = text.match(/\[code language=.*\] /g, "");
-        text = text[0].replace(/\[code language\=/g, "");
-        text = text.replace(/\] /g, "");
-        
-        return text;
-    },
-    
-    
-    /**
-=======
->>>>>>> 4942596550f5a557a3528e0bc5ee250fe34a0034:app/sum-frontend-helpers.js
      * resize image to smaller size in frontend
      * @param img (DOMNode) image for resizing
      * @param maxWidth (int) maximal allowed width
@@ -161,7 +114,6 @@ var FrontendHelpers = Class.extend({
             ratio = maxWidth / width;   // get ratio for scaling image
             $(img).css("width", maxWidth); // Set new width
             $(img).css("height", height * ratio);  // Scale height based on ratio
-            height = height * ratio;    // Reset height to match scaled image
         }
 
         width = $(img).width();    // Current image width
@@ -172,7 +124,6 @@ var FrontendHelpers = Class.extend({
             ratio = maxHeight / height; // get ratio for scaling image
             $(img).css("height", maxHeight);   // Set new height
             $(img).css("width", width * ratio);    // Scale width based on ratio
-            width = width * ratio;    // Reset width to match scaled image
         }
     },
 
@@ -218,8 +169,8 @@ var FrontendHelpers = Class.extend({
         var ori = new Image();
         ori.src = $(image).attr('src');
 
-        factorX = ori.width / $(image).width();
-        factorY = ori.height / $(image).height();
+        var factorX = ori.width / $(image).width();
+        var factorY = ori.height / $(image).height();
 
         var canvas = document.createElement("canvas");
         canvas.width  = "200";
@@ -242,7 +193,7 @@ var FrontendHelpers = Class.extend({
             var language = this.extractLanguageFromCode(message);
 
             // remove [code] tags
-            message = message.replace(/\[\/?code\s*(language=([^\]]+))?\]/g, "");
+            message = message.replace(/\[\/?code\s*(language=([^\]]+))?\]/g, "").trim();
 
             // format code
             if (language !== false && language != 'auto')
@@ -250,7 +201,7 @@ var FrontendHelpers = Class.extend({
             else
                 message = hljs.highlightAuto(message).value;
 
-            message = '<pre><code>' + message + '</code></pre>';
+            message = '<pre><code class="donthyphenate has-numbering">' + message + '</code></pre>';
 
         // format message as text with emoticons, urls, ...
         } else {
@@ -270,6 +221,8 @@ var FrontendHelpers = Class.extend({
     extractLanguageFromCode: function(message) {
         var regex = /(?:\[code\s*language=)([^\]]+)/g;
         var result = regex.exec(message);
+        if (result == null)
+            return false;
         return result.length>1 ? result[1] : false;
     }
 });

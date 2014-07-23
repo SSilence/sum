@@ -30,7 +30,7 @@ var BackendServer = Class.extend({
             // error occured
             request.addListener('error', function(error){
                 backend.error('server init error: ' + error);
-                next(err);
+                next(error);
             });
 
             // last data chunk received
