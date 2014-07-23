@@ -4,7 +4,7 @@ SUM - S Ultimate Messenger
 Copyright (c) 2013 Tobias Zeising, tobias.zeising@aditu.de  
 http://www.aditu.de  
 Licensed under the GPLv3 license  
-Version 0.0.5
+Version 0.0.6-SNAPSHOT
 
 
 SUM is a simple instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a file which will be stored at a shared network folder.
@@ -50,7 +50,7 @@ CONFIG
 You can configure SUM by changing app/config.js. You can also give a other config as command line argument:
 
 ```
-nodewebkit ./../config_ext.js
+nodewebkit ./ ./../config_ext.js
 ```
 
 config_ext.js content could be:
@@ -109,6 +109,7 @@ Special thanks to the great programmers of this libraries which will be used in 
 * grunt: http://gruntjs.com/
 * grunt node webkit builder: https://github.com/mllrsohn/grunt-node-webkit-builder
 * grunt shell: https://github.com/sindresorhus/grunt-shell
+* wait for images: https://github.com/alexanderdickson/waitForImages
 
   [1]: http://nodejs.org/
   [2]: http://www.jrsoftware.org/isinfo.php

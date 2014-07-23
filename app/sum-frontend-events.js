@@ -501,7 +501,7 @@ var FrontendEvents = Class.extend({
 
         var headerHeight = $('#main-header').outerHeight();
         var messageHeight = $('#message').outerHeight();
-        var padding = parseInt($('#content').css('padding-bottom')) * 2;
+        var padding = parseInt($('#content').css('padding-bottom'));
 
         $('#content-wrapper').height(windowHeight - headerHeight - messageHeight - padding);
 

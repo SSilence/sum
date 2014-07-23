@@ -45,8 +45,9 @@ var Frontend = Class.extend({
             advanced:{
                 updateOnContentResize: true
             },
+            scrollInertia: 0,
             mouseWheel: {
-                scrollAmount: 450
+                scrollAmount: 350
             }
         });
 
@@ -340,11 +341,12 @@ var Frontend = Class.extend({
         // write metadata
         $('#main-metadata').html(avatar + '<span>' + this.currentConversation + '</span><span class="' + state + '"></span>');
 
-        // show messages (highlite new messages)
+        // show messages
         $('#content').html('');
         var that = this;
+        var html = '';
         $.each(messages, function(index, message) {
-            $('#content').append('<li class="entry">\
+            html = html + '<li class="entry">\
                 <div class="entry-avatar">\
                     <img src="' + backend.getAvatar(message.sender) + '" class="avatar" />\
                 </div>\
@@ -355,15 +357,21 @@ var Frontend = Class.extend({
                         ' + that.frontendHelpers.formatMessage(message.text) + '\
                     </div>\
                 </div>\
-            </li>');
+            </li>';
+        });
 
-            // set time ago updater
-            var dateTimeElement = $('#content .entry-datetime:last');
+        $('#content').append(html);
+
+        // start time ago updater
+        $.each(messages, function(index, message) {
+            var dateTimeElement = $('#content .entry-datetime:nth-child(' + index + ')');
             that.frontendHelpers.startDateAgoUpdater(message.datetime, dateTimeElement);
         });
 
         // scroll 2 bottom
-        $("#content-wrapper").mCustomScrollbar("scrollTo","bottom");
+        $("#content").waitForImages(function() {
+            $("#content-wrapper").mCustomScrollbar("scrollTo","bottom");
+        });
     }
 
 });
