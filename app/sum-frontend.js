@@ -153,6 +153,7 @@ var Frontend = Class.extend({
         // backend has update for userlist
         backend.onHasUserlistUpdate(function() {
             backend.updateUserlist(that.currentConversation);
+            that.updateConversationHeader();
         });
         
         // backend has removed an user
@@ -321,25 +322,7 @@ var Frontend = Class.extend({
         backend.updateUserlist(this.currentConversation);
         backend.updateRoomlist();
 
-        // set metadata: avatar
-        var avatar = 'group.png';
-        if($('.contacts .active').length > 0)
-            avatar = $('.contacts .active .avatar').attr('src');
-        avatar = '<img src="' + avatar + '" class="avatar" />';
-
-        // set metadata: state
-        var state = 'online';
-        var stateElement = $('.active > div:first');
-        if(stateElement.length > 0) {
-            if(stateElement.hasClass('offline')) {
-                state = 'offline';
-            } else if(stateElement.hasClass('notavailable')) {
-                state = 'notavailable';
-            }
-        }
-
-        // write metadata
-        $('#main-metadata').html(avatar + '<span>' + this.currentConversation + '</span><span class="' + state + '"></span>');
+        this.updateConversationHeader();
 
         // show messages
         $('#content').html('');
@@ -392,6 +375,32 @@ var Frontend = Class.extend({
                 }
             });
         });
+    },
+
+
+    /**
+     * update current updateConversationHeader
+     */
+    updateConversationHeader: function(){
+        // set metadata: avatar
+        var avatar = 'group.png';
+        if($('.contacts .active').length > 0)
+            avatar = $('.contacts .active .avatar').attr('src');
+        avatar = '<img src="' + avatar + '" class="avatar" />';
+
+        // set metadata: state
+        var state = 'online';
+        var stateElement = $('.active > div:first');
+        if(stateElement.length > 0) {
+            if(stateElement.hasClass('offline')) {
+                state = 'offline';
+            } else if(stateElement.hasClass('notavailable')) {
+                state = 'notavailable';
+            }
+        }
+
+        // write metadata
+        $('#main-metadata').html(avatar + '<span>' + this.currentConversation + '</span><span class="' + state + '"></span>');
     }
 
 });
