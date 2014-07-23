@@ -221,6 +221,8 @@ var FrontendHelpers = Class.extend({
     extractLanguageFromCode: function(message) {
         var regex = /(?:\[code\s*language=)([^\]]+)/g;
         var result = regex.exec(message);
+        if (result == null)
+            return false;
         return result.length>1 ? result[1] : false;
     }
 });

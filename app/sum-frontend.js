@@ -370,6 +370,7 @@ var Frontend = Class.extend({
 
         // scroll 2 bottom
         $("#content").waitForImages(function() {
+            $("#content-wrapper").mCustomScrollbar("update");
             $("#content-wrapper").mCustomScrollbar("scrollTo","bottom");
         });
     }
