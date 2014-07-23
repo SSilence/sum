@@ -44,6 +44,9 @@ var Frontend = Class.extend({
         $("#contacts-wrapper, #rooms-wrapper, #content-wrapper").mCustomScrollbar({
             advanced:{
                 updateOnContentResize: true
+            },
+            mouseWheel: {
+                scrollAmount: 450
             }
         });
 
@@ -358,12 +361,10 @@ var Frontend = Class.extend({
             // set time ago updater
             var dateTimeElement = $('#content .entry-datetime:last');
             that.frontendHelpers.startDateAgoUpdater(message.datetime, dateTimeElement);
-
-            // scroll 2 bottom
-            if(index==messages.length-1) {
-                window.setTimeout(function() { $("#content-wrapper").mCustomScrollbar("scrollTo","bottom"); }, 500);
-            }
         });
+
+        // scroll 2 bottom
+        $("#content-wrapper").mCustomScrollbar("scrollTo","bottom");
     }
 
 });
