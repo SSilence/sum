@@ -148,7 +148,6 @@ var Frontend = Class.extend({
 
         // backend has update for userlist
         backend.onHasUserlistUpdate(function() {
-            backend.getConversation(that.currentConversation);
             backend.updateUserlist(that.currentConversation);
         });
         
