@@ -612,6 +612,17 @@ body {
             font-size:0.8em;
             color:#AAA;
         }
+		
+		.entry-content {
+			line-height: 135%;
+			padding-top: 5px;
+		}
+		
+		.entry-content img.emoticons {
+			width: 20px;
+			margin-top: -3px;
+			margin-bottom: -2px;
+		}
 
         .entry-content pre code {
             font-size: 1.2em;
@@ -622,6 +633,12 @@ body {
         }
 
         .entry-contentarea {
+            -webkit-box-flex: 1;
+            box-flex: 1;
+            flex:1;
+        }
+		
+		.entry-contentarea {
             -webkit-box-flex: 1;
             box-flex: 1;
             flex:1;

@@ -185,7 +185,7 @@ var Frontend = Class.extend({
         var lastEmot = "";
         $.each(emoticons, function(shortcut, emoticon) {
             if(lastEmot != emoticon)
-                emotbox.append('<img src="'+ emoticon +'" title="' + shortcut + '"/>');
+                emotbox.append('<img class="emoticons" src="'+ emoticon +'" title="' + shortcut + '"/>');
             lastEmot = emoticon;
         });
     },
