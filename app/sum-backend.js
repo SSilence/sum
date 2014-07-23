@@ -463,7 +463,7 @@ var Backend = Class.extend({
         for(var i=0; i<this.userlist.length; i++) {
             if (withoutCurrentUser === true && this.userlist[i].username == currentuser)
                 continue;
-            users[users.length] = this.userlist[i].username;
+            users[users.length] = this.userlist[i];
         }
         return users;
     },
