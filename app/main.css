@@ -625,26 +625,28 @@ body {
 		}
 
         .entry-content pre {
-            overflow: scroll;
+            /*overflow: scroll;*/
             position: relative;
-            margin-bottom: 24px;
+            margin-bottom: 5px;
+            margin-top: 5px;
             border-radius: 3px;
             border: 1px solid #C3CCD0;
             background: #FFF;
             overflow: hidden;
+            overflow-y: auto;
+            overflow-x: auto;
+            max-height: 400px;
         }
 
         .entry-content pre code {
             font-size: 1.0em;
             display: block;
-            padding: 12px 24px;
-            overflow-y: auto;
+            padding-left: 50px;
+            padding-bottom: 12px;
+            padding-top: 12px;
+            padding-right: 12px;
             font-weight: 300;
             font-family: Menlo, monospace;
-        }
-
-        code.has-numbering {
-            margin-left: 21px;
         }
 
         .pre-numbering {
@@ -652,7 +654,7 @@ body {
             top: 0;
             left: 0;
             width: auto;
-            padding: 12.8px 2px 12.8px 0;
+            padding: 11.4px 2px 11.4px 2px;
             border-right: 1px solid #C3CCD0;
             border-radius: 3px 0 0 3px;
             background-color: #EEE;
