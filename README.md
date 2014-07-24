@@ -31,8 +31,7 @@ this has to be done only once:
 
 for creating a new build you have to do following:
  1. set version in ```README.md```, ```index.html``` (title), ```package.json``` and ```setup.iss```
- 2. build sum: ```grunt``` (you can find the sum application in ```bin/releases/SUM/win/SUM/```)
- 3. build setup: ```grunt setup``` creates the setup file
+ 2. build sum and setup: ```grunt``` (you can find the sum application in ```bin/releases/SUM/win/SUM/```) and the setup in the current folder
 
 If you are behind a proxy you have to set your proxy server for npm and nodewebkit in c:\Users\username\.npmrc
 ```
@@ -47,11 +46,10 @@ You need also proxy settings for installing nodewebkit and using grunt. You have
 TEST SUM
 --------
 
- 1. install karma ```npm install -g karma-cli```
- 2. start karma server from command line: ```karma start```
- 3. run unit tests with ```karma run```
- 
-or open ```run.html``` in folder ```test``` in your browser.
+You have three options for running unit tests:
+ * unit tests will be executed on running ```grunt``` which builds also a sum.exe and setup (see build release chapter) from command line
+ * only execute jshint and jasmine with ```grunt check``` from command line
+ * open ```run.html``` in folder ```test``` in your browser
 
 
 
@@ -120,6 +118,8 @@ Special thanks to the great programmers of this libraries which will be used in 
 * grunt: http://gruntjs.com/
 * grunt node webkit builder: https://github.com/mllrsohn/grunt-node-webkit-builder
 * grunt shell: https://github.com/sindresorhus/grunt-shell
+* grunt contrib jasmine: https://github.com/gruntjs/grunt-contrib-jasmine
+* jasmine unit test: http://jasmine.github.io/
 * wait for images: https://github.com/alexanderdickson/waitForImages
 
   [1]: http://nodejs.org/

@@ -29,13 +29,18 @@ eos(rs, function(err) {
 });
 rs.pipe(fs.createWriteStream('/dev/null'));
 
+var rs = fs.createReadStream(__filename);
+eos(rs, function(err) {
+	throw new Error('no go')
+})();
+rs.pipe(fs.createWriteStream('/dev/null'));
+
 var socket = net.connect(50000);
 eos(socket, function(err) {
 	expected--;
 	assert(!!err);
 	if (!expected) process.exit(0);
 });
-
 
 var server = net.createServer(function(socket) {
 	eos(socket, function() {
@@ -50,8 +55,6 @@ var server = net.createServer(function(socket) {
 		if (!expected) process.exit(0);
 	});
 });
-
-
 
 setTimeout(function() {
 	assert(expected === 0);

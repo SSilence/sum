@@ -55,7 +55,18 @@ var eos = function(stream, opts, callback) {
 	if (opts.error !== false) stream.on('error', callback);
 	stream.on('close', onclose);
 
-	return stream;
+	return function() {
+		stream.removeListener('complete', onfinish);
+		stream.removeListener('abort', onclose);
+		stream.removeListener('request', onrequest);
+		if (stream.req) stream.req.removeListener('finish', onfinish);
+		stream.removeListener('end', onlegacyfinish);
+		stream.removeListener('close', onlegacyfinish);
+		stream.removeListener('finish', onfinish);
+		stream.removeListener('end', onend);
+		stream.removeListener('error', callback);
+		stream.removeListener('close', onclose);
+	};
 };
 
 module.exports = eos;
