@@ -413,7 +413,7 @@ define('sum-frontend-events', Class.extend({
         $('.rooms-popup.add, .rooms-popup.edit').remove();
 
         // create select with all users
-        var select = this.createSelectForAllUsers();
+        var select = this.createSelectForAllOnlineUsers();
 
         // create popup with text and buttons
         var div = $(this.frontendHelpers.createRoomsPopup(element, "add"));
@@ -433,7 +433,7 @@ define('sum-frontend-events', Class.extend({
         var room = $(element).parent().find('.name').html();
 
         // create select with all users
-        var select = this.createSelectForAllUsers();
+        var select = this.createSelectForAllOnlineUsers();
 
         // create popup with text and buttons
         var div = $(this.frontendHelpers.createRoomsPopup($('#rooms-add'), "edit"));
@@ -448,20 +448,20 @@ define('sum-frontend-events', Class.extend({
 
 
     /**
-     * create a select input for all users
+     * create a select input for all online users
      */
-    createSelectForAllUsers: function() {
-        // get all users from backend
-        var users = this.backend.getAllUsers(true);
+    createSelectForAllOnlineUsers: function() {
+        // get all online users from backend
+        var users = this.backend.backendHelpers.getUsersByStatus(this.backend.getAllUsers(true), 'online');
 
-        // create select with all users
+        // create select with all online users
         var select = document.createElement("select");
         select.setAttribute('placeholder', 'Mitglieder...');
         select.setAttribute('multiple', 'multiple');
         for (var i=0; i<users.length; i++) {
             var option = document.createElement("option");
-            option.setAttribute('value', users[i]);
-            option.innerHTML = users[i];
+            option.setAttribute('value', users[i].username);
+            option.innerHTML = users[i].username;
             select.appendChild(option);
         }
 
