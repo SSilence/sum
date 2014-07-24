@@ -27,7 +27,8 @@ this has to be done only once:
  1. install [InnoSetup][2]
  2. add InnoSetup program directory to path variable
  3. install [node.js][1]
- 5. install grunt: ```npm install -g grunt-cli```
+ 4. install grunt: ```npm install -g grunt-cli```
+ 5. install all developments node_modules: ```npm install```
 
 for creating a new build you have to do following:
  1. set version in ```README.md```, ```index.html``` (title), ```package.json``` and ```setup.iss```
