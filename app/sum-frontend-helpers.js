@@ -35,7 +35,7 @@ define('sum-frontend-helpers', Class.extend({
 
         var timeout = 1000;
         if(ageInMinutes<1)
-            timeout = 61000;
+            timeout = 60000;
         else if(ageInHours<1)
             timeout = 1000 * 60;
         else if(ageInDays<1)

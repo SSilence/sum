@@ -352,7 +352,7 @@ define('sum-frontend', Class.extend({
 
         // start time ago updater
         $.each(messages, function(index, message) {
-            var dateTimeElement = $('#content .entry-datetime:nth-child(' + index + ')');
+            var dateTimeElement = $('#content .entry:nth-child(' + (index+1) + ') .entry-datetime');
             that.frontendHelpers.startDateAgoUpdater(message.datetime, dateTimeElement);
         });
 
