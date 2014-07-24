@@ -79,6 +79,5 @@ module.exports = function(grunt) {
 
     grunt.registerTask('default', ['jasmine', 'jshint', 'nodewebkit', 'shell']);
     grunt.registerTask('check', ['jasmine', 'jshint']);
-    grunt.registerTask('travis', ['jasmine', 'jshint']);
 
 };
