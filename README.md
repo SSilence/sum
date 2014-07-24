@@ -9,6 +9,7 @@ Version 0.2.0-SNAPSHOT
 
 SUM is a simple instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a file which will be stored at a shared network folder.
 
+[![Build Status](https://travis-ci.org/SSilence/sum.svg?branch=master)](https://travis-ci.org/SSilence/sum)
 
 
 RUN SUM
