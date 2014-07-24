@@ -9,7 +9,7 @@ define('sum-backend-client', Class.extend({
     /**
      * backends helpers
      */
-    backendHelpers: '@inject:sum-backend-helpers',
+    backendHelpers: injected('sum-backend-helpers'),
 
 
     /**

@@ -9,19 +9,19 @@ define('sum-frontend', Class.extend({
     /**
      * frontends helpers
      */
-    frontendHelpers: '@inject:sum-frontend-helpers',
+    frontendHelpers: injected('sum-frontend-helpers'),
 
 
     /**
      * frontends events
      */
-    frontendEvents: '@inject:sum-frontend-events',
+    frontendEvents: injected('sum-frontend-events'),
 
 
     /**
      *  the current backend
      */
-    backend: '@inject:sum-backend',
+    backend: injected('sum-backend'),
 
 
     /**

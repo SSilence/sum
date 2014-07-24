@@ -1,4 +1,4 @@
-var gui = require('nw.gui');
+var gui = (typeof gui == 'undefined') ? require('nw.gui') : gui;
 
 /**
  * handels userlist file update
@@ -11,13 +11,13 @@ define('sum-backend-userlist', Class.extend({
     /**
      * backends
      */
-    backend: '@inject:sum-backend',
+    backend: injected('sum-backend'),
 
 
     /**
      * backends helpers
      */
-    backendHelpers: '@inject:sum-backend-helpers',
+    backendHelpers: injected('sum-backend-helpers'),
 
 
     /**

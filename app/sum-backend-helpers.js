@@ -1,7 +1,7 @@
-var fs = require('fs');
-var NodeRSA = require('node-rsa');
-var os = require('os');
-var lockFile = require('lockfile');
+var fs = (typeof fs == 'undefined') ? require('fs') : fs;
+var NodeRSA = (typeof NodeRSA == 'undefined') ? require('node-rsa') : NodeRSA;
+var os = (typeof os == 'undefined') ? require('os') : os;
+var lockFile = (typeof lockFile == 'undefined') ? require('lockfile') : lockFile;
 
 /**
  * helpers for backend

@@ -1,4 +1,4 @@
-var gui = require('nw.gui');
+var gui = (typeof gui == 'undefined') ? require('nw.gui') : gui;
 
 /**
  * backend handles messaging, userlist management, update of userlist and all nodejs/node webkit tasks
@@ -11,25 +11,25 @@ define('sum-backend', Class.extend({
     /**
      * backends helpers
      */
-    backendHelpers: '@inject:sum-backend-helpers',
+    backendHelpers: injected('sum-backend-helpers'),
 
 
     /**
      * backends client
      */
-    backendClient: '@inject:sum-backend-client',
+    backendClient: injected('sum-backend-client'),
 
 
     /**
      * backends client
      */
-    backendUserlist: '@inject:sum-backend-userlist',
+    backendUserlist: injected('sum-backend-userlist'),
 
 
     /**
      * backends server
      */
-    backendServer: '@inject:sum-backend-server',
+    backendServer: injected('sum-backend-server'),
 
 
     /**

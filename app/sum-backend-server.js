@@ -1,5 +1,5 @@
-var net = require('net');
-var http = require('http');
+var net = (typeof net == 'undefined') ? require('net') : net;
+var http = (typeof http == 'undefined') ? require('http') : http;
 
 /**
  * server for receiving encrypted chat messages and status updates from other users
@@ -12,13 +12,13 @@ define('sum-backend-server', Class.extend({
     /**
      * backend
      */
-    backend: '@inject:sum-backend',
+    backend: injected('sum-backend'),
 
 
     /**
      * backends helpers
      */
-    backendHelpers: '@inject:sum-backend-helpers',
+    backendHelpers: injected('sum-backend-helpers'),
 
 
     /**
