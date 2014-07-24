@@ -44,6 +44,17 @@ You need also proxy settings for installing nodewebkit and using grunt. You have
 
 
 
+TEST SUM
+--------
+
+ 1. install karma ```npm install -g karma-cli```
+ 2. start karma server from command line: ```karma start```
+ 3. run unit tests with ```karma run```
+ 
+or open ```run.html``` in folder ```test``` in your browser.
+
+
+
 CONFIG
 ------
 
