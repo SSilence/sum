@@ -1,5 +1,5 @@
 #define MyAppName "S Ultimate Messenger"
-#define MyAppVersion "0.1.0"
+#define MyAppVersion "0.2.0-SNAPSHOT"
 #define MyAppPublisher "Tobias Zeising"
 #define MyAppURL "http://www.sum-messenger.org"
 #define LaunchProgram "Starte S Ultimate Messenger nach der Installation"
