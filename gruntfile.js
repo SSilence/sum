@@ -106,7 +106,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-node-webkit-builder');
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
-    grunt.loadNpmTasks('grunt-template-jasmine-istanbul');
 
     grunt.registerTask('default', ['jasmine', 'jshint', 'nodewebkit', 'shell']);
     grunt.registerTask('check', ['jasmine', 'jshint']);
