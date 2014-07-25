@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "nodewebkit": "~0.10",
-    "lockfile": "~0.4.2",
+    "lockfile": "~0.4.1",
     "node-rsa": "~0.1.53"
   },
   "devDependencies": {
@@ -28,7 +28,8 @@
     "grunt-template-jasmine-istanbul": "~0.3.0",
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-node-webkit-builder": "~0.1",
-    "grunt-shell": "~0.7"
+    "grunt-shell": "~0.7",
+    "grunt-text-replace": "~0.3"
   },
   "scripts": {
     "test": "grunt check"

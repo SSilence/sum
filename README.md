@@ -32,8 +32,8 @@ this has to be done only once:
  5. install all developments node_modules: ```npm install```
 
 for creating a new build you have to do following:
- 1. set version in ```README.md```, ```index.html``` (title), ```package.json``` and ```setup.iss```
- 2. build sum and setup: ```grunt``` 
+ 1. you can set a new version by adding the optional parameter ```--newversion=1.2.3``` to grunt
+ 2. build sum and setup: ```grunt``` (with current version) or ```grunt --newversion=1.0.0``` (for setting new version)
  3. you can find the sum setup in the ```bin``` folder
 
 If you are behind a proxy you have to set your proxy server for npm and nodewebkit in c:\Users\username\.npmrc
