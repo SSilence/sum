@@ -49,6 +49,36 @@ module.exports = function(grunt) {
                     'app/libs/jquery.waitforimages/jquery.waitforimages.js', 
                     'app/libs/hyphenator/hyphenator.js'
                 ]
+            },
+            coverage: {
+                src: [
+                    'test/require-mock.js',
+                    'app/injector.js',
+                    'app/string-escape.js',
+                    'app/config.js',
+                    'app/sum-backend-client.js',
+                    'app/sum-backend-helpers.js',
+                    'app/sum-backend-server.js',
+                    'app/sum-backend-userlist.js',
+                    'app/sum-backend.js',
+                    'app/sum-emoticons.js',
+                    'app/sum-frontend-events.js',
+                    'app/sum-frontend-helpers.js',
+                    'app/sum-frontend.js'
+                ],
+                options: {
+                    template: require('grunt-template-jasmine-istanbul'),
+                    templateOptions: {
+                        coverage: 'bin/coverage/coverage.json',
+                        report: 'bin/coverage',
+                        /*thresholds: {
+                            lines: 50,
+                            statements: 50,
+                            branches: 50,
+                            functions: 50
+                        }*/
+                    }
+                }
             }
         },
         
@@ -76,6 +106,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-node-webkit-builder');
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
+    grunt.loadNpmTasks('grunt-template-jasmine-istanbul');
 
     grunt.registerTask('default', ['jasmine', 'jshint', 'nodewebkit', 'shell']);
     grunt.registerTask('check', ['jasmine', 'jshint']);
