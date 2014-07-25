@@ -1,3 +1,6 @@
 .idea
 sum-setup-*.exe
 bin
+node_modules/grunt*
+node_modules/nodewebkit*
+node_modules/.bin*
