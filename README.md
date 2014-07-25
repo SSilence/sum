@@ -4,7 +4,7 @@ SUM - S Ultimate Messenger
 Copyright (c) 2013 Tobias Zeising, tobias.zeising@aditu.de  
 http://www.aditu.de  
 Licensed under the GPLv3 license  
-Version 0.2.0
+Version 0.3.0-SNAPSHOT
 
 
 SUM is a simple instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a file which will be stored at a shared network folder.
