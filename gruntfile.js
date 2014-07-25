@@ -70,8 +70,8 @@ module.exports = function(grunt) {
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
                         coverage: 'bin/coverage/coverage.json',
-                        report: 'bin/coverage',
-                        /*thresholds: {
+                        report: 'bin/coverage'
+                        /*,thresholds: {
                             lines: 50,
                             statements: 50,
                             branches: 50,
