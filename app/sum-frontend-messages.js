@@ -10,23 +10,44 @@ define('sum-frontend-messages', Class.extend({
         if (typeof position != 'undefined')
             position = $('#content');
 
-        $.each(messages, function(index, message) {
+        if (typeof messages != 'undefined') {
+            var markup = '';
 
-        });
+            $.each(messages, function (index, message) {
+                markup = markup + this.renderMessage(message);
+            });
+        }
+
+        if (typeof markup != 'undefined')
+            position.append(markup);
     },
 
     showMessage: function (message, position) {
         if (typeof position != 'undefined')
             position = $('#content');
 
+        if (typeof message != 'undefined') {
+            var markup = this.renderMessage(message);
 
+            if (typeof markup != 'undefined')
+                position.append(markup);
+        }
     },
 
     renderMessage: function (message) {
-      if (typeof message != 'undefined') {
+        if (typeof message != 'undefined') {
+            switch(message.messageType) {
+                case 'text-message':
+                    this.renderTextMessage(message);
+                break;
+            }
+        }
+    },
 
-          
-      }
+    renderTextMessage: function (message) {
+        var markup;
+
+        return markup;
     }
 
 }));
