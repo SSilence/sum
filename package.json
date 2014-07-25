@@ -18,7 +18,7 @@
     "min_height": 560
   },
   "dependencies": {
-    "nodewebkit": "~0.9",
+    "nodewebkit": "~0.10",
     "lockfile": "~0.4.2",
     "node-rsa": "~0.1.53"
   },
