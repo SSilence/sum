@@ -18,7 +18,7 @@ DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 Compression=lzma
 SolidCompression=yes
-OutputDir=.
+OutputDir=./bin/
 OutputBaseFilename=sum-setup-{#MyAppVersion}
 
 [Languages]

@@ -33,7 +33,8 @@ this has to be done only once:
 
 for creating a new build you have to do following:
  1. set version in ```README.md```, ```index.html``` (title), ```package.json``` and ```setup.iss```
- 2. build sum and setup: ```grunt``` (you can find the sum application in ```bin/releases/SUM/win/SUM/```) and the setup in the current folder
+ 2. build sum and setup: ```grunt``` 
+ 3. you can find the sum setup in the ```bin``` folder
 
 If you are behind a proxy you have to set your proxy server for npm and nodewebkit in c:\Users\username\.npmrc
 ```
@@ -121,6 +122,7 @@ Special thanks to the great programmers of this libraries which will be used in 
 * grunt node webkit builder: https://github.com/mllrsohn/grunt-node-webkit-builder
 * grunt shell: https://github.com/sindresorhus/grunt-shell
 * grunt contrib jasmine: https://github.com/gruntjs/grunt-contrib-jasmine
+* grunt coverage template: https://github.com/maenu/grunt-template-jasmine-istanbul
 * jasmine unit test: http://jasmine.github.io/
 * wait for images: https://github.com/alexanderdickson/waitForImages
 
