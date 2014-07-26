@@ -224,5 +224,24 @@ define('sum-frontend-helpers', Class.extend({
         if (result === null)
             return false;
         return result.length>1 ? result[1] : false;
+    },
+
+
+    /**
+     * hyphenator and code numbering
+     * @param element target element
+     */
+    hyphenateAndNumberCode: function(element) {
+        // start hyphenator
+        Hyphenator.run();
+
+        // numbering for pre>code blocks
+        $(element).find('pre code').each(function(){
+            var lines = $(this).text().split(/\r\n|\r|\n/).length;
+            var $numbering = $('<ul/>').addClass('pre-numbering');
+            $(this).addClass('has-numbering').parent().append($numbering);
+            for(i=1;i<=lines;i++)
+                $numbering.append($('<li/>').text(i));
+        });
     }
 }));
