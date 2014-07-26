@@ -347,7 +347,9 @@ define('sum-frontend', Class.extend({
                 </div>\
                 <div class="entry-contentarea hyphenate" lang="de">\
                     <span class="entry-sender">' + message.sender.escape() + '</span>\
-                    <span class="entry-datetime">' + that.frontendHelpers.dateAgo(message.datetime) + '</span>\
+                    <span class="entry-datetime" title="' + new Date(message.datetime).toLocaleString() + '">\
+                        ' + that.frontendHelpers.dateAgo(message.datetime) + '\
+                    </span>\
                     <div class="entry-content">\
                         ' + that.frontendHelpers.formatMessage(message.text) + '\
                     </div>\
@@ -371,8 +373,8 @@ define('sum-frontend', Class.extend({
             element.data('message', message);
 
             // start time ago updater (only for new messages)
-            if (index > startTimeAgoUpdaterIndex) {
-                var dateTimeElement = $('#content .entry:nth-child(' + (index + 1) + ') .entry-datetime');
+            if (index >= startTimeAgoUpdaterIndex) {
+                var dateTimeElement = $(element).find('.entry-datetime');
                 that.frontendHelpers.startDateAgoUpdater(message.datetime, dateTimeElement);
             }
         });
