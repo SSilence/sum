@@ -325,7 +325,8 @@ define('sum-backend', Class.extend({
         // create new message
         var currentuser = this.backendHelpers.getUsername();
         var message = {
-            'type': 'message',
+            'id': this.backendHelpers.genereateGUID(),
+            'type': 'text-message',
             'text': text,
             'sender': currentuser,
             'receiver': receiver

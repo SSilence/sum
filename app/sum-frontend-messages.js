@@ -6,21 +6,34 @@
  */
 define('sum-frontend-messages', Class.extend({
 
+    /**
+     * the current backend
+     */
+    backend: injected('sum-backend'),
+
+
+    /**
+     * the current frontend helpers
+     */
+    frontendHelpers: injected('sum-frontend-helpers'),
+
+
     showMessages: function (messages, position) {
-        if (typeof position != 'undefined')
+        if (typeof position == 'undefined')
             position = $('#content');
 
         if (typeof messages != 'undefined') {
             var markup = '';
-
+            var that = this;
             $.each(messages, function (index, message) {
-                markup = markup + this.renderMessage(message);
+                markup = markup + that.renderMessage(message);
             });
         }
 
         if (typeof markup != 'undefined')
             position.append(markup);
     },
+
 
     showMessage: function (message, position) {
         if (typeof position != 'undefined')
@@ -34,18 +47,36 @@ define('sum-frontend-messages', Class.extend({
         }
     },
 
+
     renderMessage: function (message) {
+        var markup = '';
+
         if (typeof message != 'undefined') {
-            switch(message.messageType) {
+            switch(message.type) {
                 case 'text-message':
-                    this.renderTextMessage(message);
+                case 'message':
+                    markup = this.renderTextMessage(message);
                 break;
             }
         }
+
+        return markup;
     },
 
+
     renderTextMessage: function (message) {
-        var markup;
+        var markup = '<li id="' + message.id + '" class="entry">\
+            <div class="entry-avatar">\
+                <img src="' + this.backend.getAvatar(message.sender) + '" class="avatar" />\
+            </div>\
+            <div class="entry-contentarea hyphenate" lang="de">\
+                <span class="entry-sender">' + message.sender.escape() + '</span>\
+                <span class="entry-datetime">' + this.frontendHelpers.dateAgo(message.datetime) + '</span>\
+                <div class="entry-content">\
+                    ' + this.frontendHelpers.formatMessage(message.text) + '\
+                </div>\
+            </div>\
+        </li>';
 
         return markup;
     }
