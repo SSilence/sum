@@ -91,7 +91,7 @@ module.exports = function(grunt) {
                 linux32: false,
                 linux64: false
             },
-            src: ['./app/**', './package.json', './node_modules/lockfile/**', './node_modules/node-rsa/**']
+            src: ['./app/**', './package.json', './node_modules/ini/**', './node_modules/lockfile/**', './node_modules/node-rsa/**']
         },
 
         /* create setup file with inno setup */

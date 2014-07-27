@@ -1,4 +1,4 @@
-var gui = (typeof gui == 'undefined') ? require('nw.gui') : gui;
+if (typeof gui == 'undefined') gui = require('nw.gui');
 
 /**
  * backend handles messaging, userlist management, update of userlist and all nodejs/node webkit tasks
@@ -84,16 +84,6 @@ define('sum-backend', Class.extend({
      * initialize backend
      */
     initialize: function() {
-        // load alternative config given by command line?
-        if (gui.App.argv.length > 0) {
-            try {
-                config = require(gui.App.argv[0]).extend(config);
-            } catch(e) {
-                // can't load config file? Then user parameter as username
-                config.username = gui.App.argv[0];
-            }
-        }
-
         // initial generate rsa keys
         this.key = this.backendHelpers.generateKeypair();
 

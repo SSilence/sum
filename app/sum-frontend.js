@@ -33,7 +33,7 @@ define('sum-frontend', Class.extend({
     /**
      * id of current visible conversation (on app startup user is in room all)
      */
-    currentConversation: config.room_all,
+    currentConversation: false,
 
 
     /**
@@ -46,6 +46,9 @@ define('sum-frontend', Class.extend({
      * initialize frontend
      */
     initialize: function() {
+        // set currentConversation
+        this.currentConversation = config.room_all;
+
         // initialize div inline scroller
         $("#contacts-wrapper, #rooms-wrapper, #content-wrapper").mCustomScrollbar({
             advanced:{
@@ -203,9 +206,11 @@ define('sum-frontend', Class.extend({
     initSelectForCodeBoxLanguage: function() {
         var select = $('#message-add-code-box-language');
 
-        $.each(config.highlight_languages, function(key, value) {
+        $.each(config, function(key, value) {
+            if (key.indexOf('highlight_languages_') !== 0)
+                return true;
             var option = document.createElement("option");
-            option.setAttribute('value', key);
+            option.setAttribute('value', key.replace(/highlight_languages_/, ''));
             option.innerHTML = value;
             select.append(option);
         });

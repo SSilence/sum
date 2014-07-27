@@ -1,5 +1,5 @@
-var net = (typeof net == 'undefined') ? require('net') : net;
-var http = (typeof http == 'undefined') ? require('http') : http;
+if (typeof net == 'undefined') net = require('net');
+if (typeof http == 'undefined') http = require('http');
 
 /**
  * server for receiving encrypted chat messages and status updates from other users

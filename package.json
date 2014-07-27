@@ -20,7 +20,8 @@
   "dependencies": {
     "nodewebkit": "~0.10",
     "lockfile": "~0.4.1",
-    "node-rsa": "~0.1.53"
+    "node-rsa": "~0.1.53",
+    "ini": "~1.2.1"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
