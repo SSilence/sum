@@ -70,8 +70,8 @@ module.exports = function(grunt) {
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
                         coverage: 'bin/coverage/coverage.json',
-                        report: 'bin/coverage',
-                        /*thresholds: {
+                        report: 'bin/coverage'
+                        /*,thresholds: {
                             lines: 50,
                             statements: 50,
                             branches: 50,
@@ -91,13 +91,30 @@ module.exports = function(grunt) {
                 linux32: false,
                 linux64: false
             },
-            src: ['./app/**', './package.json', './node_modules/lockfile/**', './node_modules/node-rsa/**']
+            src: ['./app/**', './package.json', './config.ini', './node_modules/ini/**', './node_modules/lockfile/**', './node_modules/node-rsa/**']
         },
 
         /* create setup file with inno setup */
         shell: {
             build_setup: {
                 command: 'call compil32 /cc setup.iss'
+            }
+        },
+        
+        /* version text replace */
+        replace: {
+            version: {
+                src: [
+                    'app/index.html',
+                    'setup.iss',
+                    'package.json',
+                    'README.md'
+                ],
+                overwrite: true,
+                replacements: [{
+                    from: /\d+\.\d+\.\d+(\-SNAPSHOT)?/,
+                    to: ("" + grunt.option('newversion'))
+                }]
             }
         }
     });
@@ -106,9 +123,21 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-node-webkit-builder');
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
-    grunt.loadNpmTasks('grunt-template-jasmine-istanbul');
+    grunt.loadNpmTasks('grunt-text-replace');
 
-    grunt.registerTask('default', ['jasmine', 'jshint', 'nodewebkit', 'shell']);
+    /* task checks whether newversion is given and start replacement in files if correct format is given */
+    grunt.registerTask('versionupdater', 'version update task', function() {
+        var version = "" + grunt.option('newversion');
+        if (typeof grunt.option('newversion') != 'undefined') {
+            grunt.log.writeln('replace version ' + grunt.option('newversion'));
+            if (version.search(/^\d+\.\d+\.\d+(\-SNAPSHOT)?$/) == -1)
+                grunt.fail.warn('newversion must have the format n.m.x or n.m.x-SNAPSHOT (n, m and x are integer numbers)');
+            grunt.task.run('replace');
+        }
+    });
+
+    grunt.registerTask('default', ['versionupdater', 'jasmine', 'jshint', 'nodewebkit', 'shell']);
     grunt.registerTask('check', ['jasmine', 'jshint']);
+    grunt.registerTask('version', ['versionupdater']);
 
 };

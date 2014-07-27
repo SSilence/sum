@@ -33,7 +33,7 @@ define('sum-frontend', Class.extend({
     /**
      * id of current visible conversation (on app startup user is in room all)
      */
-    currentConversation: config.room_all,
+    currentConversation: false,
 
 
     /**
@@ -46,6 +46,9 @@ define('sum-frontend', Class.extend({
      * initialize frontend
      */
     initialize: function() {
+        // set currentConversation
+        this.currentConversation = config.room_all;
+
         // initialize div inline scroller
         $("#contacts-wrapper, #rooms-wrapper, #content-wrapper").mCustomScrollbar({
             advanced:{
@@ -152,7 +155,7 @@ define('sum-frontend', Class.extend({
         // register callback for getting conversation
         this.backend.onGetContentResponse(function(id, messages) {
             if (id==that.currentConversation)
-                that.updateConversation(messages, that.backend);
+                that.updateConversation(messages);
         });
 
         // backend has update for userlist
@@ -203,9 +206,11 @@ define('sum-frontend', Class.extend({
     initSelectForCodeBoxLanguage: function() {
         var select = $('#message-add-code-box-language');
 
-        $.each(config.highlight_languages, function(key, value) {
+        $.each(config, function(key, value) {
+            if (key.indexOf('highlight_languages_') !== 0)
+                return true;
             var option = document.createElement("option");
-            option.setAttribute('value', key);
+            option.setAttribute('value', key.replace(/highlight_languages_/, ''));
             option.innerHTML = value;
             select.append(option);
         });
@@ -319,28 +324,37 @@ define('sum-frontend', Class.extend({
     /**
      * update current conversation
      * @param messages (array) list of all messages
-     * @param backend (object) the current backend
      */
-    updateConversation: function(messages, backend) {
+    updateConversation: function(messages) {
         // set unreadcounter to 0
         delete this.unreadMessagesCounter[this.currentConversation];
-        backend.updateUserlist(this.currentConversation);
-        backend.updateRoomlist();
-
+        this.backend.updateUserlist(this.currentConversation);
+        this.backend.updateRoomlist();
         this.updateConversationHeader();
 
         // show messages
-        $('#content').html('');
         var that = this;
         var html = '';
+        var onlyAppendNewMessages = false;
+
         $.each(messages, function(index, message) {
+            // message already in list?
+            var element = $('#content .entry:nth-child(' + (index+1) + ')');
+            if(typeof $(element).data('message') != 'undefined' && $(element).data('message').sender == message.sender && $(element).data('message').datetime == message.datetime) {
+                onlyAppendNewMessages = true;
+                return true;
+            }
+
+            // new message: add it
             html = html + '<li class="entry">\
                 <div class="entry-avatar">\
-                    <img src="' + backend.getAvatar(message.sender) + '" class="avatar" />\
+                    <img src="' + that.backend.getAvatar(message.sender) + '" class="avatar" />\
                 </div>\
                 <div class="entry-contentarea hyphenate" lang="de">\
                     <span class="entry-sender">' + message.sender.escape() + '</span>\
-                    <span class="entry-datetime">' + that.frontendHelpers.dateAgo(message.datetime) + '</span>\
+                    <span class="entry-datetime" title="' + new Date(message.datetime).toLocaleString() + '">\
+                        ' + that.frontendHelpers.dateAgo(message.datetime) + '\
+                    </span>\
                     <div class="entry-content">\
                         ' + that.frontendHelpers.formatMessage(message.text) + '\
                     </div>\
@@ -348,12 +362,26 @@ define('sum-frontend', Class.extend({
             </li>';
         });
 
+        // remove old messages if complete messages stream was changed
+        var startTimeAgoUpdaterIndex = 0;
+        if (onlyAppendNewMessages === false)
+            $('#content').html('');
+        else
+            startTimeAgoUpdaterIndex = $('#content .entry').length;
+
+        // append (new) messages
         $('#content').append(html);
 
-        // start time ago updater
         $.each(messages, function(index, message) {
-            var dateTimeElement = $('#content .entry:nth-child(' + (index+1) + ') .entry-datetime');
-            that.frontendHelpers.startDateAgoUpdater(message.datetime, dateTimeElement);
+            // save message context at message
+            var element = $('#content .entry:nth-child(' + (index + 1) + ')');
+            element.data('message', message);
+
+            // start time ago updater (only for new messages)
+            if (index >= startTimeAgoUpdaterIndex) {
+                var dateTimeElement = $(element).find('.entry-datetime');
+                that.frontendHelpers.startDateAgoUpdater(message.datetime, dateTimeElement);
+            }
         });
 
         // scroll 2 bottom
@@ -362,24 +390,8 @@ define('sum-frontend', Class.extend({
             $("#content-wrapper").mCustomScrollbar("scrollTo","bottom");
         });
 
-        // start hyphenator
-        Hyphenator.run();
-
-        //numbering for pre>code blocks
-        $(function(){
-            $('pre code').each(function(){
-                //var lines = $(this).text().split('\n').length;
-                var lines = $(this).text().split(/\r\n|\r|\n/).length;
-                var $numbering = $('<ul/>').addClass('pre-numbering');
-                $(this)
-                    .addClass('has-numbering')
-                    .parent()
-                    .append($numbering);
-                for(i=1;i<=lines;i++){
-                    $numbering.append($('<li/>').text(i));
-                }
-            });
-        });
+        // hyphenator and code numbering
+        this.frontendHelpers.hyphenateAndNumberCode($('#content'));
     },
 
 

@@ -18,9 +18,10 @@
     "min_height": 560
   },
   "dependencies": {
-    "nodewebkit": "~0.9",
-    "lockfile": "~0.4.2",
-    "node-rsa": "~0.1.53"
+    "nodewebkit": "~0.10",
+    "lockfile": "~0.4.1",
+    "node-rsa": "~0.1.53",
+    "ini": "~1.2.1"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
@@ -28,7 +29,8 @@
     "grunt-template-jasmine-istanbul": "~0.3.0",
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-node-webkit-builder": "~0.1",
-    "grunt-shell": "~0.7"
+    "grunt-shell": "~0.7",
+    "grunt-text-replace": "~0.3"
   },
   "scripts": {
     "test": "grunt check"

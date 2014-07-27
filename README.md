@@ -9,7 +9,7 @@ Version 0.3.0-SNAPSHOT
 
 SUM is a simple instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a file which will be stored at a shared network folder.
 
-[![Build Status](https://travis-ci.org/SSilence/sum.svg?branch=master)](https://travis-ci.org/SSilence/sum)
+[![Build Status](https://travis-ci.org/SSilence/sum.svg?branch=master)](https://travis-ci.org/SSilence/sum) [![Dependency Status](https://david-dm.org/ssilence/sum.svg)](https://david-dm.org/ssilence/sum)
 
 
 RUN SUM
@@ -32,8 +32,9 @@ this has to be done only once:
  5. install all developments node_modules: ```npm install```
 
 for creating a new build you have to do following:
- 1. set version in ```README.md```, ```index.html``` (title), ```package.json``` and ```setup.iss```
- 2. build sum and setup: ```grunt``` (you can find the sum application in ```bin/releases/SUM/win/SUM/```) and the setup in the current folder
+ 1. you can set a new version by adding the optional parameter ```--newversion=1.2.3``` to grunt
+ 2. build sum and setup: ```grunt``` (with current version) or ```grunt --newversion=1.0.0``` (for setting new version)
+ 3. you can find the sum setup in the ```bin``` folder
 
 If you are behind a proxy you have to set your proxy server for npm and nodewebkit in c:\Users\username\.npmrc
 ```
@@ -58,28 +59,44 @@ You have three options for running unit tests:
 CONFIG
 ------
 
-You can configure SUM by changing app/config.js. You can also give a other config as command line argument:
+You can configure SUM by adding config.ini in your base dir (same folder where package.json, and README.md is). 
+Per default all configuration values taken from app/default.ini. By setting single values in your config.ini you 
+can overwrite them. 
+
+example config.ini in base folder:
+```
+user_file = //myserver/simfolder/userfile.json
+user_file_extended = //myserver/simfolder/?
+lock_file = //myserver/simfolder/userfile.lock
+```
+
+You can also set a config as parameter:
 
 ```
-nodewebkit ./ ./../config_ext.js
+nodewebkit . c:\tmp\otherconfig.ini
 ```
 
-config_ext.js content could be:
+or 
+
 ```
-exports.extend = function(config) {
-    config.username = "Karl Mustermann";
-    return config;
-};
+SUM.exe c:\tmp\otherconfig.ini
 ```
 
 For only setting another username just use a username as parameter:
 ```
-nodewebkit KarlMustermann
+nodewebkit . KarlMustermann
 ```
 
-Following configuration parameters are available:
+or
+
+```
+SUM.exe KarlMusermann
+```
+
+
+Following configuration parameters are available in config.ini:
 * ``user_file``: path of the file where all users register themself
-* ``user_file_extended``: file per user where avatar and key will be stored. # will be replaced by the md5 hash of the username
+* ``user_file_extended``: file per user where avatar and key will be stored. ? will be replaced by the md5 hash of the username
 * ``lock_file``: path of the lock file for the user file. ensures that only one user access the user file
 * ``user_timeout``: set user status to offline after ms inactivity
 * ``user_remove``: remove users from list after ms inactivity
@@ -89,7 +106,7 @@ Following configuration parameters are available:
 * ``lock_retry_maximum``: retry in maximum random ms when file is locked
 * ``room_all``: name of the default room for all users
 * ``excluded_ips``: ips which will be ignored on creating server
-* ``highlight_languages``: supported highlight.js languages in code input selection
+* ``highlight_languages_value``: supported highlight.js languages in code input selection (replace value by language key)
 
 You can access the debugger by setting ``"toolbar": true`` in ``package.json``
 
@@ -104,6 +121,7 @@ Special thanks to the great programmers of this libraries which will be used in 
 * jquery: http://jquery.com/
 * lockfile: https://github.com/isaacs/lockfile
 * node-rsa: https://github.com/rzcoder/node-rsa
+* ini: https://github.com/isaacs/ini
 * nw-desktop-notifications: https://github.com/robrighter/nw-desktop-notifications
 * alertify: http://fabien-d.github.io/alertify.js/
 * cryptojs: https://code.google.com/p/crypto-js/
@@ -121,6 +139,7 @@ Special thanks to the great programmers of this libraries which will be used in 
 * grunt node webkit builder: https://github.com/mllrsohn/grunt-node-webkit-builder
 * grunt shell: https://github.com/sindresorhus/grunt-shell
 * grunt contrib jasmine: https://github.com/gruntjs/grunt-contrib-jasmine
+* grunt coverage template: https://github.com/maenu/grunt-template-jasmine-istanbul
 * jasmine unit test: http://jasmine.github.io/
 * wait for images: https://github.com/alexanderdickson/waitForImages
 

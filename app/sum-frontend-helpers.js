@@ -70,9 +70,9 @@ define('sum-frontend-helpers', Class.extend({
         if(ageInMinutes<1)
             return ' vor wenigen Sekunden';
         if(ageInHours<1)
-            return 'vor ' + Math.floor(ageInMinutes) + ' Minuten';
+            return ageInMinutes < 2 ? 'vor einer Minute' : ('vor ' + Math.floor(ageInMinutes) + ' Minuten');
         if(ageInDays<1)
-            return 'vor ' + Math.floor(ageInHours) + ' Stunden';
+            return ageInHours < 2 ? 'vor einer Stunde' : ('vor ' + Math.floor(ageInHours) + ' Stunden');
 
         var dateObj = new Date(date*1000);
         return dateObj.getHours() + ':' + dateObj.getMinutes() + ':' + dateObj.getSeconds();
@@ -224,5 +224,24 @@ define('sum-frontend-helpers', Class.extend({
         if (result === null)
             return false;
         return result.length>1 ? result[1] : false;
+    },
+
+
+    /**
+     * hyphenator and code numbering
+     * @param element target element
+     */
+    hyphenateAndNumberCode: function(element) {
+        // start hyphenator
+        Hyphenator.run();
+
+        // numbering for pre>code blocks
+        $(element).find('pre code').each(function(){
+            var lines = $(this).text().split(/\r\n|\r|\n/).length;
+            var $numbering = $('<ul/>').addClass('pre-numbering');
+            $(this).addClass('has-numbering').parent().append($numbering);
+            for(i=1;i<=lines;i++)
+                $numbering.append($('<li/>').text(i));
+        });
     }
 }));

@@ -3,8 +3,8 @@
 #define MyAppPublisher "Tobias Zeising"
 #define MyAppURL "http://www.sum-messenger.org"
 #define LaunchProgram "Starte S Ultimate Messenger nach der Installation"
-#define DesktopIcon "Verknüpfung auf dem Desktop"
-#define CreateDesktopIcon "Wollen Sie eine Verknüpfung auf dem Desktop erstellen?"
+#define DesktopIcon "Shortcut auf dem Desktop erstellen"
+#define CreateDesktopIcon "Wollen Sie einen Shortcut auf dem Desktop erstellen?"
 
 [Setup]
 AppId={{F3E30478-2D70-4CBC-AB4F-0B7A0A4D44AB}
@@ -18,7 +18,7 @@ DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 Compression=lzma
 SolidCompression=yes
-OutputDir=.
+OutputDir=./bin/
 OutputBaseFilename=sum-setup-{#MyAppVersion}
 
 [Languages]
