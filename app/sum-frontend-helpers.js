@@ -182,52 +182,6 @@ define('sum-frontend-helpers', Class.extend({
 
 
     /**
-     * format message for display it in conversation stream
-     * @return (string) formatted message
-     * @param message (string) unformatted message
-     */
-    formatMessage: function(message) {
-        // format message as sourcecode if [code] tag was given (highlight.js escapes)
-        if (message.search(/\[code.*\]/g) != -1) {
-            // extract usergiven language
-            var language = this.extractLanguageFromCode(message);
-
-            // remove [code] tags
-            message = message.replace(/\[\/?code\s*(language=([^\]]+))?\]/g, "").trim();
-
-            // format code
-            if (language !== false && language != 'auto')
-                message = hljs.highlight(language, message).value;
-            else
-                message = hljs.highlightAuto(message).value;
-
-            message = '<pre><code class="donthyphenate has-numbering">' + message + '</code></pre>';
-
-        // format message as text with emoticons, urls, ...
-        } else {
-            message = message.escape();
-            message = this.emoticons(message);
-            message = this.urlify(message);
-        }
-        return message;
-    },
-
-
-    /**
-     * extract language value from [code language=java] tag
-     * @return (string) the language or undefined
-     * @param message (string) message with [code language=...] tag
-     */
-    extractLanguageFromCode: function(message) {
-        var regex = /(?:\[code\s*language=)([^\]]+)/g;
-        var result = regex.exec(message);
-        if (result === null)
-            return false;
-        return result.length>1 ? result[1] : false;
-    },
-
-
-    /**
      * hyphenator and code numbering
      * @param element target element
      */

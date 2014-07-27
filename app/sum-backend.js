@@ -291,8 +291,10 @@ define('sum-backend', Class.extend({
      * send new message. receiver is username or roomname.
      * @param receiver (string) user or room
      * @param text (string) the message
+     * @param messageType (string) the message-type
+     * @param parameters (object) additional parameters (for the messageType)
      */
-    sendMessage: function(receiver, text) {
+    sendMessage: function(receiver, text, messageType, parameters) {
         // get user or users of a given room
         var users = this.backendHelpers.getUser(this.userlist, receiver);
         if (users===false) {
@@ -316,7 +318,8 @@ define('sum-backend', Class.extend({
         var currentuser = this.backendHelpers.getUsername();
         var message = {
             'id': this.backendHelpers.genereateGUID(),
-            'type': 'text-message',
+            'type': messageType,
+            'parameters': parameters,
             'text': text,
             'sender': currentuser,
             'receiver': receiver
