@@ -34,6 +34,12 @@ $(document).ready(function() {
         }
     }
 
+    // convert int values to int type
+    $.each(config, function(key, value) {
+        if (value % 1 === 0)
+            config[key] = parseInt(value);
+    });
+
     // start application
     var backend = inject('sum-backend');
     var frontend = inject('sum-frontend');
