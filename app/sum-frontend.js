@@ -422,7 +422,7 @@ define('sum-frontend', Class.extend({
         }
 
         $('#conversationState').removeClass();
-        $('#conversationState').addClass(state)
+        $('#conversationState').addClass(state);
     }
 
 }));
