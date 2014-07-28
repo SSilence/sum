@@ -50,15 +50,14 @@ define('sum-frontend-messages', Class.extend({
 
         if (typeof escape == 'undefined' || escape === true) {
             text = text.escape();
-            text = this.frontendHelpers.emoticons(text);
             text = this.frontendHelpers.urlify(text);
-            text = Hyphenator.hyphenate(text, 'de');
+            text = this.frontendHelpers.emoticons(text);
         }
 
         var markup = '<div class="entry-avatar">\
             <img src="' + this.backend.getAvatar(message.sender) + '" class="avatar" />\
         </div>\
-        <div class="entry-contentarea hyphenate" lang="de">\
+        <div class="entry-contentarea" lang="de">\
             <span class="entry-sender">' + message.sender.escape() + '</span>\
             <span class="entry-datetime" title="' + new Date(message.datetime).toLocaleString() + '">\
                 ' + this.frontendHelpers.dateAgo(message.datetime) + '\
@@ -87,7 +86,7 @@ define('sum-frontend-messages', Class.extend({
             text = hljs.highlightAuto(text).value;
 
         var formattedMessage = $.extend({}, message);
-        formattedMessage.text = '<pre><code class="donthyphenate has-numbering">' + text + '</code></pre>';
+        formattedMessage.text = '<pre><code class="has-numbering">' + text + '</code></pre>';
         return this.renderTextMessage(formattedMessage, false);
     }
 
