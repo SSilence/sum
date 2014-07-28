@@ -18,76 +18,44 @@ define('sum-frontend-messages', Class.extend({
     frontendHelpers: injected('sum-frontend-helpers'),
 
 
-    showMessages: function (messages, position) {
-        if (typeof position == 'undefined')
-            position = $('#content');
-
-        if (typeof messages != 'undefined') {
-            var markup = '';
-            var that = this;
-            $.each(messages, function (index, message) {
-                markup = markup + '<li id="' + message.id + '" class="entry">\
-                    ' + that.renderMessage(message) + '\
-                </li>';
-            });
-        }
-
-        if (typeof markup != 'undefined')
-            position.append(markup);
-    },
-
-
-    showMessage: function (message, position) {
-        if (typeof position != 'undefined')
-            position = $('#content');
-
-        if (typeof message != 'undefined') {
-            var markup = '<li id="' + message.id + '" class="entry">\
-                    ' + this.renderMessage(message) + '\
-                </li>';
-
-            if (typeof markup != 'undefined')
-                position.append(markup);
-        }
-    },
-
-
-    updateMessage: function (message) {
-        if (typeof message != 'undefined' && $('#' + message.id).length) {
-            var oldMessage = $('#' + message.id);
-            var newMessage = this.renderMessage(message);
-
-            oldMessage.html('');
-            oldMessage.append(newMessage);
-        }
-    },
-
-
+    /**
+     * renders a single message
+     * @param message given message for rendering
+     * @returns {string} rendered message
+     */
     renderMessage: function (message) {
-        var markup = '';
-
-        if (typeof message != 'undefined') {
-            switch(message.type) {
-                case 'text-message':
-                case 'message':
-                    markup = this.renderTextMessage(message);
-                break;
-                case 'codeBlock-message':
-                    markup = this.renderCodeBlockMessage(message);
-                break;
-            }
+        var markup = '<li id="' + message.id + '" class="entry">';
+        switch(message.type) {
+            case 'text-message':
+            case 'message':
+                markup += this.renderTextMessage(message);
+            break;
+            case 'codeBlock-message':
+                markup += this.renderCodeBlockMessage(message);
+            break;
         }
-
+        markup += '</li>';
         return markup;
     },
 
 
-    renderTextMessage: function (message) {
+    /**
+     * renders a text message
+     * @param message given message
+     * @param escape (boolean) true for escaping text, false for not
+     * @returns {string} text message markup
+     */
+    renderTextMessage: function (message, escape) {
+        if(typeof escape == 'undefined')
+            escape = true;
+
         var text = message.text;
 
-        text = text.escape();
-        text = this.frontendHelpers.emoticons(text);
-        text = this.frontendHelpers.urlify(text);
+        if (escape) {
+            text = text.escape();
+            text = this.frontendHelpers.emoticons(text);
+            text = this.frontendHelpers.urlify(text);
+        }
 
         var markup = '<div class="entry-avatar">\
             <img src="' + this.backend.getAvatar(message.sender) + '" class="avatar" />\
@@ -104,6 +72,11 @@ define('sum-frontend-messages', Class.extend({
     },
 
 
+    /**
+     * renders source code block
+     * @param message source code
+     * @returns {string} source code block markup
+     */
     renderCodeBlockMessage: function (message) {
         var text = message.text;
 
@@ -113,18 +86,9 @@ define('sum-frontend-messages', Class.extend({
         else
             text = hljs.highlightAuto(text).value;
 
-        var markup = '<div class="entry-avatar">\
-            <img src="' + this.backend.getAvatar(message.sender) + '" class="avatar" />\
-        </div>\
-        <div class="entry-contentarea hyphenate" lang="de">\
-            <span class="entry-sender">' + message.sender.escape() + '</span>\
-            <span class="entry-datetime">' + this.frontendHelpers.dateAgo(message.datetime) + '</span>\
-            <div class="entry-content">\
-                <pre><code class="donthyphenate has-numbering">' + text + '</code></pre>\
-            </div>\
-        </div>';
-
-        return markup;
+        var formattedMessage = $.extend({}, message);
+        formattedMessage.text = '<pre><code class="donthyphenate has-numbering">' + text + '</code></pre>';
+        return this.renderTextMessage(formattedMessage, false);
     }
 
 }));
