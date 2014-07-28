@@ -167,7 +167,7 @@ define('sum-frontend', Class.extend({
         // backend has update for userlist
         this.backend.onHasUserlistUpdate(function() {
             that.backend.updateUserlist(that.currentConversation);
-            that.updateConversationHeader();
+            that.updateConversationState();
         });
         
         // backend has removed an user
@@ -355,11 +355,9 @@ define('sum-frontend', Class.extend({
         });
 
         // remove old messages if complete messages stream was changed
-        var startTimeAgoUpdaterIndex = 0;
         if (onlyAppendNewMessages === false)
             $('#content').html('');
-        else
-            startTimeAgoUpdaterIndex = $('#content .entry').length;
+        var startTimeAgoUpdaterIndex = $('#content .entry').length;
 
         // add (new) messages
         $('#content').append(html);
@@ -404,7 +402,27 @@ define('sum-frontend', Class.extend({
         }
 
         // write metadata
-        $('#main-metadata').html(avatar + '<span>' + this.currentConversation + '</span><span class="' + state + '"></span>');
+        $('#main-metadata').html(avatar + '<span>' + this.currentConversation + '</span><span id="conversationState" class="' + state + '"></span>');
+    },
+
+
+    /**
+     * update current conversationStatus
+     */
+    updateConversationState: function () {
+        // set metadata: state
+        var state = 'online';
+        var stateElement = $('.active > div:first');
+        if(stateElement.length > 0) {
+            if(stateElement.hasClass('offline')) {
+                state = 'offline';
+            } else if(stateElement.hasClass('notavailable')) {
+                state = 'notavailable';
+            }
+        }
+
+        $('#conversationState').removeClass();
+        $('#conversationState').addClass(state)
     }
 
 }));

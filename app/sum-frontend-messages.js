@@ -46,12 +46,9 @@ define('sum-frontend-messages', Class.extend({
      * @returns {string} text message markup
      */
     renderTextMessage: function (message, escape) {
-        if(typeof escape == 'undefined')
-            escape = true;
-
         var text = message.text;
 
-        if (escape) {
+        if (typeof escape == 'undefined' || escape === true) {
             text = text.escape();
             text = this.frontendHelpers.emoticons(text);
             text = this.frontendHelpers.urlify(text);
