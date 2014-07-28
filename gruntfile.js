@@ -46,8 +46,7 @@ module.exports = function(grunt) {
                     'app/libs/selectize/selectize.js', 
                     'app/libs/crypto-js/md5.js', 
                     'app/libs/highlight/highlight.pack.js', 
-                    'app/libs/jquery.waitforimages/jquery.waitforimages.js', 
-                    'app/libs/hyphenator/hyphenator.js'
+                    'app/libs/jquery.waitforimages/jquery.waitforimages.js'
                 ]
             },
             coverage: {
