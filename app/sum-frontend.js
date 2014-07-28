@@ -376,7 +376,7 @@ define('sum-frontend', Class.extend({
         });
 
         // hyphenator and code numbering
-        this.frontendHelpers.hyphenateAndNumberCode($('#content'));
+        this.frontendHelpers.numberCode($('#content'));
     },
 
 
