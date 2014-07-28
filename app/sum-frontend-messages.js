@@ -1,5 +1,6 @@
 /**
- * messages for the frontend
+ * messages for the frontend, user showMessages(messages, position) for render the markup for the type of message
+ * in that position of choice. You can leaf the position blank for default position (#content).
  *
  * @copyright  Copyright (c) Andreas Schiefele
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
@@ -18,6 +19,11 @@ define('sum-frontend-messages', Class.extend({
     frontendHelpers: injected('sum-frontend-helpers'),
 
 
+    /**
+     * Shows all given messages on the given position, decides between messageTypes
+     * @param messages (list) the message-list
+     * @param position (object) the position to show the messages (if not defined, default: #content)
+     */
     showMessages: function (messages, position) {
         if (typeof position == 'undefined')
             position = $('#content');
@@ -37,6 +43,11 @@ define('sum-frontend-messages', Class.extend({
     },
 
 
+    /**
+     * Show the one given message on the given position, decides between messageTypes
+     * @param message (message) the message to show
+     * @param position (object) the position to show the messages (if not defined, default: #content)
+     */
     showMessage: function (message, position) {
         if (typeof position != 'undefined')
             position = $('#content');
@@ -52,6 +63,10 @@ define('sum-frontend-messages', Class.extend({
     },
 
 
+    /**
+     * Update the given message in the displayed conversation
+     * @param message (message) the message
+     */
     updateMessage: function (message) {
         if (typeof message != 'undefined' && $('#' + message.id).length) {
             var oldMessage = $('#' + message.id);
@@ -63,6 +78,11 @@ define('sum-frontend-messages', Class.extend({
     },
 
 
+    /**
+     * renders the message, give the markup for the messageType back
+     * @param message (message)
+     * @returns {string} the markup for the given message
+     */
     renderMessage: function (message) {
         var markup = '';
 
@@ -82,6 +102,11 @@ define('sum-frontend-messages', Class.extend({
     },
 
 
+    /**
+     * render the markup for a text-messages
+     * @param message (message) the text-message
+     * @returns {string} the markup for the text-message
+     */
     renderTextMessage: function (message) {
         var text = message.text;
 
@@ -104,6 +129,11 @@ define('sum-frontend-messages', Class.extend({
     },
 
 
+    /**
+     * render the markup for a codeBlock-messages
+     * @param message (message) the codeBlock-message
+     * @returns {string} the markup for the codeBlock-message
+     */
     renderCodeBlockMessage: function (message) {
         var text = message.text;
 
