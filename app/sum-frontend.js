@@ -340,46 +340,38 @@ define('sum-frontend', Class.extend({
 
         // show messages
         var that = this;
-        var newMessages = [];
         var onlyAppendNewMessages = false;
-
+        var html = '';
         $.each(messages, function(index, message) {
             // message already in list?
-            var element = $('#content .entry:nth-child(' + (index+1) + ')');
-            if(typeof $(element).data('message') != 'undefined' && $(element).data('message').sender == message.sender && $(element).data('message').datetime == message.datetime) {
+            var id = $('#content .entry:nth-child(' + (index+1) + ')').attr('id');
+            if(message.id == id) {
                 onlyAppendNewMessages = true;
                 return true;
             }
 
-            // new message: add it
-            newMessages[newMessages.length] = message;
+            // render message
+            html += that.frontendMessages.renderMessage(message);
         });
 
         // remove old messages if complete messages stream was changed
-        var startTimeAgoUpdaterIndex = 0;
         if (onlyAppendNewMessages === false)
             $('#content').html('');
-        else
-            startTimeAgoUpdaterIndex = $('#content .entry').length;
+        var startTimeAgoUpdaterIndex = $('#content .entry').length;
 
-        // append (new) messages
-        this.frontendMessages.showMessages(newMessages);
+        // add (new) messages
+        $('#content').append(html);
 
+        // start time ago updater (only for new messages)
         $.each(messages, function(index, message) {
-            // save message context at message
-            var element = $('#content .entry:nth-child(' + (index + 1) + ')');
-            element.data('message', message);
-
-            // start time ago updater (only for new messages)
             if (index >= startTimeAgoUpdaterIndex) {
-                var dateTimeElement = $(element).find('.entry-datetime');
+                var dateTimeElement = $('#content .entry:nth-child(' + (index+1) + ') .entry-datetime');
                 that.frontendHelpers.startDateAgoUpdater(message.datetime, dateTimeElement);
             }
         });
 
         // scroll 2 bottom
         $("#content").waitForImages(function() {
-            $("#content-wrapper").mCustomScrollbar("update");
             $("#content-wrapper").mCustomScrollbar("scrollTo","bottom");
         });
 
