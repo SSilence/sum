@@ -19,6 +19,12 @@ define('sum-frontend', Class.extend({
 
 
     /**
+     * frontends messages
+     */
+    frontendMessages: injected('sum-frontend-messages'),
+
+
+    /**
      *  the current backend
      */
     backend: injected('sum-backend'),
@@ -334,7 +340,7 @@ define('sum-frontend', Class.extend({
 
         // show messages
         var that = this;
-        var html = '';
+        var newMessages = [];
         var onlyAppendNewMessages = false;
 
         $.each(messages, function(index, message) {
@@ -346,20 +352,7 @@ define('sum-frontend', Class.extend({
             }
 
             // new message: add it
-            html = html + '<li class="entry">\
-                <div class="entry-avatar">\
-                    <img src="' + that.backend.getAvatar(message.sender) + '" class="avatar" />\
-                </div>\
-                <div class="entry-contentarea hyphenate" lang="de">\
-                    <span class="entry-sender">' + message.sender.escape() + '</span>\
-                    <span class="entry-datetime" title="' + new Date(message.datetime).toLocaleString() + '">\
-                        ' + that.frontendHelpers.dateAgo(message.datetime) + '\
-                    </span>\
-                    <div class="entry-content">\
-                        ' + that.frontendHelpers.formatMessage(message.text) + '\
-                    </div>\
-                </div>\
-            </li>';
+            newMessages[newMessages.length] = message;
         });
 
         // remove old messages if complete messages stream was changed
@@ -370,7 +363,7 @@ define('sum-frontend', Class.extend({
             startTimeAgoUpdaterIndex = $('#content .entry').length;
 
         // append (new) messages
-        $('#content').append(html);
+        this.frontendMessages.showMessages(newMessages);
 
         $.each(messages, function(index, message) {
             // save message context at message

@@ -176,13 +176,15 @@ define('sum-frontend-events', Class.extend({
                 return;
             }
 
-            var language = $('#message-add-code-box-language').val();
-            var message = '[code language=' + language + '] ' + $('#message-add-code-box-area').val() + ' [/code]';
+            var message = $('#message-add-code-box-area').val();
+            var parameters = {
+                language: $('#message-add-code-box-language').val()
+            };
 
             // send message
             $('#message-add-code-box').hide();
             $('#message-add-code-box-area').val('');
-            that.backend.sendMessage(that.frontend.currentConversation, message);
+            that.backend.sendMessage(that.frontend.currentConversation, message, 'codeBlock-message', parameters);
         });
 
         // message menue: cancel code block
@@ -256,7 +258,7 @@ define('sum-frontend-events', Class.extend({
 
             // send message
             $('#message-input-textfield').val("");
-            that.backend.sendMessage(that.frontend.currentConversation, message);
+            that.backend.sendMessage(that.frontend.currentConversation, message, 'text-message');
         });
 
         // send message by enter
