@@ -185,9 +185,7 @@ define('sum-frontend-helpers', Class.extend({
      * hyphenator and code numbering
      * @param element target element
      */
-    hyphenateAndNumberCode: function(element) {
-        // start hyphenator
-        Hyphenator.run();
+    numberCode: function(element) {
 
         // numbering for pre>code blocks
         $(element).find('pre code').each(function(){

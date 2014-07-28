@@ -52,6 +52,7 @@ define('sum-frontend-messages', Class.extend({
             text = text.escape();
             text = this.frontendHelpers.emoticons(text);
             text = this.frontendHelpers.urlify(text);
+            text = Hyphenator.hyphenate(text, 'de');
         }
 
         var markup = '<div class="entry-avatar">\
