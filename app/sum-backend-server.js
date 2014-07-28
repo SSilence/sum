@@ -94,7 +94,7 @@ define('sum-backend-server', Class.extend({
         //    'sender': 'sender',
         //    'receiver': 'receiver'
         //};
-        if (request.type == 'message') {
+        if (request.type == 'text-message' || request.type == 'codeBlock-message') {
             if (typeof request.text == 'undefined' || typeof request.sender == 'undefined' || typeof request.receiver == 'undefined') {
                 this.backend.error('Ungültige Nachricht erhalten: ' + JSON.stringify(request));
             }
@@ -114,7 +114,10 @@ define('sum-backend-server', Class.extend({
                 'datetime': new Date().getTime(),
                 'sender': request.sender,
                 'receiver': request.receiver,
-                'text': request.text
+                'text': request.text,
+                'id': request.id,
+                'parameters': request.parameters,
+                'type': request.type
             };
 
             if(typeof this.backend.newMessage != "undefined")
