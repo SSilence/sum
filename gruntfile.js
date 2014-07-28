@@ -20,7 +20,7 @@ module.exports = function(grunt) {
         /* jasmine unit tests */
         jasmine : {
             src: [
-                'test/require-mock.js',
+                'test/init-mocks.js',
                 'app/injector.js',
                 'app/string-escape.js',
                 'app/config.js',
@@ -52,10 +52,9 @@ module.exports = function(grunt) {
             },
             coverage: {
                 src: [
-                    'test/require-mock.js',
+                    'test/init-mocks.js',
                     'app/injector.js',
                     'app/string-escape.js',
-                    'app/config.js',
                     'app/sum-backend-client.js',
                     'app/sum-backend-helpers.js',
                     'app/sum-backend-server.js',
