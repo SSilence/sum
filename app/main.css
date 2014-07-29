@@ -196,7 +196,7 @@ body {
 /* contact list */
 
 .mCSB_container {
-    margin-right:0;
+    margin-right:0 !important;
 }
 
     .mCSB_scrollTools .mCSB_draggerContainer {

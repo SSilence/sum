@@ -80,8 +80,8 @@ define('sum-frontend-messages', Class.extend({
         var text = message.text;
 
         // format code
-        if (message.parameters.language != 'undefined' && message.parameters.language != 'auto')
-            text = hljs.highlight(message.parameters.language, text).value;
+        if (message.language != 'undefined' && message.language != 'auto')
+            text = hljs.highlight(message.language, text).value;
         else
             text = hljs.highlightAuto(text).value;
 

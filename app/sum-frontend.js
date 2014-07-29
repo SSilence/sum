@@ -63,6 +63,11 @@ define('sum-frontend', Class.extend({
             scrollInertia: 0,
             mouseWheel: {
                 scrollAmount: 350
+            },
+            callbacks: {
+                whileScrolling: function() {
+                    $(this).data('scrollTop', -this.mcs.top);
+                }
             }
         });
 
@@ -234,7 +239,7 @@ define('sum-frontend', Class.extend({
     updateUserlist: function(users) {
         // save scroll state
         var contactsWrapper = $("#contacts-wrapper");
-        var scrollPosition = contactsWrapper.scrollTop();
+        var scrollPosition = typeof contactsWrapper.data('scrollTop') != 'undefined' ? contactsWrapper.data('scrollTop') : 0;
 
         // update userlist
         $('.contacts').html('');
@@ -275,7 +280,7 @@ define('sum-frontend', Class.extend({
     updateRoomlist: function(rooms) {
         // save scroll state
         var roomsWrapper = $("#rooms-wrapper");
-        var scrollPosition = roomsWrapper.scrollTop();
+        var scrollPosition = typeof roomsWrapper.data('scrollTop') != 'undefined' ? roomsWrapper.data('scrollTop') : 0;
 
         // update roomlist
         $('.rooms').html('');

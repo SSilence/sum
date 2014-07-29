@@ -89,12 +89,13 @@ define('sum-backend-server', Class.extend({
     handle: function(request) {
         // new message
         // {
-        //    'type': 'message',
+        //    'type': 'text-message', or 'codeblock-message'
         //    'text': 'text',
         //    'sender': 'sender',
-        //    'receiver': 'receiver'
+        //    'receiver': 'receiver',
+        //    'language': 'auto' (for codeblock-message)
         //};
-        if (request.type == 'text-message' || request.type == 'codeBlock-message') {
+        if (request.type == 'text-message' || request.type == 'codeblock-message') {
             if (typeof request.text == 'undefined' || typeof request.sender == 'undefined' || typeof request.receiver == 'undefined') {
                 this.backend.error('Ungültige Nachricht erhalten: ' + JSON.stringify(request));
             }
@@ -109,19 +110,14 @@ define('sum-backend-server', Class.extend({
             if (typeof this.backend.conversations[conversationId] == 'undefined')
                 this.backend.conversations[conversationId] = [];
 
+            var message = $.extend(request, { datetime: new Date().getTime()});
+
             var conversation = this.backend.conversations[conversationId];
-            this.backend.conversations[conversationId][conversation.length] = {
-                'datetime': new Date().getTime(),
-                'sender': request.sender,
-                'receiver': request.receiver,
-                'text': request.text,
-                'id': request.id,
-                'parameters': request.parameters,
-                'type': request.type
-            };
+            this.backend.conversations[conversationId][conversation.length] = message;
 
             if(typeof this.backend.newMessage != "undefined")
                 this.backend.newMessage(this.backend.conversations[conversationId][conversation.length-1]);
+
 
         // room invite
         // {
@@ -152,7 +148,8 @@ define('sum-backend-server', Class.extend({
 
             // update roomlist
             this.backend.updateRoomlist();
-        }
+        } else
+            this.backend.error('Ungültigen Nachrichtentyp erhalten: ' + JSON.stringify(request));
     },
 
 

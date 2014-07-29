@@ -288,17 +288,14 @@ define('sum-backend', Class.extend({
 
 
     /**
-     * send new message. receiver is username or roomname.
-     * @param receiver (string) user or room
-     * @param text (string) the message
-     * @param messageType (string) the message-type
-     * @param parameters (object) additional parameters (for the messageType)
+     * send new message.
+     * @param message (object) the message
      */
-    sendMessage: function(receiver, text, messageType, parameters) {
+    sendMessage: function(message) {
         // get user or users of a given room
-        var users = this.backendHelpers.getUser(this.userlist, receiver);
+        var users = this.backendHelpers.getUser(this.userlist, message.receiver);
         if (users===false) {
-            users = this.getUsersInRoom(receiver);
+            users = this.getUsersInRoom(message.receiver);
         } else {
             users = [ users ];
         }
@@ -316,21 +313,17 @@ define('sum-backend', Class.extend({
 
         // create new message
         var currentuser = this.backendHelpers.getUsername();
-        var message = {
+        var message = $.extend(message, {
             'id': this.backendHelpers.genereateGUID(),
-            'type': messageType,
-            'parameters': parameters,
-            'text': text,
-            'sender': currentuser,
-            'receiver': receiver
-        };
+            'sender': currentuser
+        });
 
         // save message in own conversation
-        if (typeof this.conversations[receiver] == 'undefined')
-            this.conversations[receiver] = [];
-        var conversation = this.conversations[receiver];
+        if (typeof this.conversations[message.receiver] == 'undefined')
+            this.conversations[message.receiver] = [];
+        var conversation = this.conversations[message.receiver];
         conversation[conversation.length] = $.extend({}, message, { datetime: new Date().getTime() });
-        this.getConversation(receiver);
+        this.getConversation(message.receiver);
 
         // send message to all users
         var that = this;
@@ -345,7 +338,7 @@ define('sum-backend', Class.extend({
 
             // send message
             this.backendClient.send(users[i], message, function() {
-                that.getConversation(receiver);
+                that.getConversation(message.receiver);
             }, this.error);
         }
     },

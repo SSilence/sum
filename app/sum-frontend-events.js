@@ -176,15 +176,18 @@ define('sum-frontend-events', Class.extend({
                 return;
             }
 
-            var message = $('#message-add-code-box-area').val();
-            var parameters = {
-                language: $('#message-add-code-box-language').val()
-            };
+            var text = $('#message-add-code-box-area').val();
+            var language = $('#message-add-code-box-language').val();
 
             // send message
             $('#message-add-code-box').hide();
             $('#message-add-code-box-area').val('');
-            that.backend.sendMessage(that.frontend.currentConversation, message, 'codeBlock-message', parameters);
+            that.backend.sendMessage({
+                receiver: that.frontend.currentConversation,
+                type: 'codeblock-message',
+                text: text,
+                language: language
+            });
         });
 
         // message menue: cancel code block
@@ -242,10 +245,10 @@ define('sum-frontend-events', Class.extend({
 
         // send message
         $('#message-send').click(function() {
-            var message = $('#message-input-textfield').val();
+            var text = $('#message-input-textfield').val();
 
             // message given?
-            if (message.trim().length===0) {
+            if (text.trim().length===0) {
                 alertify.error('bitte eine Nachricht eingeben');
                 return;
             }
@@ -258,7 +261,11 @@ define('sum-frontend-events', Class.extend({
 
             // send message
             $('#message-input-textfield').val("");
-            that.backend.sendMessage(that.frontend.currentConversation, message, 'text-message');
+            that.backend.sendMessage({
+                receiver: that.frontend.currentConversation,
+                type: 'text-message',
+                text: text
+            });
         });
 
         // send message by enter
