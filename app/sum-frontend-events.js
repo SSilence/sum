@@ -353,6 +353,8 @@ define('sum-frontend-events', Class.extend({
 
         // rooms: leave
         $('.rooms').delegate("li .rooms-leave", "click", function(e) {
+            if(confirm("Raum wirklich verlassen?") !== true)
+                return;
             var room = $(this).parent().find('.name').html();
             that.backend.leaveRoom(room);
             $('.rooms li:first').click();
