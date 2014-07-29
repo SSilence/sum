@@ -313,7 +313,7 @@ define('sum-backend', Class.extend({
 
         // create new message
         var currentuser = this.backendHelpers.getUsername();
-        var message = $.extend(message, {
+        message = $.extend(message, {
             'id': this.backendHelpers.genereateGUID(),
             'sender': currentuser
         });
