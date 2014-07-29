@@ -52,6 +52,10 @@ define('sum-frontend', Class.extend({
      * initialize frontend
      */
     initialize: function() {
+        // ser version
+        $('title').html($('title').html() + ' ' + this.backend.version);
+        $('.version').html(this.backend.version);
+
         // set currentConversation
         this.currentConversation = config.room_all;
 

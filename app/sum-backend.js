@@ -33,6 +33,12 @@ define('sum-backend', Class.extend({
 
 
     /**
+     * current version
+     */
+    version: '',
+
+
+    /**
      * RSA Key
      */
     key: false,
@@ -84,6 +90,10 @@ define('sum-backend', Class.extend({
      * initialize backend
      */
     initialize: function() {
+        // get current version
+        var packagejson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
+        this.version = packagejson.version;
+
         // initial generate rsa keys
         this.key = this.backendHelpers.generateKeypair();
 

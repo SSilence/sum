@@ -188,9 +188,20 @@ body {
     padding-top:12px;
 }
 
-#nav .heading span {
-    padding-right:10px;
-}
+    #nav .heading span {
+        padding-right:10px;
+    }
+
+    #nav .version {
+        position: absolute;
+        left: 5px;
+        top: 100%;
+        color: #CCC;
+        font-size: 0.5em;
+        font-family: sans-serif;
+        margin-top: -15px;
+        z-index:100;
+    }
 
 
 /* contact list */

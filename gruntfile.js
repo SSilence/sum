@@ -103,7 +103,6 @@ module.exports = function(grunt) {
         replace: {
             version: {
                 src: [
-                    'app/index.html',
                     'setup.iss',
                     'package.json',
                     'README.md'
