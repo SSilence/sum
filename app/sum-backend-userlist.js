@@ -159,9 +159,6 @@ define('sum-backend-userlist', Class.extend({
                 }
 
                 userlist[userlist.length] = users[i];
-            } else {
-                if (typeof this.userIsRemoved != 'undefined')
-                    this.userIsRemoved(users[i]);
             }
         }
 
@@ -252,6 +249,9 @@ define('sum-backend-userlist', Class.extend({
      * @param users (array) fetched users
      */
     userlistRefreshFrontend: function(users) {
+        // fix corrupt userlist
+        users = this.compensateCorruptUserlist(users);
+
         // sort userlist by username
         users = this.backendHelpers.sortUserlistByUsername(users);
 
@@ -288,5 +288,38 @@ define('sum-backend-userlist', Class.extend({
         window.setTimeout(function() {
             that.userlistUpdateTimer();
         }, config.user_list_update_intervall);
+    },
+
+
+    /**
+     * Compensates corrupt or wrong userfile. If a user is in local userlist and not in userlist.json
+     * and user is not timedout for removing from list, the user will be restored in the userlist.
+     * @param users userlist
+     * @returns (array) userlist with restored users
+     */
+    compensateCorruptUserlist: function(users) {
+        // search in old userlist
+        $.each(this.backend.userlist, function(index, oldUser) {
+            var found = false;
+
+            // search oldUser in new userlist
+            $.each(users, function(index, user) {
+                if(oldUser.username == user.username) {
+                    found = true;
+                    return false;
+                }
+                return true;
+            });
+
+            // if user is not in new userlist and not timedout: restore it
+            var now = new Date().getTime();
+            if (found == false && oldUser.timestamp + config.user_remove > now) {
+                users[users.length] = oldUser;
+            }
+
+            return true;
+        });
+
+        return users;
     }
 }));
