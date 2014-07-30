@@ -313,7 +313,7 @@ define('sum-backend-userlist', Class.extend({
 
             // if user is not in new userlist and not timedout: restore it
             var now = new Date().getTime();
-            if (found == false && oldUser.timestamp + config.user_remove > now) {
+            if (found === false && oldUser.timestamp + config.user_remove > now) {
                 users[users.length] = oldUser;
             }
 
