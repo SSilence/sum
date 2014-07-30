@@ -245,8 +245,8 @@ define('sum-frontend', Class.extend({
     checkVersion: function() {
         this.backend.isNewerVersionAvailable(function(version) {
             $('#newversion').show();
-            $('#newversion').html('SUM Version ' + version + ' ist verfügbar');
-            $('#newversion').data('url', config.version_update.replace(/\?/, version));
+            $('#newversion').html('SUM Version ' + version.escape() + ' ist verfügbar');
+            $('#newversion').data('url', config.version_update.replace(/\?/, version.escape()));
         });
         var that = this;
         window.setTimeout(function() {
