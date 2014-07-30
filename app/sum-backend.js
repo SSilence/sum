@@ -113,7 +113,7 @@ define('sum-backend', Class.extend({
             that.port = port;
 
             // create/update userfile (holds additional information as avatar, key, ip, ...)
-            that.backendUserlist.userlistUpdateUsersOwnFile(that.ip, that.port, that.key, that.loadAvatar(), function() {
+            that.backendUserlist.userlistUpdateUsersOwnFile(that.ip, that.port, that.key, that.loadAvatar(), that.version, function() {
                 // afterwards start userlist updater
                 that.backendUserlist.userlistUpdateTimer(that);
             });
@@ -376,7 +376,7 @@ define('sum-backend', Class.extend({
      */
     saveAvatar: function(avatar) {
         window.localStorage.avatar = avatar;
-        this.backendUserlist.userlistUpdateUsersOwnFile(this.ip, this.port, this.key, avatar);
+        this.backendUserlist.userlistUpdateUsersOwnFile(this.ip, this.port, this.key, this.version, avatar);
     },
 
 
@@ -632,5 +632,19 @@ define('sum-backend', Class.extend({
      */
     clearConversation: function(conversation) {
         this.conversations[conversation] = [];
+    },
+
+
+    /**
+     * check if newer version of this application is available
+     * @param callback (function) will be executed if newer version was found
+     */
+    isNewerVersionAvailable: function(callback) {
+        var that = this;
+        this.backendHelpers.readFile(config.version_file, function(given) {
+            given = given.toString();
+            if (that.backendHelpers.isVersionNewer(that.version, given))
+                callback(given);
+        }, function() { /* on error do nothing */ });
     }
 }));

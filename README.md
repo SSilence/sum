@@ -98,6 +98,9 @@ Following configuration parameters are available in config.ini:
 * ``user_file``: path of the file where all users register themself
 * ``user_file_extended``: file per user where avatar and key will be stored. ? will be replaced by the md5 hash of the username
 * ``lock_file``: path of the lock file for the user file. ensures that only one user access the user file
+* ``version_file``: path of version file
+* ``version_update``: link to version update file
+* ``version_update_intervall``: how often sum checks for new version
 * ``user_timeout``: set user status to offline after ms inactivity
 * ``user_remove``: remove users from list after ms inactivity
 * ``user_list_update_intervall``: update every n seconds users entry in userlist file

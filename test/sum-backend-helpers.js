@@ -211,4 +211,16 @@ describe('backend helper', function() {
             expect(user.username).toMatch(/Peter|Dieter/);
         });
     });
+
+
+    it('isVersionNewer: identify a newer or older version', function() {
+        expect(backendHelper.isVersionNewer("1.3.0", "2.4.0")).toBeTruthy();
+        expect(backendHelper.isVersionNewer("1.3.0", "1.3.1")).toBeTruthy();
+        expect(backendHelper.isVersionNewer("1.3.0", "1.4.0")).toBeTruthy();
+        expect(backendHelper.isVersionNewer("1.3.0", "2.3.0")).toBeTruthy();
+
+        expect(backendHelper.isVersionNewer("2.4.1", "2.4.0")).toBeFalsy();
+        expect(backendHelper.isVersionNewer("2.5.0", "2.4.0")).toBeFalsy();
+        expect(backendHelper.isVersionNewer("3.4.0", "2.4.0")).toBeFalsy();
+    });
 });

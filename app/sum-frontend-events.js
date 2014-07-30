@@ -361,6 +361,11 @@ define('sum-frontend-events', Class.extend({
             e.preventDefault();
             return false;
         });
+
+        // update version
+        $('#newversion').click(function() {
+            gui.Shell.openExternal($(this).data('url'));
+        });
     },
 
 

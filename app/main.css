@@ -481,6 +481,7 @@ body {
 }
 
     #main-header {
+        position: relative;
         height:37px;
         padding-top:10px;
         padding-bottom:10px;
@@ -489,10 +490,23 @@ body {
         background:#66829a;
     }
 
-        #main-header .dragzone {
-            height:100%;
-            width:80%;
-            background:red;
+        #newversion {
+            top:8px;
+            margin:3px;
+            display:none;
+            opacity:0.8;
+            z-index:100;
+            background:#e45857;
+            padding:10px;
+            position: absolute;
+            left:50%;
+            margin-left:-150px;
+            width: 300px;
+            -webkit-app-region: no-drag;
+            color:#ffffff;
+            border-radius: 3px;
+            font-size:0.8em;
+            cursor: pointer;
         }
 
         #main-metadata {

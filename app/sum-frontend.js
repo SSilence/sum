@@ -91,6 +91,9 @@ define('sum-frontend', Class.extend({
         this.backend.updateUserlist(this.currentConversation);
         this.backend.updateRoomlist();
         this.backend.getConversation(this.currentConversation);
+
+        // check whether new version is available
+        this.checkVersion();
     },
 
 
@@ -237,6 +240,22 @@ define('sum-frontend', Class.extend({
 
 
     /**
+     * checks for new sum version
+     */
+    checkVersion: function() {
+        this.backend.isNewerVersionAvailable(function(version) {
+            $('#newversion').show();
+            $('#newversion').html('SUM Version ' + version + ' ist verfügbar');
+            $('#newversion').data('url', config.version_update.replace(/\?/, version));
+        });
+        var that = this;
+        window.setTimeout(function() {
+            that.checkVersion();
+        }, config.version_update_intervall);
+    },
+
+
+    /**
      * update current userlist
      * @param users (array) list of users for updating
      */
@@ -267,7 +286,9 @@ define('sum-frontend', Class.extend({
             $('.contacts').append('<li ' + active + '>\
                 <div class="' + user.status + ' contacts-state"></div>\
                 <img src="' + avatar + '" class="contacts-avatar avatar" />\
-                <div class="contacts-name">' + user.username.escape() + '</div>\
+                <div class="contacts-name" title="' + user.username.escape() +
+                ' ' + (typeof user.version != 'undefined' ? user.version : '') + '">' +
+                user.username.escape() + '</div>\
                 ' + unread + '\
             </li>');
         });

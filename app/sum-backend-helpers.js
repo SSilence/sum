@@ -37,6 +37,7 @@ define('sum-backend-helpers', Class.extend({
         user.ip = userinfos.ip;
         user.port = userinfos.port;
         user.key = userinfos.key;
+        user.version = userinfos.version;
 
         if (typeof userinfos.avatar != 'undefined')
             user.avatar = userinfos.avatar;
@@ -122,14 +123,12 @@ define('sum-backend-helpers', Class.extend({
      */
     readJsonFile: function(file, success, error) {
         if (typeof error == 'undefined')
-            error = function() {
-                success([]);
-            };
+            error = function() {};
 
         fs.readFile(file, 'utf8', function (err, data) {
             var res = [];
             if (err) {
-                error();
+                error(err);
                 return;
             }
 
@@ -298,5 +297,37 @@ define('sum-backend-helpers', Class.extend({
             return v.toString(16);
         });
         return guid;
+    },
+
+
+    /**
+     * returns true if given version is newer than the current version
+     * @param current (string) version
+     * @param given (string) version
+     */
+    isVersionNewer: function(current, given) {
+        // wrong format? return false
+        if (given.search(/^\d+\.\d+\.\d+$/) == -1)
+            return false;
+
+        if (current.search(/^\d+\.\d+\.\d+$/) == -1)
+            return false;
+
+        // parse version number
+        var regex = /(\d+)\.(\d+)\.(\d+)/;
+        var currentVersion = regex.exec(current);
+        var givenVersion = regex.exec(given);
+
+        // convert to int
+        var i=0;
+        for(i=0; i<currentVersion.length; i++)
+            currentVersion[i] = parseInt(currentVersion[i]);
+        for(i=0; i<givenVersion.length; i++)
+            givenVersion[i] = parseInt(givenVersion[i]);
+
+        // compare
+        return currentVersion[1] == givenVersion[1] && currentVersion[2] == givenVersion[2] && currentVersion[3] < givenVersion[3] ||
+               currentVersion[1] == givenVersion[1] && currentVersion[2] < givenVersion[2] ||
+               currentVersion[1] < givenVersion[1];
     }
 }));
