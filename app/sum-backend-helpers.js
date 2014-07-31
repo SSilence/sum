@@ -87,9 +87,9 @@ define('sum-backend-helpers', Class.extend({
      */
     getUsername: function() {
         if (typeof config.username == "undefined")
-            return process.env.USERNAME;
+            return process.env.USERNAME.toLowerCase();
         else
-            return config.username;
+            return config.username.toLowerCase();
     },
 
 
