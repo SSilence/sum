@@ -283,14 +283,11 @@ define('sum-frontend', Class.extend({
             if(that.currentConversation==user.username)
                 active = 'class="active"';
 
-            $('.contacts').append('<li ' + active + '>\
-                <div class="' + user.status + ' contacts-state"></div>\
-                <img src="' + avatar + '" class="contacts-avatar avatar" />\
-                <div class="contacts-name" title="' + user.username.escape() +
-                ' ' + (typeof user.version != 'undefined' ? user.version : '') + '">' +
-                user.username.escape() + '</div>\
-                ' + unread + '\
-            </li>');
+            $('.contacts').append('<li ' + active + '>' +
+                '<div class="' + user.status + ' contacts-state" ' +
+                'title="' + (typeof user.version != 'undefined' ? user.version : '') + '"></div>' +
+                '<img src="' + avatar + '" class="contacts-avatar avatar" />' +
+                '<div class="contacts-name">' + user.username.escape() + '</div>' + unread + '</li>');
         });
 
         // restore scroll state

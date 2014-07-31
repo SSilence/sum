@@ -135,7 +135,7 @@ define('sum-backend-helpers', Class.extend({
             try {
                 res = JSON.parse(data);
             } catch (er) {
-                error();
+                error('json parse error');
             }
 
             success(res);

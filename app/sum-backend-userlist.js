@@ -108,8 +108,8 @@ define('sum-backend-userlist', Class.extend({
                 that.userlistUpdate(users);
             },
             function(err) {
-                // userfile does not exist? create new one
-                if (typeof err != 'undefined' && typeof err.code != 'undefined') {
+                // userfile does not exist or wrong json parse error? create new one
+                if (typeof err != 'undefined' && (typeof err.code != 'undefined' || err === 'json parse error')) {
                     that.userlistUpdate([]);
                     return;
                 }
@@ -164,11 +164,11 @@ define('sum-backend-userlist', Class.extend({
 
         // add current user
         userlist[userlist.length] = {
-            username: currentuser,
             timestamp: now,
             status: 'online',
             userfileTimestamp: this.userfileTimestamp,
-            rooms: this.backend.roomlist
+            rooms: this.backend.roomlist,
+            username: currentuser
         };
 
         // write back updated userfile
