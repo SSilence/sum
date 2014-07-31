@@ -265,7 +265,7 @@ define('sum-frontend', Class.extend({
         var scrollPosition = typeof contactsWrapper.data('scrollTop') != 'undefined' ? contactsWrapper.data('scrollTop') : 0;
 
         // update userlist
-        $('.contacts').html('');
+        var html = '';
         var that = this;
         $.each(users, function(index, user) {
             // unread
@@ -283,12 +283,14 @@ define('sum-frontend', Class.extend({
             if(that.currentConversation==user.username)
                 active = 'class="active"';
 
-            $('.contacts').append('<li ' + active + '>' +
+            // add new entry
+            html = html + '<li ' + active + '>' +
                 '<div class="' + user.status + ' contacts-state" ' +
                 'title="' + (typeof user.version != 'undefined' ? user.version : '') + '"></div>' +
                 '<img src="' + avatar + '" class="contacts-avatar avatar" />' +
-                '<div class="contacts-name">' + user.username.escape() + '</div>' + unread + '</li>');
+                '<div class="contacts-name">' + user.username.escape() + '</div>' + unread + '</li>';
         });
+        $('.contacts').html(html);
 
         // restore scroll state
         contactsWrapper.mCustomScrollbar("scrollTo", scrollPosition);
