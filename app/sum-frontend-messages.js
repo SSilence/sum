@@ -30,7 +30,7 @@ define('sum-frontend-messages', Class.extend({
             case 'message':
                 markup += this.renderTextMessage(message);
             break;
-            case 'codeBlock-message':
+            case 'codeblock-message':
                 markup += this.renderCodeBlockMessage(message);
             break;
         }

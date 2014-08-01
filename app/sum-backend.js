@@ -376,7 +376,10 @@ define('sum-backend', Class.extend({
      */
     saveAvatar: function(avatar) {
         window.localStorage.avatar = avatar;
-        this.backendUserlist.userlistUpdateUsersOwnFile(this.ip, this.port, this.key, avatar, this.version);
+        var that = this;
+        this.backendUserlist.userlistUpdateUsersOwnFile(this.ip, this.port, this.key, avatar, this.version, function() {
+            that.backendUserlist.userlistUpdateTimer(this);
+        });
     },
 
 
