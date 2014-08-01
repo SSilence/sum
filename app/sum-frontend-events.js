@@ -40,6 +40,18 @@ define('sum-frontend-events', Class.extend({
      * initialize events (clicks, ...)
      */
     initialize: function() {
+        this.initGeneral();
+        this.initMenue();
+        this.initMessageMenue();
+        this.initMessageInput();
+        this.initNavigation();
+    },
+    
+    
+    /**
+     * initialize general events
+     */
+    initGeneral: function() {
         var that = this;
 
         // initialize window resize handler
@@ -74,6 +86,19 @@ define('sum-frontend-events', Class.extend({
             }
         });
 
+        // update version
+        $('#newversion').click(function() {
+            gui.Shell.openExternal($(this).data('url'));
+        });
+    },
+    
+    
+    /**
+     * initialize top menue events
+     */
+    initMenue: function() {
+        var that = this;
+    
         // menue: toggle
         $('#main-menue').click(function() {
             $('#main-menue-dropdown').toggle();
@@ -139,7 +164,15 @@ define('sum-frontend-events', Class.extend({
         $('#main-close').click(function() {
             that.backend.close();
         });
-
+    },
+    
+    
+    /**
+     * initialize message menue events
+     */
+    initMessageMenue: function() {
+        var that = this;
+        
         // message menue: toggle
         $('#message-add-menue').click(function() {
             $('#message-add-menue-dropdown').toggle();
@@ -195,7 +228,15 @@ define('sum-frontend-events', Class.extend({
             $('#message-add-code-box').hide();
             $('#message-add-code-box-area').val('');
         });
-
+    },
+    
+    
+    /**
+     * initialize message input events
+     */
+    initMessageInput: function() {
+        var that = this;
+        
         // toggle emoticons
         $('#message-toggleemots').click(function() {
             var emoticonsPopup = $('#message-emoticons');
@@ -216,33 +257,7 @@ define('sum-frontend-events', Class.extend({
             $('#message-toggleemots').click();
             $('#message-input-textfield').focus();
         });
-
-        // select user
-        $('.contacts').delegate("li", "click", function() {
-            var user = $(this).find('.contacts-name').html();
-            $('.rooms li, .contacts li').removeClass('active');
-            $(this).addClass('active');
-            that.frontend.currentConversation = user;
-            that.backend.getConversation(user);
-            that.backend.updateUserlist(that.frontend.currentConversation);
-            $('#main-metadata').css('visibility', 'visible');
-        });
-
-        // select room
-        $('.rooms').delegate("li", "click", function() {
-            if ( $(this).find('.rooms-outside').length>0 ) {
-                alertify.error('Bitte erst Einladung annehmen/ablehnen');
-                return;
-            }
-            var room = $(this).find('.name').html();
-            $('.rooms li, .contacts li').removeClass('active');
-            $(this).addClass('active');
-            that.frontend.currentConversation = room;
-            that.backend.getConversation(that.frontend.currentConversation);
-            that.backend.updateUserlist(that.frontend.currentConversation);
-            $('#main-metadata').css('visibility', 'visible');
-        });
-
+        
         // send message
         $('#message-send').click(function() {
             var text = $('#message-input-textfield').val();
@@ -273,6 +288,40 @@ define('sum-frontend-events', Class.extend({
             if(e.which == 13) {
                 $('#message-send').click();
             }
+        });
+    },
+    
+    
+    /**
+     * initialize left navigation events
+     */
+    initNavigation: function() {
+        var that = this;
+        
+        // select user
+        $('.contacts').delegate("li", "click", function() {
+            var user = $(this).find('.contacts-name').html();
+            $('.rooms li, .contacts li').removeClass('active');
+            $(this).addClass('active');
+            that.frontend.currentConversation = user;
+            that.backend.getConversation(user);
+            that.backend.updateUserlist(that.frontend.currentConversation);
+            $('#main-metadata').css('visibility', 'visible');
+        });
+
+        // select room
+        $('.rooms').delegate("li", "click", function() {
+            if ( $(this).find('.rooms-outside').length>0 ) {
+                alertify.error('Bitte erst Einladung annehmen/ablehnen');
+                return;
+            }
+            var room = $(this).find('.name').html();
+            $('.rooms li, .contacts li').removeClass('active');
+            $(this).addClass('active');
+            that.frontend.currentConversation = room;
+            that.backend.getConversation(that.frontend.currentConversation);
+            that.backend.updateUserlist(that.frontend.currentConversation);
+            $('#main-metadata').css('visibility', 'visible');
         });
 
         // rooms add: show dialog
@@ -360,11 +409,6 @@ define('sum-frontend-events', Class.extend({
             $('.rooms li:first').click();
             e.preventDefault();
             return false;
-        });
-
-        // update version
-        $('#newversion').click(function() {
-            gui.Shell.openExternal($(this).data('url'));
         });
     },
 
