@@ -275,7 +275,7 @@ define('sum-frontend-events', Class.extend({
             }
             
             // command?
-            if (text.indexOf('/') == 0) {
+            if (text.indexOf('/') === 0) {
                 that.backend.command(text, that.frontend.currentConversation);
                 $('#message-input-textfield').val("");
                 return;

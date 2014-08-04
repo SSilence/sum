@@ -651,10 +651,10 @@ define('sum-backend', Class.extend({
 
         // /gamez gamename
         } else if(command.indexOf('/gamez') === 0) {
-            var gamez = this.backendHelpers.getDirectories('./gamez/');
+            var available = this.backendHelpers.getDirectories('./gamez/');
             var game = command.replace(/\/gamez /, '');
-            if ($.inArray(game, gamez) === -1) {
-                this.renderSystemMessage('game ' + game + ' nicht gefunden', conversation)
+            if ($.inArray(game, available) === -1) {
+                this.renderSystemMessage('game ' + game + ' nicht gefunden', conversation);
             } else {
                 gui.Window.open('../gamez/' + game + '/index.html', {
                     position: 'center',
@@ -668,7 +668,7 @@ define('sum-backend', Class.extend({
 
         // /version
         } else if(command == '/version') {
-            this.renderSystemMessage('version: ' + this.version, conversation)
+            this.renderSystemMessage('version: ' + this.version, conversation);
 
         // /versions
         } else if(command == '/versions') {

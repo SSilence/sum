@@ -319,10 +319,11 @@ define('sum-backend-userlist', Class.extend({
             var offline = this.backendHelpers.getUsersNotInListOne(this.backendHelpers.getUsersByStatus(this.backend.userlist, 'offline'), this.backendHelpers.getUsersByStatus(users, 'offline'));
             var removed = this.backendHelpers.getUsersNotInListOne(users, this.backend.userlist);
             var i = 0;
-
+            var message;
+            
             if (typeof this.backend.userOnlineNotice != 'undefined')
                 for (i = 0; i < online.length; i++) {
-                    var message = online[i].username + ' ist jetzt online';
+                    message = online[i].username + ' ist jetzt online';
                     this.backend.renderSystemMessage(message, online[i].username);
                     this.backend.renderSystemMessage(message, config.room_all);
                     this.backend.userOnlineNotice(online[i].avatar, online[i].username);
@@ -330,10 +331,10 @@ define('sum-backend-userlist', Class.extend({
 
             if (typeof this.backend.userOfflineNotice != 'undefined')
                 for (i = 0; i < offline.length; i++) {
-                    var message = offline[i].username + ' ist jetzt offline';
+                    message = offline[i].username + ' ist jetzt offline';
                     this.backend.renderSystemMessage(message, offline[i].offline);
                     this.backend.renderSystemMessage(message, config.room_all);
-                    this.backend.userOfflineNotice(offline[i].avatar, offline[i].username)
+                    this.backend.userOfflineNotice(offline[i].avatar, offline[i].username);
                 }
 
             if (typeof this.backend.userRemovedNotice != 'undefined')

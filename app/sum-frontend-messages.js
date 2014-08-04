@@ -57,7 +57,7 @@ define('sum-frontend-messages', Class.extend({
             text = this.frontendHelpers.emoticons(text);
         }
 
-        return '<div class="entry-avatar">\
+        var markup = '<div class="entry-avatar">\
             <img src="' + this.backend.getAvatar(message.sender) + '" class="avatar" />\
         </div>\
         <div class="entry-contentarea" lang="de">\
@@ -69,6 +69,8 @@ define('sum-frontend-messages', Class.extend({
                 ' + text + '\
             </div>\
         </div>';
+        
+        return markup;
     },
 
 
@@ -98,9 +100,10 @@ define('sum-frontend-messages', Class.extend({
      * @returns {string} command markup
      */
     renderSystemMessage: function(message) {
-        return '<div class="entry-contentarea" lang="de">\
+        var markup = '<div class="entry-contentarea" lang="de">\
             <div class="entry-status">\
                 ' + message.text + '\
             </div>';
+        return markup;
     }
 }));
