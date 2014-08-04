@@ -108,8 +108,8 @@ define('sum-backend-helpers', Class.extend({
 
         fs.writeFile(file, JSON.stringify(content, null, 4), 'utf8', function(err) {
             if(err) {
-                console.info("Fehler beim Schreiben der Datei " + file);
-                console.info(err);
+                console.error(new Date() + " Fehler beim Schreiben der Datei " + file);
+                console.error(err);
                 error('Fehler beim Schreiben der Userliste: ' + err);
             } else if (typeof success != 'undefined')
                 success();
@@ -130,8 +130,8 @@ define('sum-backend-helpers', Class.extend({
         fs.readFile(file, 'utf8', function (err, data) {
             var res = [];
             if (err) {
-                console.info("Fehler beim Lesen der Datei " + file);
-                console.info(err);
+                console.error(new Date() + " Fehler beim Lesen der Datei " + file);
+                console.error(err);
                 error(err);
                 return;
             }
@@ -139,6 +139,8 @@ define('sum-backend-helpers', Class.extend({
             try {
                 res = JSON.parse(data);
             } catch (er) {
+                console.error(new Date() + " Fehler beim Parsen der JSON Datei " + file);
+                console.error(er);
                 error('json parse error');
             }
 
@@ -156,6 +158,8 @@ define('sum-backend-helpers', Class.extend({
     readFile: function(file, success, error) {
         fs.readFile(file, function (err, data) {
             if (err) {
+                console.error(new Date() + " Fehler beim Lesen der Datei " + file);
+                console.error(err);
                 error('Datei konnte nicht geladen werden');
                 return;
             }
