@@ -273,6 +273,13 @@ define('sum-frontend-events', Class.extend({
                 alertify.error('bitte einen Chat Kanal ausw&auml;hlen');
                 return;
             }
+            
+            // command?
+            if (text.indexOf('/') == 0) {
+                that.backend.command(text, that.frontend.currentConversation);
+                $('#message-input-textfield').val("");
+                return;
+            }
 
             // send message
             $('#message-input-textfield').val("");

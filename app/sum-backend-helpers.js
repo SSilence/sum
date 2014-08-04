@@ -107,9 +107,11 @@ define('sum-backend-helpers', Class.extend({
             };
 
         fs.writeFile(file, JSON.stringify(content, null, 4), 'utf8', function(err) {
-            if(err)
+            if(err) {
+                console.info("Fehler beim Schreiben der Datei " + file);
+                console.info(err);
                 error('Fehler beim Schreiben der Userliste: ' + err);
-            else if (typeof success != 'undefined')
+            } else if (typeof success != 'undefined')
                 success();
         });
     },
@@ -128,6 +130,8 @@ define('sum-backend-helpers', Class.extend({
         fs.readFile(file, 'utf8', function (err, data) {
             var res = [];
             if (err) {
+                console.info("Fehler beim Lesen der Datei " + file);
+                console.info(err);
                 error(err);
                 return;
             }
@@ -329,5 +333,20 @@ define('sum-backend-helpers', Class.extend({
         return currentVersion[1] == givenVersion[1] && currentVersion[2] == givenVersion[2] && currentVersion[3] < givenVersion[3] ||
                currentVersion[1] == givenVersion[1] && currentVersion[2] < givenVersion[2] ||
                currentVersion[1] < givenVersion[1];
+    },
+    
+    
+    /**
+     * get directories of given directory
+     * @return (array of strings) directories found
+     * @param (string) dir the target directory
+     */
+    getDirectories: function(dir) {
+        if (fs.existsSync(dir) === false) {
+            return [];
+        }
+        return fs.readdirSync(dir).filter(function (file) {
+            return fs.statSync(dir + file).isDirectory();
+        });
     }
 }));

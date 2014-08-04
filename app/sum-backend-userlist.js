@@ -83,6 +83,8 @@ define('sum-backend-userlist', Class.extend({
         this.backendHelpers.lock(function(err) {
             // can't get lock for exclusive userfile access? retry in random timeout
             if (typeof err != 'undefined') {
+                console.info("Lockfile nicht bekommen");
+                console.info(err);
                 var randomTimeout = Math.floor(Math.random() * config.lock_retry_maximum) + config.lock_retry_minimum;
                 window.setTimeout(function() {
                     that.userlistUpdateTimer();
@@ -256,24 +258,7 @@ define('sum-backend-userlist', Class.extend({
         users = this.backendHelpers.sortUserlistByUsername(users);
 
         // show notification for users which are now online/offline/removed
-        if (this.firstUpdate===false) {
-            var online = this.backendHelpers.getUsersNotInListOne(this.backendHelpers.getUsersByStatus(this.backend.userlist, 'online'), this.backendHelpers.getUsersByStatus(users, 'online'));
-            var offline = this.backendHelpers.getUsersNotInListOne(this.backendHelpers.getUsersByStatus(this.backend.userlist, 'offline'), this.backendHelpers.getUsersByStatus(users, 'offline'));
-            var removed = this.backendHelpers.getUsersNotInListOne(users, this.backend.userlist);
-            var i=0;
-
-            if (typeof this.backend.userOnlineNotice != 'undefined')
-                for(i=0; i<online.length; i++)
-                    this.backend.userOnlineNotice(online[i].avatar, online[i].username);
-
-            if (typeof this.backend.userOfflineNotice != 'undefined')
-                for(i=0; i<offline.length; i++)
-                    this.backend.userOfflineNotice(offline[i].avatar, offline[i].username);
-
-            if (typeof this.backend.userRemovedNotice != 'undefined')
-                for(i=0; i<removed.length; i++)
-                    this.backend.userRemovedNotice(removed[i].avatar, removed[i].username);
-        }
+        this.showOnlineOfflineNotifications(users);
         this.firstUpdate = false;
 
         // save userlist
@@ -321,5 +306,40 @@ define('sum-backend-userlist', Class.extend({
         });
 
         return users;
+    },
+
+
+    /**
+     * show notification for users which are now online/offline/removed
+     * @param users userlist
+     */
+    showOnlineOfflineNotifications: function(users) {
+        if (this.firstUpdate === false) {
+            var online = this.backendHelpers.getUsersNotInListOne(this.backendHelpers.getUsersByStatus(this.backend.userlist, 'online'), this.backendHelpers.getUsersByStatus(users, 'online'));
+            var offline = this.backendHelpers.getUsersNotInListOne(this.backendHelpers.getUsersByStatus(this.backend.userlist, 'offline'), this.backendHelpers.getUsersByStatus(users, 'offline'));
+            var removed = this.backendHelpers.getUsersNotInListOne(users, this.backend.userlist);
+            var i = 0;
+
+            if (typeof this.backend.userOnlineNotice != 'undefined')
+                for (i = 0; i < online.length; i++) {
+                    var message = online[i].username + ' ist jetzt online';
+                    this.backend.renderSystemMessage(message, online[i].username);
+                    this.backend.renderSystemMessage(message, config.room_all);
+                    this.backend.userOnlineNotice(online[i].avatar, online[i].username);
+                }
+
+            if (typeof this.backend.userOfflineNotice != 'undefined')
+                for (i = 0; i < offline.length; i++) {
+                    var message = offline[i].username + ' ist jetzt offline';
+                    this.backend.renderSystemMessage(message, offline[i].offline);
+                    this.backend.renderSystemMessage(message, config.room_all);
+                    this.backend.userOfflineNotice(offline[i].avatar, offline[i].username)
+                }
+
+            if (typeof this.backend.userRemovedNotice != 'undefined')
+                for (i = 0; i < removed.length; i++) {
+                    this.backend.userRemovedNotice(removed[i].avatar, removed[i].username);
+                }
+        }
     }
 }));

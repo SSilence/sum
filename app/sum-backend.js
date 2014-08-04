@@ -637,6 +637,70 @@ define('sum-backend', Class.extend({
         this.conversations[conversation] = [];
     },
 
+    
+    /**
+     * execute command.
+     * @param (string) command given by message input
+     * @param (string) current conversation
+     */
+    command: function(command, conversation) {
+        // /gamez
+        if (command === '/gamez') {
+            var gamez = this.backendHelpers.getDirectories('./gamez/').join(', ');
+            this.renderSystemMessage('gamez gefunden: ' + gamez, conversation);
+
+        // /gamez gamename
+        } else if(command.indexOf('/gamez') === 0) {
+            var gamez = this.backendHelpers.getDirectories('./gamez/');
+            var game = command.replace(/\/gamez /, '');
+            if ($.inArray(game, gamez) === -1) {
+                this.renderSystemMessage('game ' + game + ' nicht gefunden', conversation)
+            } else {
+                gui.Window.open('../gamez/' + game + '/index.html', {
+                    position: 'center',
+                    width: 700,
+                    height: 500,
+                    focus: true,
+                    toolbar: false,
+                    frame: true
+                });
+            }
+
+        // /version
+        } else if(command == '/version') {
+            this.renderSystemMessage('version: ' + this.version, conversation)
+
+        // /versions
+        } else if(command == '/versions') {
+            var versions = "";
+            $.each(this.userlist, function(index, user) {
+                versions = user.username + ': ' + user.version + '<br />\n';
+            });
+            this.renderSystemMessage('versions of users<br />\n' + versions, conversation);
+        }
+    },
+
+
+    /**
+     * render system message
+     * @param text (string) message
+     * @param conversation (string) target conversation
+     */
+    renderSystemMessage: function(text, conversation) {
+        // get conversation
+        if (typeof this.conversations[conversation] == 'undefined')
+            this.conversations[conversation] = [];
+        var con = this.conversations[conversation];
+
+        // add system message
+        con[con.length] = {
+            id: this.backendHelpers.genereateGUID(),
+            type: 'system',
+            text: text
+        };
+        this.getConversation(conversation);
+    },
+    
 
     /**
      * check if newer version of this application is available

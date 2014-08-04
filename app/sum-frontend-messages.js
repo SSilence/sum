@@ -33,6 +33,9 @@ define('sum-frontend-messages', Class.extend({
             case 'codeblock-message':
                 markup += this.renderCodeBlockMessage(message);
             break;
+            case 'system':
+                markup += this.renderSystemMessage(message);
+            break;
         }
         markup += '</li>';
         return markup;
@@ -54,7 +57,7 @@ define('sum-frontend-messages', Class.extend({
             text = this.frontendHelpers.emoticons(text);
         }
 
-        var markup = '<div class="entry-avatar">\
+        return '<div class="entry-avatar">\
             <img src="' + this.backend.getAvatar(message.sender) + '" class="avatar" />\
         </div>\
         <div class="entry-contentarea" lang="de">\
@@ -66,8 +69,6 @@ define('sum-frontend-messages', Class.extend({
                 ' + text + '\
             </div>\
         </div>';
-
-        return markup;
     },
 
 
@@ -88,6 +89,18 @@ define('sum-frontend-messages', Class.extend({
         var formattedMessage = $.extend({}, message);
         formattedMessage.text = '<pre><code class="has-numbering">' + text + '</code></pre>';
         return this.renderTextMessage(formattedMessage, false);
+    },
+    
+    
+    /**
+     * renders command result
+     * @param message command result
+     * @returns {string} command markup
+     */
+    renderSystemMessage: function(message) {
+        return '<div class="entry-contentarea" lang="de">\
+            <div class="entry-status">\
+                ' + message.text + '\
+            </div>';
     }
-
 }));
