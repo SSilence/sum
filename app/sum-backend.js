@@ -674,7 +674,7 @@ define('sum-backend', Class.extend({
         } else if(command == '/versions') {
             var versions = "";
             $.each(this.userlist, function(index, user) {
-                versions = user.username + ': ' + user.version + '<br />\n';
+                versions = versions + user.username + ': ' + user.version + '<br />\n';
             });
             this.renderSystemMessage('versions of users<br />\n' + versions, conversation);
         }
