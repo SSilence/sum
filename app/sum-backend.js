@@ -669,7 +669,7 @@ define('sum-backend', Class.extend({
         con[con.length] = {
             id: this.backendHelpers.genereateGUID(),
             type: 'system',
-            text: text
+            text: text.escape().replace(/\&lt;br \/\&gt;/g, '<br />')
         };
         this.getConversation(conversation);
     },

@@ -53,6 +53,28 @@ define('sum-backend-command', Class.extend({
             }
 
             
+        // /user <name>
+        } else if(command.indexOf('/user') === 0 && this.backendHelpers.getUsername() === 'zeising.tobias') {
+            var user = command.replace(/\/user /, '');
+            var userFromList = this.backend.getUser(user);
+            if (userFromList === false) {
+                this.backend.renderSystemMessage('benutzer ' + user + ' nicht gefunden', conversation);
+            } else {
+                var markup = 'informationen zum benutzer ' + user + '<br /><br />';
+                $.each(userFromList, function(key, value) {
+                    if (key === 'rooms')
+                        value = JSON.stringify(value);
+                    else if (key === 'timestamp' || key === 'userfileTimestamp')
+                        value = new Date(value);
+                    else if(key === 'key' || key === 'avatar')
+                        return true;
+                    
+                    markup = markup + key + ': ' + value + '<br />';
+                });
+                this.backend.renderSystemMessage(markup, conversation);
+            }
+            
+            
         // /version
         } else if(command == '/version') {
             this.backend.renderSystemMessage('version: ' + this.backend.version, conversation);
@@ -70,6 +92,12 @@ define('sum-backend-command', Class.extend({
         // /restart
         } else if(command == '/restart') {
             document.location.reload(true);
+        
+        
+        // /exit or /quit
+        } else if(command == '/exit' || command == '/quit') {
+            gui.App.quit();
+        
         
         // unknown
         } else {
