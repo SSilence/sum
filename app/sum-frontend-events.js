@@ -323,7 +323,7 @@ define('sum-frontend-events', Class.extend({
                 
             // up
             } else if(e.which == 38) {
-                that.historyCursor = (that.historyCursor==0) ? 0 : that.historyCursor-1;
+                that.historyCursor = (that.historyCursor===0) ? 0 : that.historyCursor-1;
                 $('#message-input-textfield').val(that.history[that.frontend.currentConversation][that.historyCursor]);
                 
             // other
