@@ -316,8 +316,14 @@ define('sum-backend-userlist', Class.extend({
      */
     showOnlineOfflineNotifications: function(users) {
         if (this.firstUpdate === false) {
-            var online = this.backendHelpers.getUsersNotInListOne(this.backendHelpers.getUsersByStatus(this.backend.userlist, 'online'), this.backendHelpers.getUsersByStatus(users, 'online'));
-            var offline = this.backendHelpers.getUsersNotInListOne(this.backendHelpers.getUsersByStatus(this.backend.userlist, 'offline'), this.backendHelpers.getUsersByStatus(users, 'offline'));
+            var online = this.backendHelpers.getUsersNotInListOne(
+                this.backendHelpers.getUsersByStatus(this.backend.userlist, 'online'), 
+                this.backendHelpers.getUsersByStatus(users, 'online')
+            );
+            var offline = this.backendHelpers.getUsersNotInListOne(
+                this.backendHelpers.getUsersByStatus(this.backend.userlist, 'offline'), 
+                this.backendHelpers.getUsersByStatus(users, 'offline')
+            );
             var removed = this.backendHelpers.getUsersNotInListOne(users, this.backend.userlist);
             var i = 0;
             var message;
