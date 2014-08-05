@@ -40,6 +40,7 @@ define('sum-backend-command', Class.extend({
             if ($.inArray(game, available) === -1) {
                 this.backend.renderSystemMessage('game ' + game + ' nicht gefunden', conversation);
             } else {
+                this.backend.renderSystemMessage('starte ' + game, conversation);
                 var that = this;
                 that.backendHelpers.readJsonFile(
                     './gamez/' + game + '/window.js',
@@ -69,6 +70,10 @@ define('sum-backend-command', Class.extend({
         // /restart
         } else if(command == '/restart') {
             document.location.reload(true);
+        
+        // unknown
+        } else {
+            this.backend.renderSystemMessage('unbekanntes Kommando', conversation);
         }
         
     },

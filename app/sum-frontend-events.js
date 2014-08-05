@@ -35,6 +35,18 @@ define('sum-frontend-events', Class.extend({
      */
     selection: false,
 
+    
+    /**
+     * input history
+     */
+    history: [],
+    
+    
+    /**
+     * cursor in history
+     */
+    historyCursor: 0,
+    
 
     /**
      * initialize events (clicks, ...)
@@ -274,6 +286,10 @@ define('sum-frontend-events', Class.extend({
                 return;
             }
             
+            // save in history
+            var history = that.history[that.frontend.currentConversation];
+            history[history.length] = text;
+            
             // command?
             if (text.indexOf('/') === 0) {
                 that.backend.command(text, that.frontend.currentConversation);
@@ -291,9 +307,28 @@ define('sum-frontend-events', Class.extend({
         });
 
         // send message by enter
-        $('#message-input-textfield').keypress(function(e) {
+        $('#message-input-textfield').keydown(function(e) {
+            // create history entry for this conversation if not defined
+            if (typeof that.history[that.frontend.currentConversation] === 'undefined')
+                that.history[that.frontend.currentConversation] = [];
+            
+            // enter
             if(e.which == 13) {
                 $('#message-send').click();
+            
+            // down
+            } else if(e.which == 40) {
+                that.historyCursor = (that.historyCursor+1>that.history[that.frontend.currentConversation].length) ? that.historyCursor : that.historyCursor+1;
+                $('#message-input-textfield').val(that.history[that.frontend.currentConversation][that.historyCursor]);
+                
+            // up
+            } else if(e.which == 38) {
+                that.historyCursor = (that.historyCursor==0) ? 0 : that.historyCursor-1;
+                $('#message-input-textfield').val(that.history[that.frontend.currentConversation][that.historyCursor]);
+                
+            // other
+            } else {
+                that.historyCursor = that.history[that.frontend.currentConversation].length + 1;
             }
         });
     },
