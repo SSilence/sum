@@ -28,6 +28,7 @@ module.exports = function(grunt) {
                 'app/sum-backend-helpers.js',
                 'app/sum-backend-server.js',
                 'app/sum-backend-userlist.js',
+                'app/sum-backend-command.js',
                 'app/sum-backend.js',
                 'app/sum-emoticons.js',
                 'app/sum-frontend-events.js',

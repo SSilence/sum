@@ -30,6 +30,12 @@ define('sum-backend', Class.extend({
      * backends server
      */
     backendServer: injected('sum-backend-server'),
+    
+    
+    /**
+     * backends command handler
+     */
+    backendCommand: injected('sum-backend-command'),
 
 
     /**
@@ -644,40 +650,7 @@ define('sum-backend', Class.extend({
      * @param (string) current conversation
      */
     command: function(command, conversation) {
-        // /gamez
-        if (command === '/gamez') {
-            var gamez = this.backendHelpers.getDirectories('./gamez/').join(', ');
-            this.renderSystemMessage('gamez gefunden: ' + gamez, conversation);
-
-        // /gamez gamename
-        } else if(command.indexOf('/gamez') === 0) {
-            var available = this.backendHelpers.getDirectories('./gamez/');
-            var game = command.replace(/\/gamez /, '');
-            if ($.inArray(game, available) === -1) {
-                this.renderSystemMessage('game ' + game + ' nicht gefunden', conversation);
-            } else {
-                gui.Window.open('../gamez/' + game + '/index.html', {
-                    position: 'center',
-                    width: 700,
-                    height: 500,
-                    focus: true,
-                    toolbar: false,
-                    frame: true
-                });
-            }
-
-        // /version
-        } else if(command == '/version') {
-            this.renderSystemMessage('version: ' + this.version, conversation);
-
-        // /versions
-        } else if(command == '/versions') {
-            var versions = "";
-            $.each(this.userlist, function(index, user) {
-                versions = versions + user.username + ': ' + user.version + '<br />\n';
-            });
-            this.renderSystemMessage('versions of users<br />\n' + versions, conversation);
-        }
+        this.backendCommand.handle(command, conversation);
     },
 
 
