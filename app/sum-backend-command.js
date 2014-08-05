@@ -64,6 +64,11 @@ define('sum-backend-command', Class.extend({
                 versions = versions + user.username + ': ' + user.version + '<br />\n';
             });
             this.backend.renderSystemMessage('versions of users<br />\n' + versions, conversation);
+        
+        
+        // /restart
+        } else if(command == '/restart') {
+            document.location.reload(true);
         }
         
     },

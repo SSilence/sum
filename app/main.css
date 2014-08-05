@@ -248,6 +248,8 @@ body {
     height:50px;
     cursor:pointer;
     background:#f1f1f1;
+    border-top:1px solid #f1f1f1;
+    border-bottom:1px solid #f1f1f1;
     margin:0;
     padding:0;
 
