@@ -30,12 +30,6 @@ define('sum-backend', Class.extend({
      * backends server
      */
     backendServer: injected('sum-backend-server'),
-    
-    
-    /**
-     * backends command handler
-     */
-    backendCommand: injected('sum-backend-command'),
 
 
     /**
@@ -510,6 +504,20 @@ define('sum-backend', Class.extend({
      * @param room (string) roomname
      */
     declineInvitation: function(room) {
+        // send decline message to invitor
+        var roomObj = this.backendHelpers.getRoom(this.invited, room);
+        var user = this.backendHelpers.getUser(this.userlist, roomObj.invited);
+        this.backendClient.send(
+            user, {
+                'type': 'invite-decline',
+                'room': room,
+                'sender': this.getUsername(),
+                'receiver': user.username
+            },
+            function() {},
+            this.error);
+        
+        // remove from invite roomlist
         this.invited = this.backendHelpers.removeRoomFromList(this.invited, room);
         this.updateRoomlist();
     },
@@ -520,6 +528,19 @@ define('sum-backend', Class.extend({
      * @param room (string) roomname
      */
     acceptInvitation: function(room) {
+        // send acccept message to invitor
+        var roomObj = this.backendHelpers.getRoom(this.invited, room);
+        var user = this.backendHelpers.getUser(this.userlist, roomObj.invited);
+        this.backendClient.send(
+            user, {
+                'type': 'invite-accept',
+                'room': room,
+                'sender': this.getUsername(),
+                'receiver': user.username
+            },
+            function() {},
+            this.error);
+            
         // remove room from invitation list
         this.invited = this.backendHelpers.removeRoomFromList(this.invited, room);
 
@@ -575,6 +596,7 @@ define('sum-backend', Class.extend({
         for (i=0; i<users.length; i++) {
             message.receiver = users[i].username;
             this.backendClient.send(users[i], message, function() {}, this.error);
+            this.renderSystemMessage(users[i].username + ' eingeladen', room);
         }
     },
 
@@ -641,16 +663,6 @@ define('sum-backend', Class.extend({
      */
     clearConversation: function(conversation) {
         this.conversations[conversation] = [];
-    },
-
-    
-    /**
-     * execute command.
-     * @param (string) command given by message input
-     * @param (string) current conversation
-     */
-    command: function(command, conversation) {
-        this.backendCommand.handle(command, conversation);
     },
 
 

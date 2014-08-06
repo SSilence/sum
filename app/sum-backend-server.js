@@ -148,6 +148,30 @@ define('sum-backend-server', Class.extend({
 
             // update roomlist
             this.backend.updateRoomlist();
+        
+        
+        // accept room invite
+        // {
+        //     'type': 'invite-accept',
+        //     'room': 'roomname',
+        //     'sender': 'sender',
+        //     'receiver': 'receiver'
+        // };
+        } else if(request.type == 'invite-accept') {
+            this.backend.renderSystemMessage(request.sender + ' hat die Einladung angenommen', request.room);
+        
+        
+        // decline room invite
+        // {
+        //     'type': 'invite-decline',
+        //     'room': 'roomname',
+        //     'sender': 'sender',
+        //     'receiver': 'receiver'
+        // };
+        } else if(request.type == 'invite-decline') {
+            this.backend.renderSystemMessage(request.sender + ' hat die Einladung abgelehnt', request.room);
+        
+        
         } else
             this.backend.error('Ungültigen Nachrichtentyp erhalten: ' + JSON.stringify(request));
     },

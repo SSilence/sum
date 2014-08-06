@@ -19,6 +19,12 @@ define('sum-frontend-events', Class.extend({
 
 
     /**
+     * backends command handler
+     */
+    backendCommand: injected('sum-backend-command'),
+
+
+    /**
      * the current frontend
      */
     frontend: injected('sum-frontend'),
@@ -292,7 +298,7 @@ define('sum-frontend-events', Class.extend({
             
             // command?
             if (text.indexOf('/') === 0) {
-                that.backend.command(text, that.frontend.currentConversation);
+                that.backendCommand.handle(text, that.frontend.currentConversation);
                 $('#message-input-textfield').val("");
                 return;
             }
