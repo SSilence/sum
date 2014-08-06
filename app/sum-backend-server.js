@@ -1,5 +1,9 @@
 if (typeof net == 'undefined') net = require('net');
 if (typeof http == 'undefined') http = require('http');
+if (typeof crypto == 'undefined') crypto = require('crypto');
+if (typeof stream == 'undefined') stream = require('stream');
+if (typeof base64  == 'undefined') base64 = require('base64-stream');
+if (typeof fs == 'undefined') fs = require('fs');
 
 /**
  * server for receiving encrypted chat messages and status updates from other users
@@ -62,15 +66,13 @@ define('sum-backend-server', Class.extend({
 
                 // is type given?
                 if(typeof req.type != "undefined") {
-                    that.handle(req);
-                    response.writeHeader(200, {"Content-Type": "text/plain"});
+                    that.handle(req, response);
                 } else {
                     that.backend.error('invalid request received');
                     response.writeHeader(400, {"Content-Type": "text/plain"});
+                    response.end();
                 }
-
-                // finish handling
-                response.end();
+                
             });
         });
 
@@ -85,8 +87,9 @@ define('sum-backend-server', Class.extend({
     /**
      * handle request
      * @param request object with the type
+     * @param response object with the type
      */
-    handle: function(request) {
+    handle: function(request, response) {
         // new message
         // {
         //    'type': 'text-message', or 'codeblock-message'
@@ -118,7 +121,11 @@ define('sum-backend-server', Class.extend({
             if(typeof this.backend.newMessage != "undefined")
                 this.backend.newMessage(this.backend.conversations[conversationId][conversation.length-1]);
 
-
+            // send ok
+            response.writeHeader(200, {"Content-Type": "text/plain"});
+            response.end();
+            
+            
         // room invite
         // {
         //     'type': 'invite',
@@ -148,6 +155,50 @@ define('sum-backend-server', Class.extend({
 
             // update roomlist
             this.backend.updateRoomlist();
+            
+            // send ok
+            response.writeHeader(200, {"Content-Type": "text/plain"});
+            response.end();
+        
+        // invite receiving file (other user has file for downloading)
+        // {
+        //     'type': 'file-invite',
+        //     'file': '<file uuid>',
+        //     'sender': 'sender',
+        //     'receiver': 'receiver',
+        //     'size': <size in bytes>
+        // };
+        } else if(request.type == 'file-invite') {
+        
+            
+            
+            
+        // request invited file (send file client was invited)
+        // {
+        //     'type': 'file-request',
+        //     'file': '<file uuid>'
+        // };
+        } else if(request.type == 'file-request') {
+            // create aes encription stream (password is file id, thats save because file id will be sent rsa encrypted)
+            var base64  = require('base64-stream');
+            var crypto = require('crypto');
+            var aes = crypto.createCipher('aes-256-cbc', crypto.createHash('sha256').update(request.file).digest('hex'));
+            
+            // file is still available?
+            
+            // file exists?
+            
+            // handler on file was send successfully
+            response.on("end", function() {
+                // this.backend.finishedFileRequest(request.file);
+            });
+            
+            // stream file
+            fs.createReadStream('c:/tmp/test.jpg')
+              .pipe(aes)                // encrypt
+              .pipe(base64.encode())    // encode base64
+              .pipe(response);          // send
+        
         } else
             this.backend.error('Ungültigen Nachrichtentyp erhalten: ' + JSON.stringify(request));
     },
