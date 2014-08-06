@@ -21,7 +21,8 @@
     "nodewebkit": "~0.10",
     "lockfile": "~0.4.1",
     "node-rsa": "~0.1.53",
-    "ini": "~1.2.1"
+    "ini": "~1.2.1",
+    "base64-stream": "~0.1.2"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
