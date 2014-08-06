@@ -310,12 +310,13 @@ define('sum-backend', Class.extend({
             users = [ users ];
         }
 
-        // no room or user found
+        // no room or user found?
         if (users.length===0) {
             this.error('Ungültiger Benutzer oder Raum');
             return;
         }
 
+        // user is offline?
         if (users.length==1 && users[0].status == 'offline') {
             this.error('Der Benutzer ist nicht online');
             return;
