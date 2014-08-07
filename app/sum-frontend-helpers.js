@@ -186,7 +186,6 @@ define('sum-frontend-helpers', Class.extend({
      * @param element target element
      */
     numberCode: function(element) {
-
         // numbering for pre>code blocks
         $(element).find('pre code').each(function(){
             var lines = $(this).text().split(/\r\n|\r|\n/).length;
@@ -195,5 +194,23 @@ define('sum-frontend-helpers', Class.extend({
             for(i=1;i<=lines;i++)
                 $numbering.append($('<li/>').text(i));
         });
+    },
+    
+    
+    /**
+     * format file size to human readable size
+     * @return (string) size in readable format e.g. 10 MB
+     * @param (int) bytes filesize
+     */
+    humanFileSize: function(bytes) {
+        var thresh = 1024;
+        if(bytes < thresh) return bytes + ' B';
+        var units = ['kB','MB','GB','TB'];
+        var u = -1;
+        do {
+            bytes /= thresh;
+            ++u;
+        } while(bytes >= thresh);
+        return bytes.toFixed(1) + ' '+units[u];
     }
 }));

@@ -103,10 +103,7 @@ define('sum-backend-server', Class.extend({
         if (request.type == 'text-message' || request.type == 'codeblock-message' || request.type == 'file-invite') {
             if (typeof request.sender == 'undefined' || typeof request.receiver == 'undefined' || 
                 (typeof request.text == 'undefined' && request.type != 'file-invite')) {
-                this.backend.error('Ungültige Nachricht erhalten: ' + JSON.stringify(request));
-                response.writeHeader(400, {"Content-Type": "text/plain"});
-                response.end();
-                return;
+                return this.sendError(request, response);
             }
 
             // conversation = sender
@@ -142,7 +139,7 @@ define('sum-backend-server', Class.extend({
         // };
         } else if(request.type == 'invite') {
             if (typeof request.room == 'undefined' || typeof request.sender == 'undefined' || typeof request.receiver == 'undefined') {
-                this.backend.error('Ungültige Nachricht erhalten: ' + JSON.stringify(request));
+                return this.sendError(request, response);
             }
 
             // only accept one invitation per room
@@ -169,6 +166,24 @@ define('sum-backend-server', Class.extend({
                     
             
             
+        // cancel file invitation
+        // {
+        //     'id' 'uuid',
+        //     'type': 'file-invite-cancel',
+        //     'file': '<file uuid>'
+        // };
+        } else if(request.type == 'file-invite-cancel') {
+            if (typeof request.file == 'undefined') {
+                return this.sendError(request, response);
+            }
+            
+            this.backend.cancelFileInvite(request.file);
+            
+            response.writeHeader(200, {"Content-Type": "text/plain"});
+            response.end();
+            
+        
+        
         // request invited file (send file client was invited)
         // {
         //     'id' 'uuid',
@@ -176,6 +191,10 @@ define('sum-backend-server', Class.extend({
         //     'file': '<file uuid>'
         // };
         } else if(request.type == 'file-request') {
+            if (typeof request.file == 'undefined') {
+                return this.sendError(request, response);
+            }
+            
             // create aes encription stream (password is file id, thats save because file id will be sent rsa encrypted)
             var base64  = require('base64-stream');
             var crypto = require('crypto');
@@ -197,6 +216,7 @@ define('sum-backend-server', Class.extend({
               .pipe(response);          // send
        
         
+        
         // accept room invite
         // {
         //     'id' 'uuid',
@@ -207,6 +227,7 @@ define('sum-backend-server', Class.extend({
         // };
         } else if(request.type == 'invite-accept') {
             this.backend.renderSystemMessage(request.sender + ' hat die Einladung angenommen', request.room);
+        
         
         
         // decline room invite
@@ -220,11 +241,25 @@ define('sum-backend-server', Class.extend({
         } else if(request.type == 'invite-decline') {
             this.backend.renderSystemMessage(request.sender + ' hat die Einladung abgelehnt', request.room);
         
+        
+        
         } else
             this.backend.error('Ungültigen Nachrichtentyp erhalten: ' + JSON.stringify(request));
     },
 
-
+    
+    /**
+     * send error response
+     * @param (object) request
+     * @param (object) response
+     */
+    sendError: function(request, response) {
+        this.backend.error('Ungültige Nachricht erhalten: ' + JSON.stringify(request));
+        response.writeHeader(400, {"Content-Type": "text/plain"});
+        response.end();
+    },
+    
+    
     /**
      * find a free port.
      * @param callback (function) callback with port

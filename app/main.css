@@ -702,14 +702,12 @@ body {
             flex:1;
         }
 
-        .entry-contentarea {
-            -webkit-box-flex: 1;
-            box-flex: 1;
-            flex:1;
-        }
-
         .entry-status {
             color:#B8B8B8;
+        }
+        
+        .entry-content input {
+            display:block;
         }
         
         .entry-content .cancel {
@@ -720,6 +718,10 @@ body {
         
         .entry-content .entry-file-label {
             color:#54728c;
+        }
+        
+        .entry-content .entry-file-canceled {
+            color:#ff0000;
         }
 
 

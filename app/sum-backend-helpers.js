@@ -406,20 +406,16 @@ define('sum-backend-helpers', Class.extend({
      * find message in given conversations array
      * @return (boolean|object) message or false
      * @param (array) conversations array with all conversations
-     * @param (string) uuid of message
+     * @param (string) id of message
      */
-    findMessage: function(conversations, uuid) {
-        var found = false;
-        $.each(this.conversations, function(userrroom, messages) {
-            $.each(messages, function(index, message) {
-                if (message.uuid === uuid) {
-                    found = message;
-                    return false;
+    findMessage: function(conversations, id) {
+        for (var key in conversations) {
+            for (var i=0; i<conversations[key].length; i++) {
+                if (conversations[key][i].id == id) {
+                    return conversations[key][i];
                 }
-            });
-            if (found !== false)
-                return false;
-        });
-        return found;
+            }
+        }
+        return false;
     },
 }));

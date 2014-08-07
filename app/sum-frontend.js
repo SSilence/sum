@@ -187,13 +187,23 @@ define('sum-frontend', Class.extend({
             }
         });
         
-        //switchConversation to user or room
+        // switchConversation to user or room
         this.backend.onSwitchConversation(function(conversationName) {
             if  (that.currentConversation != conversationName) {
                 that.currentConversation = conversationName;
                 that.backend.getConversation(that.currentConversation);
                 that.backend.updateUserlist(that.currentConversation);
             }
+        });
+        
+        // rerender changed messages
+        this.backend.onRerenderMessage(function(message) {
+            var ele = $('#' + message.id);
+            if (ele.length === 0)
+                return;
+            
+            // rerender single message
+            ele.replaceWith(that.frontendMessages.renderMessage(message));
         });
     },
 

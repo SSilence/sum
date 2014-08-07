@@ -100,7 +100,7 @@ define('sum-frontend-messages', Class.extend({
      */
     renderFileInvite: function (message) {
         message.text = 'Download bereitgestellt:';
-        message.text = message.text + '<div class="entry-file-label">' + message.path + '</div>';
+        message.text = message.text + '<div class="entry-file-label">' + message.path + ' (' + this.frontendHelpers.humanFileSize(message.size) + ')</div>';
         
         // render sent invite
         if(this.backend.isCurrentUser(message.sender)) {
@@ -112,21 +112,32 @@ define('sum-frontend-messages', Class.extend({
                 message.text += '</ul>';
             }
             
+            // canceled
             if (typeof message.canceled === 'undefined') {
-                message.text = message.text + '<div class="entry-file-action"><input class="cancel entry-file-cancel" type="button" value="abbrechen" /></div>';
+                message.text = message.text + '<input class="cancel entry-file-cancel" type="button" value="abbrechen" />';
+            } else {
+                message.text = message.text + '<div class="entry-file-canceled">Die Datei wurde zur&uuml;ckgezogen</div>';
             }
         
         // render received invite
         } else {
+            // download in progress
             if (typeof message.progress === 'number') {
                 message.text = message.text + '<div class="entry-file-progress" style="width:' + message.progress + '%"></div>';
-                message.text = message.text + '<div class="entry-file-action"><input class="cancel" type="button" value="abbrechen" /></div>';
+                message.text = message.text + '<input class="cancel" type="button" value="abbrechen" />';
+            
+            // canceled
+            } else if (typeof message.canceled !== 'undefined') {
+                message.text = message.text + '<div class="entry-file-canceled">Die Datei wurde zur&uuml;ckgezogen</div>';
+            
+            // ready for download
             } else {
-                message.text = message.text + '<div class="entry-file-action"><input class="save download" type="button" value="download" /></div>';
+                message.text = message.text + '<input class="save" type="button" value="download" />';
             }
             
+            // open
             if (typeof message.saved !== 'undefined') {
-                message.text = message.text + '<div class="entry-file-action"><input class="save open" type="button" value="&ouml;ffnen" /><span class="entry-file-url">' + message.saved + '</span></div>';
+                message.text = message.text + '<input class="save open" type="button" value="&ouml;ffnen" />';
             }
         }
 

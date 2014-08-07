@@ -145,7 +145,7 @@ define('sum-backend', Class.extend({
         } }));
 
         // quit app
-        menu.append(new gui.MenuItem({ type: 'normal', label: 'Exit', click: function() {
+        menu.append(new gui.MenuItem({ type: 'normal', label: 'Beenden', click: function() {
             gui.App.quit();
         } }));
         tray.menu = menu;
@@ -244,10 +244,17 @@ define('sum-backend', Class.extend({
 
 
     /**
-     * register callback for when user is removed
+     * register callback for changing current conversation
      */
     onSwitchConversation: function(callback) {
         this.switchConversation = callback;
+    },
+    
+    /**
+     * register callback for rerendering messages
+     */
+    onRerenderMessage: function(callback) {
+        this.rerenderMessage = callback;
     },
 
 
@@ -700,10 +707,10 @@ define('sum-backend', Class.extend({
     /**
      * returns message from conversation
      * @return (boolean|object) message or false
-     * @param (string) uuid of message
+     * @param (string) id of message
      */
-    getMessage: function(uuid) {
-        return this.backendHelpers.findMessage(this.conversations, uuid);
+    getMessage: function(id) {
+        return this.backendHelpers.findMessage(this.conversations, id);
     },
 
     
@@ -711,7 +718,9 @@ define('sum-backend', Class.extend({
     
     
     /**
-     * send file
+     * sends file invitation
+     * @param (string) file path of file
+     * @param (string) user or room for sending the invitation
      */
     sendFileInvite: function(file, user) {
         // file available?
@@ -731,7 +740,30 @@ define('sum-backend', Class.extend({
         this.sendMessage(invite);
     },
     
+    
+    /**
+     * cancel file invitation
+     * @param (string) messageId for canceling
+     */
+    cancelFileInvite: function(messageId) {
+        var message = this.backendHelpers.findMessage(this.conversations, messageId);
+        if (message === false)
+            return;
+        
+        message.canceled = true; // this updates also the message inside conversations
+        this.rerenderMessage(message);
+        
+        // send cancel invitation to all users
+        if (message.sender === this.backendHelpers.getUsername()) {
+            this.sendMessage({
+                'type': 'file-invite-cancel',
+                'receiver': message.receiver,
+                'file': messageId
+            });
+        }
+    },
 
+    
     
     // Application handling
     

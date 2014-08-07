@@ -60,6 +60,7 @@ define('sum-frontend-events', Class.extend({
     initialize: function() {
         this.initGeneral();
         this.initMenue();
+        this.initMessages();
         this.initMessageMenue();
         this.initMessageInput();
         this.initNavigation();
@@ -181,6 +182,26 @@ define('sum-frontend-events', Class.extend({
         // menue: quit
         $('#main-close').click(function() {
             that.backend.close();
+        });
+    },
+    
+    
+    /**
+     * initialize events inside messages
+     */
+    initMessages: function() {
+        var that = this;
+        
+        // cancel file invitation
+        $('body').delegate(".entry-file-cancel", "click", function(e) {
+            var messageId = $(this).parents('.entry').attr('id');
+            that.backend.cancelFileInvite(messageId);
+        });
+        
+        // download file
+        $('body').delegate(".entry-file-action", "click", function(e) {
+            var messageId = $(this).parents('.entry').attr('id');
+            that.backend.cancelFileInvite(messageId);
         });
     },
     
