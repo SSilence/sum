@@ -201,8 +201,8 @@ define('sum-backend-server', Class.extend({
             var aes = crypto.createCipher('aes-256-cbc', crypto.createHash('sha256').update(request.file).digest('hex'));
             
             // file is still available?
-            var message = this.backend.getMessage(request.file);
-            if (message === false || message.canceled === true || fs.existsSync(message.path) === false) {
+            var msg = this.backend.getMessage(request.file);
+            if (msg === false || msg.canceled === true || fs.existsSync(msg.path) === false) {
                 response.writeHeader(404, {"Content-Type": "text/plain"});
                 response.end();
             }
@@ -213,7 +213,7 @@ define('sum-backend-server', Class.extend({
             });
             
             // stream file
-            fs.createReadStream(message.path)
+            fs.createReadStream(msg.path)
               .pipe(aes)                // encrypt
               .pipe(base64.encode())    // encode base64
               .pipe(response);          // send
