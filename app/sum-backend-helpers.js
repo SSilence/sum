@@ -399,5 +399,27 @@ define('sum-backend-helpers', Class.extend({
         if (typeof localStorage.roomlist != 'undefined' && localStorage.roomlist !== null)
             return JSON.parse(localStorage.roomlist);
         return [];
-    }
+    },
+    
+    
+    /**
+     * find message in given conversations array
+     * @return (boolean|object) message or false
+     * @param (array) conversations array with all conversations
+     * @param (string) uuid of message
+     */
+    findMessage: function(conversations, uuid) {
+        var found = false;
+        $.each(this.conversations, function(userrroom, messages) {
+            $.each(messages, function(index, message) {
+                if (message.uuid === uuid) {
+                    found = message;
+                    return false;
+                }
+            });
+            if (found !== false)
+                return false;
+        });
+        return found;
+    },
 }));

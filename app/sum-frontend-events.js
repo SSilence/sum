@@ -88,7 +88,7 @@ define('sum-frontend-events', Class.extend({
         // close menues when clicking somewhere
         $('body').click(function(event) {
             // no click inside main menue: close it
-            if ($(event.target).parents('#main-menue-dropdown').length===0 && event.target.id != 'main-menue' && event.target.id != 'fileDialog') {
+            if ($(event.target).parents('#main-menue-dropdown').length===0 && event.target.id != 'main-menue' && event.target.id != 'fileDialogAvatar') {
                 $('#main-menue-dropdown li').show();
                 $('#main-menue-avatar-croper, #main-menue-dropdown').hide();
             }
@@ -203,7 +203,8 @@ define('sum-frontend-events', Class.extend({
 
         // message menue: send file
         $('#message-add-menue-file').click(function() {
-            alertify.error('Diese Funktion ist noch nicht implementiert');
+            that.selectFile();
+            $('#message-add-menue-dropdown').hide();
         });
 
         // message menue: clear conversation
@@ -466,7 +467,7 @@ define('sum-frontend-events', Class.extend({
      */
     selectAvatar: function() {
         var that = this;
-        $('#fileDialog').change(function() {
+        $('#fileDialogAvatar').change(function() {
             // check file given?
             if ($(this).val() === '')
                 return;
@@ -509,9 +510,34 @@ define('sum-frontend-events', Class.extend({
                 alertify.error
             );
         });
-        $('#fileDialog').trigger('click');
+        $('#fileDialogAvatar').trigger('click');
     },
 
+    
+    /**
+     * select file for sending
+     */
+    selectFile: function() {
+        var that = this;
+        $('#fileDialogFile').change(function() {
+            // check file given?
+            if ($(this).val() === '')
+                return;
+
+            // chat channel selected?
+            if (that.frontend.currentConversation===false) {
+                alertify.error('bitte einen Chat Kanal ausw&auml;hlen');
+                return;
+            }
+            
+            // send file using backend
+            var file = $(this).val();
+            $(this).val('');
+            that.backend.sendFileInvite(file, that.frontend.currentConversation);
+        });
+        $('#fileDialogFile').trigger('click');
+    },
+    
 
     /**
      * show add room dialog popup

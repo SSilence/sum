@@ -92,15 +92,21 @@ define('sum-backend-server', Class.extend({
     handle: function(request, response) {
         // new message
         // {
-        //    'type': 'text-message', or 'codeblock-message'
+        //    'id' 'uuid',
+        //    'type': 'text-message' or 'codeblock-message' or 'file-invite'
         //    'text': 'text',
         //    'sender': 'sender',
         //    'receiver': 'receiver',
         //    'language': 'auto' (for codeblock-message)
+        //    'size': <size in bytes> (for file -invite)
         //};
-        if (request.type == 'text-message' || request.type == 'codeblock-message') {
-            if (typeof request.text == 'undefined' || typeof request.sender == 'undefined' || typeof request.receiver == 'undefined') {
+        if (request.type == 'text-message' || request.type == 'codeblock-message' || request.type == 'file-invite') {
+            if (typeof request.sender == 'undefined' || typeof request.receiver == 'undefined' || 
+                (typeof request.text == 'undefined' && request.type != 'file-invite')) {
                 this.backend.error('Ungültige Nachricht erhalten: ' + JSON.stringify(request));
+                response.writeHeader(400, {"Content-Type": "text/plain"});
+                response.end();
+                return;
             }
 
             // conversation = sender
@@ -128,6 +134,7 @@ define('sum-backend-server', Class.extend({
             
         // room invite
         // {
+        //     'id' 'uuid',
         //     'type': 'invite',
         //     'room': 'roomname',
         //     'sender': 'sender',
@@ -159,22 +166,12 @@ define('sum-backend-server', Class.extend({
             // send ok
             response.writeHeader(200, {"Content-Type": "text/plain"});
             response.end();
-        
-        // invite receiving file (other user has file for downloading)
-        // {
-        //     'type': 'file-invite',
-        //     'file': '<file uuid>',
-        //     'sender': 'sender',
-        //     'receiver': 'receiver',
-        //     'size': <size in bytes>
-        // };
-        } else if(request.type == 'file-invite') {
-        
-            
+                    
             
             
         // request invited file (send file client was invited)
         // {
+        //     'id' 'uuid',
         //     'type': 'file-request',
         //     'file': '<file uuid>'
         // };
@@ -202,6 +199,7 @@ define('sum-backend-server', Class.extend({
         
         // accept room invite
         // {
+        //     'id' 'uuid',
         //     'type': 'invite-accept',
         //     'room': 'roomname',
         //     'sender': 'sender',
@@ -213,6 +211,7 @@ define('sum-backend-server', Class.extend({
         
         // decline room invite
         // {
+        //     'id' 'uuid',
         //     'type': 'invite-decline',
         //     'room': 'roomname',
         //     'sender': 'sender',

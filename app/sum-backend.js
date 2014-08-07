@@ -1,4 +1,5 @@
 if (typeof gui == 'undefined') gui = require('nw.gui');
+if (typeof path == 'undefined') path = require('path');
 
 /**
  * backend handles messaging, userlist management, update of userlist and all nodejs/node webkit tasks
@@ -352,6 +353,16 @@ define('sum-backend', Class.extend({
     },
     
     
+    /**
+     * returns true if given user is current user.
+     * @return (boolean) true or false
+     * @param (string) the name of the user
+     */
+    isCurrentUser: function(user) {
+        return this.backendHelpers.getUsername() === user;
+    },
+    
+    
     
     
     // avatar handling
@@ -662,6 +673,11 @@ define('sum-backend', Class.extend({
         conversation[conversation.length] = $.extend({}, message, { datetime: new Date().getTime() });
         this.getConversation(message.receiver);
 
+        // remove file path
+        if (message.type === 'file-invite') {
+            message = $.extend(message, { 'path': path.basename(message.path) });
+        }
+        
         // send message to all users
         var that = this;
         for (var i=0; i<users.length; i++) {
@@ -679,7 +695,42 @@ define('sum-backend', Class.extend({
             }, this.error);
         }
     },
+    
+    
+    /**
+     * returns message from conversation
+     * @return (boolean|object) message or false
+     * @param (string) uuid of message
+     */
+    getMessage: function(uuid) {
+        return this.backendHelpers.findMessage(this.conversations, uuid);
+    },
 
+    
+    // file send handling
+    
+    
+    /**
+     * send file
+     */
+    sendFileInvite: function(file, user) {
+        // file available?
+        if (fs.existsSync(file) === false)
+            this.error('Fehler beim Zugriff auf die Datei');
+                
+        // file size?
+        var fileSize = fs.statSync(file).size;
+        
+        // send
+        var invite = {
+            'type': 'file-invite',
+            'size': fileSize,
+            'receiver': user,
+            'path': file
+        };
+        this.sendMessage(invite);
+    },
+    
 
     
     // Application handling

@@ -25,18 +25,17 @@ define('sum-frontend-messages', Class.extend({
      */
     renderMessage: function (message) {
         var markup = '<li id="' + message.id + '" class="entry">';
-        switch(message.type) {
-            case 'text-message':
-            case 'message':
-                markup += this.renderTextMessage(message);
-            break;
-            case 'codeblock-message':
-                markup += this.renderCodeBlockMessage(message);
-            break;
-            case 'system':
-                markup += this.renderSystemMessage(message);
-            break;
-        }
+        
+        // render message depending on his type
+        if(message.type === 'text-message' || message.type === 'message')
+            markup += this.renderTextMessage(message);
+        else if(message.type === 'codeblock-message')
+            markup += this.renderCodeBlockMessage(message);
+        else if(message.type === 'system')
+            markup += this.renderSystemMessage(message);
+        else if(message.type === 'file-invite')
+            markup += this.renderFileInvite(message);
+        
         markup += '</li>';
         return markup;
     },
@@ -91,6 +90,45 @@ define('sum-frontend-messages', Class.extend({
         var formattedMessage = $.extend({}, message);
         formattedMessage.text = '<pre><code class="has-numbering">' + text + '</code></pre>';
         return this.renderTextMessage(formattedMessage, false);
+    },
+    
+    
+    /**
+     * renders file invite
+     * @param message source code
+     * @returns {string} source code block markup
+     */
+    renderFileInvite: function (message) {
+        message.text = message.path + ' wurde zum Download bereitgestellt';
+        
+        // render sent invite
+        if(this.backend.isCurrentUser(message.sender)) {
+            if (typeof message.loaded !== 'undefined') {
+                message.text += '<ul class="entry-file-loaded">';
+                $.each(message.loaded, function(index, user) {
+                    message.text = message.text + '<li>' + user.escape() + '</li>';
+                });
+                message.text += '</ul>';
+            }
+            
+            if (typeof message.canceled === 'undefined') {
+                message.text = message.text + '<input class="cancel entry-file-cancel" type="button" value="abbrechen" />';
+            }
+        
+        // render received invite
+        } else {
+            if (typeof message.progress === 'number') {
+                message.text = message.text + '<div class="entry-file-progress" style="width:' + message.progress + '%"></div>';
+            }
+            
+            if (typeof message.saved === 'undefined') {
+                message.text = message.text + '<input class="save" type="button" value="download" /> <input class="cancel" type="button" value="abbrechen" />';
+            } else {
+                message.text = message.text + ' Datei wurde heruntergeladen: <span class="open">' + message.path + '</span>';
+            }
+        }
+
+        return this.renderTextMessage(message, false);
     },
     
     
