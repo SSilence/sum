@@ -340,6 +340,8 @@ body {
         position:relative;
         background:#f1f1f1;
         cursor:pointer;
+        border-top:1px solid #f1f1f1;
+        border-bottom:1px solid #f1f1f1;
 
         display: -webkit-flex;
         display: flex;

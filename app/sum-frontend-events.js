@@ -13,9 +13,9 @@ define('sum-frontend-events', Class.extend({
 
 
     /**
-     * the current backend helpers
+     * backends command handler
      */
-    backendHelpers: injected('sum-backend-helpers'),
+    backendCommand: injected('sum-backend-command'),
 
 
     /**
@@ -292,7 +292,7 @@ define('sum-frontend-events', Class.extend({
             
             // command?
             if (text.indexOf('/') === 0) {
-                that.backend.command(text, that.frontend.currentConversation);
+                that.backendCommand.handle(text, that.frontend.currentConversation);
                 $('#message-input-textfield').val("");
                 return;
             }
@@ -472,7 +472,7 @@ define('sum-frontend-events', Class.extend({
             // load file
             var file = $(this).val();
             $(this).val('');
-            that.backendHelpers.readFile(
+            that.backend.getFile(
                 file,
                 function(data) {
                     // check filetype
@@ -554,7 +554,7 @@ define('sum-frontend-events', Class.extend({
      */
     createSelectForAllOnlineUsers: function() {
         // get all online users from backend
-        var users = this.backend.backendHelpers.getUsersByStatus(this.backend.getAllUsers(true), 'online');
+        var users = this.backend.getAllOnlineUsers();
 
         // create select with all online users
         var select = document.createElement("select");

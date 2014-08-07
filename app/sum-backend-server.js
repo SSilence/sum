@@ -198,6 +198,28 @@ define('sum-backend-server', Class.extend({
               .pipe(aes)                // encrypt
               .pipe(base64.encode())    // encode base64
               .pipe(response);          // send
+       
+        
+        // accept room invite
+        // {
+        //     'type': 'invite-accept',
+        //     'room': 'roomname',
+        //     'sender': 'sender',
+        //     'receiver': 'receiver'
+        // };
+        } else if(request.type == 'invite-accept') {
+            this.backend.renderSystemMessage(request.sender + ' hat die Einladung angenommen', request.room);
+        
+        
+        // decline room invite
+        // {
+        //     'type': 'invite-decline',
+        //     'room': 'roomname',
+        //     'sender': 'sender',
+        //     'receiver': 'receiver'
+        // };
+        } else if(request.type == 'invite-decline') {
+            this.backend.renderSystemMessage(request.sender + ' hat die Einladung abgelehnt', request.room);
         
         } else
             this.backend.error('Ungültigen Nachrichtentyp erhalten: ' + JSON.stringify(request));

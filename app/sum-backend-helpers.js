@@ -343,7 +343,7 @@ define('sum-backend-helpers', Class.extend({
     /**
      * get directories of given directory
      * @return (array of strings) directories found
-     * @param (string) dir the target directory
+     * @param dir (string) the target directory
      */
     getDirectories: function(dir) {
         if (fs.existsSync(dir) === false) {
@@ -352,5 +352,52 @@ define('sum-backend-helpers', Class.extend({
         return fs.readdirSync(dir).filter(function (file) {
             return fs.statSync(dir + file).isDirectory();
         });
+    },
+    
+    
+    /**
+     * get room in list
+     * @return (boolean|object) false or room object
+     * @param list (array) of rooms
+     * @param room (string) roomname
+     */
+    getRoom: function(list, room) {
+        var found = false;
+        $.each(list, function(index, value) {
+            if (value.name === room) {
+                found = value;
+                return false;
+            }
+        });
+        return found;
+    },
+    
+    
+    /**
+     * load avatar from local storage
+     * @return (string) base64 encoded avatar
+     */
+    loadAvatar: function() {
+        return localStorage.avatar;
+    },
+    
+    
+    /**
+     * save given roomlist
+     * @param (Array) roomlist current rooms user is in
+     */
+    saveRoomlist: function(roomlist) {
+        localStorage.roomlist = JSON.stringify(roomlist);
+    },
+    
+    
+    /**
+     * load roomlist from local storage
+     * @return (Array) roomlist
+     */
+    loadRoomlist: function() {
+        if (typeof localStorage.roomlist != 'undefined' && localStorage.roomlist !== null)
+            return JSON.parse(localStorage.roomlist);
+        return [];
     }
 }));
