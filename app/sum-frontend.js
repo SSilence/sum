@@ -43,12 +43,6 @@ define('sum-frontend', Class.extend({
 
 
     /**
-     * window height before last resize event
-     */
-    lastWindowHeight: $(window).height(),
-
-
-    /**
      * initialize frontend
      */
     initialize: function() {
