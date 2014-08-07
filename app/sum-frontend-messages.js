@@ -99,7 +99,8 @@ define('sum-frontend-messages', Class.extend({
      * @returns {string} source code block markup
      */
     renderFileInvite: function (message) {
-        message.text = message.path + ' wurde zum Download bereitgestellt';
+        message.text = 'Download bereitgestellt:';
+        message.text = message.text + '<div class="entry-file-label">' + message.path + '</div>';
         
         // render sent invite
         if(this.backend.isCurrentUser(message.sender)) {
@@ -112,19 +113,20 @@ define('sum-frontend-messages', Class.extend({
             }
             
             if (typeof message.canceled === 'undefined') {
-                message.text = message.text + '<input class="cancel entry-file-cancel" type="button" value="abbrechen" />';
+                message.text = message.text + '<div class="entry-file-action"><input class="cancel entry-file-cancel" type="button" value="abbrechen" /></div>';
             }
         
         // render received invite
         } else {
             if (typeof message.progress === 'number') {
                 message.text = message.text + '<div class="entry-file-progress" style="width:' + message.progress + '%"></div>';
+                message.text = message.text + '<div class="entry-file-action"><input class="cancel" type="button" value="abbrechen" /></div>';
+            } else {
+                message.text = message.text + '<div class="entry-file-action"><input class="save download" type="button" value="download" /></div>';
             }
             
-            if (typeof message.saved === 'undefined') {
-                message.text = message.text + '<input class="save" type="button" value="download" /> <input class="cancel" type="button" value="abbrechen" />';
-            } else {
-                message.text = message.text + ' Datei wurde heruntergeladen: <span class="open">' + message.path + '</span>';
+            if (typeof message.saved !== 'undefined') {
+                message.text = message.text + '<div class="entry-file-action"><input class="save open" type="button" value="&ouml;ffnen" /><span class="entry-file-url">' + message.saved + '</span></div>';
             }
         }
 
