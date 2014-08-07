@@ -370,5 +370,34 @@ define('sum-backend-helpers', Class.extend({
             }
         });
         return found;
+    },
+    
+    
+    /**
+     * load avatar from local storage
+     * @return (string) base64 encoded avatar
+     */
+    loadAvatar: function() {
+        return localStorage.avatar;
+    },
+    
+    
+    /**
+     * save given roomlist
+     * @param (Array) roomlist current rooms user is in
+     */
+    saveRoomlist: function(roomlist) {
+        localStorage.roomlist = JSON.stringify(roomlist);
+    },
+    
+    
+    /**
+     * load roomlist from local storage
+     * @return (Array) roomlist
+     */
+    loadRoomlist: function() {
+        if (typeof localStorage.roomlist != 'undefined' && localStorage.roomlist !== null)
+            return JSON.parse(localStorage.roomlist);
+        return [];
     }
 }));

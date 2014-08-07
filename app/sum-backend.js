@@ -86,6 +86,13 @@ define('sum-backend', Class.extend({
     enableNotifications: true,
 
 
+    
+    
+    ////////////////////
+    // initialization //
+    ////////////////////
+    
+    
     /**
      * initialize backend
      */
@@ -104,7 +111,7 @@ define('sum-backend', Class.extend({
         this.initTray();
 
         // load rooms where user was in on last logout
-        this.roomlist = this.loadRoomlist();
+        this.roomlist = this.backendHelpers.loadRoomlist();
 
         // start backend server for chat communication
         var that = this;
@@ -113,7 +120,7 @@ define('sum-backend', Class.extend({
             that.port = port;
 
             // create/update userfile (holds additional information as avatar, key, ip, ...)
-            that.backendUserlist.userlistUpdateUsersOwnFile(that.ip, that.port, that.key, that.loadAvatar(), that.version, function() {
+            that.backendUserlist.userlistUpdateUsersOwnFile(that.ip, that.port, that.key, that.backendHelpers.loadAvatar(), that.version, function() {
                 // afterwards start userlist updater
                 that.backendUserlist.userlistUpdateTimer(that);
             });
@@ -150,6 +157,7 @@ define('sum-backend', Class.extend({
     },
 
 
+    
 
 
     ////////////////////////////////////////////
@@ -242,12 +250,48 @@ define('sum-backend', Class.extend({
     },
 
 
+    
 
     ////////////////////////////
     // functions for frontend //
     ////////////////////////////
 
+    
+    // notification handling
+    
+    /**
+     * send system notification
+     * @param image (string) little image shown in the notification
+     * @param title (string) title of the notification
+     * @param text (string) text of the notification
+     * @param conversation (string) conversation for showing on click on notification window
+     */
+    notification: function(image, title, text, conversation) {
+        if(this.enableNotifications===true) {
+            var that = this;
+            window.LOCAL_NW.desktopNotifications.notify(image, title, text, function() {
+                gui.Window.get().show();
+                if (typeof conversation != 'undefined') {
+                    that.switchConversation(conversation);
+                }
+            });
+        }
+    },
+    
+    
+    /**
+     * enable/disable notifications
+     * @param enable (boolean) enable/disable system notifications
+     */
+    notifications: function(enable) {
+        this.enableNotifications = enable;
+    },
+    
+    
 
+    // user handling
+    
+    
     /**
      * update frontend with current userlist. onGetUserlistResponse will be executed.
      * @param conversation (string) the current conversation (room or user or nothing)
@@ -271,6 +315,91 @@ define('sum-backend', Class.extend({
         }
     },
 
+    
+    /**
+     * returns array with all known users
+     * @return (Array) of all users
+     * @param withoutCurrentUser (boolean) include current user in result or not
+     */
+    getAllUsers: function(withoutCurrentUser) {
+        var currentuser = this.backendHelpers.getUsername();
+        var users = [];
+        for(var i=0; i<this.userlist.length; i++) {
+            if (withoutCurrentUser === true && this.userlist[i].username == currentuser)
+                continue;
+            users[users.length] = this.userlist[i];
+        }
+        return users;
+    },
+    
+    
+    /**
+     * returns array with all online users
+     * @return (Array) of all online users
+     */
+    getAllOnlineUsers: function() {
+        return this.backendHelpers.getUsersByStatus(this.getAllUsers(true), 'online');
+    },
+
+
+    /**
+     * get user from userlist or false if user not available
+     * @return (object) returns given user with detail informations
+     * @param name (string) the name of the user
+     */
+    getUser: function(name) {
+        return this.backendHelpers.getUser(this.userlist, name);
+    },
+    
+    
+    
+    
+    // avatar handling
+    
+    /**
+     * save avatar in local storage
+     * @param avatar (string) base64 encoded avatar
+     */
+    saveAvatar: function(avatar) {
+        window.localStorage.avatar = avatar;
+        var that = this;
+        this.backendUserlist.userlistUpdateUsersOwnFile(this.ip, this.port, this.key, avatar, this.version, function() {
+            that.backendUserlist.userlistUpdateTimer(this);
+        });
+    },
+
+
+    /**
+     * get avatar of a given user or default avatar avatar.png
+     * @return (string) base64 encoded avatar of the user (if available)
+     * @param username (string) the username
+     */
+    getAvatar: function(username) {
+        var avatar = "avatar.png";
+        for(var i=0; i<this.userlist.length; i++) {
+            if (this.userlist[i].username==username && typeof this.userlist[i].avatar != 'undefined') {
+                avatar = this.userlist[i].avatar;
+                break;
+            }
+        }
+        return avatar;
+    },
+
+    
+    /**
+     * get file from filesystem
+     * @param file (string) path and filenam
+     * @param success (function) contains file data
+     * @param error (function) will be executed on error
+     */
+    getFile: function(file, success, error) {
+        this.backendHelpers.readFile(file, success, error);
+    },
+    
+    
+    
+    // room handling
+    
 
     /**
      * update frontend with current roomlist. onGetRoomlistResponse will be executed.
@@ -284,7 +413,174 @@ define('sum-backend', Class.extend({
         }
     },
 
+    
+    /**
+     * returns all users which are in a given room
+     * @return (Array) of all users in a given room
+     * @param room (string) roomname
+     */
+    getUsersInRoom: function(room) {
+        // room for all users?
+        if (room==config.room_all)
+            return this.userlist;
 
+        // a user created room
+        var users = [];
+        for(var i=0; i<this.userlist.length; i++) {
+            for(var n=0; n<this.userlist[i].rooms.length; n++) {
+                if (this.userlist[i].rooms[n].name==room) {
+                    users[users.length] = this.userlist[i];
+                }
+            }
+        }
+        return users;
+    },
+
+
+    /**
+     * decline room invitation
+     * @param room (string) roomname
+     */
+    declineInvitation: function(room) {
+        // send decline message to invitor
+        var roomObj = this.backendHelpers.getRoom(this.invited, room);
+        var user = this.backendHelpers.getUser(this.userlist, roomObj.invited);
+        this.backendClient.send(
+            user, {
+                'type': 'invite-decline',
+                'room': room,
+                'sender': this.backendHelpers.getUsername(),
+                'receiver': user.username
+            },
+            function() {},
+            this.error);
+        
+        // remove from invite roomlist
+        this.invited = this.backendHelpers.removeRoomFromList(this.invited, room);
+        this.updateRoomlist();
+    },
+
+
+    /**
+     * accept room invitation
+     * @param room (string) roomname
+     */
+    acceptInvitation: function(room) {
+        // send acccept message to invitor
+        var roomObj = this.backendHelpers.getRoom(this.invited, room);
+        var user = this.backendHelpers.getUser(this.userlist, roomObj.invited);
+        this.backendClient.send(
+            user, {
+                'type': 'invite-accept',
+                'room': room,
+                'sender': this.backendHelpers.getUsername(),
+                'receiver': user.username
+            },
+            function() {},
+            this.error);
+            
+        // remove room from invitation list
+        this.invited = this.backendHelpers.removeRoomFromList(this.invited, room);
+
+        // check still in room?
+        if (this.backendHelpers.isUserInRoomList(this.roomlist, room)) {
+            this.error('Du bist bereits in dem Raum');
+            return;
+        }
+
+        // add room to roomlist
+        this.roomlist[this.roomlist.length] = { 'name': room };
+        this.backendHelpers.saveRoomlist(this.roomlist);
+        this.updateRoomlist();
+    },
+
+
+    /**
+     * add new room
+     * @param room (string) roomname
+     * @param users (array) array of all usernames
+     */
+    addRoom: function(room, users) {
+        room = room.trim();
+        this.inviteUsers(room, users);
+        this.roomlist[this.roomlist.length] = { 'name': room };
+        this.backendHelpers.saveRoomlist(this.roomlist);
+        this.updateRoomlist();
+    },
+
+
+    /**
+     * invite new users to room
+     * @param room (string) roomname
+     * @param users (array) array of all usernames
+     */
+    inviteUsers: function(room, users) {
+        if (typeof users == 'undefined' || users === null)
+            users = [];
+        var usersFromList = [];
+        var i = 0;
+        for (i=0; i<users.length; i++)
+            usersFromList[usersFromList.length] = this.getUser(users[i]);
+        users = usersFromList;
+
+        var message = {
+            'type': 'invite',
+            'room': room,
+            'sender': this.backendHelpers.getUsername(),
+            'receiver': ''
+        };
+
+        // send invite to all users
+        for (i=0; i<users.length; i++) {
+            message.receiver = users[i].username;
+            this.backendClient.send(users[i], message, function() {}, this.error);
+            this.renderSystemMessage(users[i].username + ' eingeladen', room);
+        }
+    },
+
+
+    /**
+     * leave room
+     * @param room (string) roomname
+     */
+    leaveRoom:function(room) {
+        var newRoomlist = [];
+        for (var i=0; i<this.roomlist.length; i++) {
+            if (this.roomlist[i].name != room) {
+                newRoomlist[newRoomlist.length] = this.roomlist[i];
+            }
+        }
+        this.roomlist = newRoomlist;
+        this.backendHelpers.saveRoomlist(this.roomlist);
+        this.updateRoomlist();
+    },
+
+    
+    /**
+     * check whether a room already exists or not
+     * @return (boolean) true or false
+     * @param room (string) roomname
+     */
+    doesRoomExists: function(room) {
+        if (room == config.room_all)
+            return true;
+
+        room = room.toLowerCase();
+        for(var i=0; i<this.userlist.length; i++) {
+            for(var n=0; n<this.userlist[i].rooms.length; n++) {
+                if (this.userlist[i].rooms[n].name.toLowerCase() == room) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    },
+    
+    
+    
+    // conversation handling
+    
+    
     /**
      * update frontend with given conversation. id is username or roomname. onGetContentResponse will be executed.
      * @param id (string) the conversation (room or user or nothing)
@@ -296,6 +592,36 @@ define('sum-backend', Class.extend({
         }
     },
 
+    
+    /**
+     * clear given conversation
+     * @param (string) conversation for purging
+     */
+    clearConversation: function(conversation) {
+        this.conversations[conversation] = [];
+    },
+
+
+    /**
+     * render system message
+     * @param text (string) message
+     * @param conversation (string) target conversation
+     */
+    renderSystemMessage: function(text, conversation) {
+        // get conversation
+        if (typeof this.conversations[conversation] == 'undefined')
+            this.conversations[conversation] = [];
+        var con = this.conversations[conversation];
+
+        // add system message
+        con[con.length] = {
+            id: this.backendHelpers.genereateGUID(),
+            type: 'system',
+            text: text.escape().replace(/\&lt;br \/\&gt;/g, '<br />')
+        };
+        this.getConversation(conversation);
+    },
+    
 
     /**
      * send new message.
@@ -355,6 +681,10 @@ define('sum-backend', Class.extend({
     },
 
 
+    
+    // Application handling
+    
+    
     /**
      * quit application
      */
@@ -372,323 +702,6 @@ define('sum-backend', Class.extend({
 
 
     /**
-     * save avatar in local storage
-     * @param avatar (string) base64 encoded avatar
-     */
-    saveAvatar: function(avatar) {
-        window.localStorage.avatar = avatar;
-        var that = this;
-        this.backendUserlist.userlistUpdateUsersOwnFile(this.ip, this.port, this.key, avatar, this.version, function() {
-            that.backendUserlist.userlistUpdateTimer(this);
-        });
-    },
-
-
-    /**
-     * load avatar from local storage
-     * @return (string) base64 encoded avatar
-     */
-    loadAvatar: function() {
-        return window.localStorage.avatar;
-    },
-
-
-    /**
-     * save given roomlist
-     * @param (Array) roomlist current rooms user is in
-     */
-    saveRoomlist: function(roomlist) {
-        localStorage.roomlist = JSON.stringify(roomlist);
-    },
-
-
-    /**
-     * load roomlist from local storage
-     * @return (Array) roomlist
-     */
-    loadRoomlist: function() {
-        if (typeof localStorage.roomlist != 'undefined' && localStorage.roomlist !== null)
-            return JSON.parse(localStorage.roomlist);
-        return [];
-    },
-
-
-    /**
-     * get avatar of a given user or default avatar avatar.png
-     * @return (string) base64 encoded avatar of the user (if available)
-     * @param username (string) the username
-     */
-    getAvatar: function(username) {
-        var avatar = "avatar.png";
-        for(var i=0; i<this.userlist.length; i++) {
-            if (this.userlist[i].username==username && typeof this.userlist[i].avatar != 'undefined') {
-                avatar = this.userlist[i].avatar;
-                break;
-            }
-        }
-        return avatar;
-    },
-
-
-    /**
-     * send system notification
-     * @param image (string) little image shown in the notification
-     * @param title (string) title of the notification
-     * @param text (string) text of the notification
-     * @param conversation (string) conversation for showing on click on notification window
-     */
-    notification: function(image, title, text, conversation) {
-        if(this.enableNotifications===true) {
-            var that = this;
-            window.LOCAL_NW.desktopNotifications.notify(image, title, text, function() {
-                gui.Window.get().show();
-                if (typeof conversation != 'undefined') {
-                    that.switchConversation(conversation);
-                }
-            });
-        }
-    },
-
-
-    /**
-     * returns array with all known users
-     * @return (Array) of all users
-     * @param withoutCurrentUser (boolean) include current user in result or not
-     */
-    getAllUsers: function(withoutCurrentUser) {
-        var currentuser = this.backendHelpers.getUsername();
-        var users = [];
-        for(var i=0; i<this.userlist.length; i++) {
-            if (withoutCurrentUser === true && this.userlist[i].username == currentuser)
-                continue;
-            users[users.length] = this.userlist[i];
-        }
-        return users;
-    },
-
-
-    /**
-     * get user from userlist or false if user not available
-     * @return (object) returns given user with detail informations
-     * @param name (string) the name of the user
-     */
-    getUser: function(name) {
-        return this.backendHelpers.getUser(this.userlist, name);
-    },
-
-
-    /**
-     * returns all users which are in a given room
-     * @return (Array) of all users in a given room
-     * @param room (string) roomname
-     */
-    getUsersInRoom: function(room) {
-        // room for all users?
-        if (room==config.room_all)
-            return this.userlist;
-
-        // a user created room
-        var users = [];
-        for(var i=0; i<this.userlist.length; i++) {
-            for(var n=0; n<this.userlist[i].rooms.length; n++) {
-                if (this.userlist[i].rooms[n].name==room) {
-                    users[users.length] = this.userlist[i];
-                }
-            }
-        }
-        return users;
-    },
-
-
-    /**
-     * decline room invitation
-     * @param room (string) roomname
-     */
-    declineInvitation: function(room) {
-        // send decline message to invitor
-        var roomObj = this.backendHelpers.getRoom(this.invited, room);
-        var user = this.backendHelpers.getUser(this.userlist, roomObj.invited);
-        this.backendClient.send(
-            user, {
-                'type': 'invite-decline',
-                'room': room,
-                'sender': this.getUsername(),
-                'receiver': user.username
-            },
-            function() {},
-            this.error);
-        
-        // remove from invite roomlist
-        this.invited = this.backendHelpers.removeRoomFromList(this.invited, room);
-        this.updateRoomlist();
-    },
-
-
-    /**
-     * accept room invitation
-     * @param room (string) roomname
-     */
-    acceptInvitation: function(room) {
-        // send acccept message to invitor
-        var roomObj = this.backendHelpers.getRoom(this.invited, room);
-        var user = this.backendHelpers.getUser(this.userlist, roomObj.invited);
-        this.backendClient.send(
-            user, {
-                'type': 'invite-accept',
-                'room': room,
-                'sender': this.getUsername(),
-                'receiver': user.username
-            },
-            function() {},
-            this.error);
-            
-        // remove room from invitation list
-        this.invited = this.backendHelpers.removeRoomFromList(this.invited, room);
-
-        // check still in room?
-        if (this.backendHelpers.isUserInRoomList(this.roomlist, room)) {
-            this.error('Du bist bereits in dem Raum');
-            return;
-        }
-
-        // add room to roomlist
-        this.roomlist[this.roomlist.length] = { 'name': room };
-        this.saveRoomlist(this.roomlist);
-        this.updateRoomlist();
-    },
-
-
-    /**
-     * add new room
-     * @param room (string) roomname
-     * @param users (array) array of all usernames
-     */
-    addRoom: function(room, users) {
-        room = room.trim();
-        this.inviteUsers(room, users);
-        this.roomlist[this.roomlist.length] = { 'name': room };
-        this.saveRoomlist(this.roomlist);
-        this.updateRoomlist();
-    },
-
-
-    /**
-     * invite new users to room
-     * @param room (string) roomname
-     * @param users (array) array of all usernames
-     */
-    inviteUsers: function(room, users) {
-        if (typeof users == 'undefined' || users === null)
-            users = [];
-        var usersFromList = [];
-        var i = 0;
-        for (i=0; i<users.length; i++)
-            usersFromList[usersFromList.length] = this.getUser(users[i]);
-        users = usersFromList;
-
-        var message = {
-            'type': 'invite',
-            'room': room,
-            'sender': this.backendHelpers.getUsername(),
-            'receiver': ''
-        };
-
-        // send invite to all users
-        for (i=0; i<users.length; i++) {
-            message.receiver = users[i].username;
-            this.backendClient.send(users[i], message, function() {}, this.error);
-            this.renderSystemMessage(users[i].username + ' eingeladen', room);
-        }
-    },
-
-
-    /**
-     * leave room
-     * @param room (string) roomname
-     */
-    leaveRoom:function(room) {
-        var newRoomlist = [];
-        for (var i=0; i<this.roomlist.length; i++) {
-            if (this.roomlist[i].name != room) {
-                newRoomlist[newRoomlist.length] = this.roomlist[i];
-            }
-        }
-        this.roomlist = newRoomlist;
-        this.saveRoomlist(this.roomlist);
-        this.updateRoomlist();
-    },
-
-
-    /**
-     * enable/disable notifications
-     * @param enable (boolean) enable/disable system notifications
-     */
-    notifications: function(enable) {
-        this.enableNotifications = enable;
-    },
-
-
-    /**
-     * check whether a room already exists or not
-     * @return (boolean) true or false
-     * @param room (string) roomname
-     */
-    doesRoomExists: function(room) {
-        if (room == config.room_all)
-            return true;
-
-        room = room.toLowerCase();
-        for(var i=0; i<this.userlist.length; i++) {
-            for(var n=0; n<this.userlist[i].rooms.length; n++) {
-                if (this.userlist[i].rooms[n].name.toLowerCase() == room) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    },
-
-
-    /**
-     * returns username of current user
-     * @return (string) username
-     */
-    getUsername: function() {
-        return this.backendHelpers.getUsername();
-    },
-
-
-    /**
-     * clear given conversation
-     * @param (string) conversation for purging
-     */
-    clearConversation: function(conversation) {
-        this.conversations[conversation] = [];
-    },
-
-
-    /**
-     * render system message
-     * @param text (string) message
-     * @param conversation (string) target conversation
-     */
-    renderSystemMessage: function(text, conversation) {
-        // get conversation
-        if (typeof this.conversations[conversation] == 'undefined')
-            this.conversations[conversation] = [];
-        var con = this.conversations[conversation];
-
-        // add system message
-        con[con.length] = {
-            id: this.backendHelpers.genereateGUID(),
-            type: 'system',
-            text: text.escape().replace(/\&lt;br \/\&gt;/g, '<br />')
-        };
-        this.getConversation(conversation);
-    },
-    
-
-    /**
      * check if newer version of this application is available
      * @param callback (function) will be executed if newer version was found
      */
@@ -700,4 +713,5 @@ define('sum-backend', Class.extend({
                 callback(given);
         }, function() { /* on error do nothing */ });
     }
+    
 }));

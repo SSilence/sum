@@ -145,8 +145,8 @@ define('sum-frontend', Class.extend({
             if (that.backend.doesRoomExists(message.receiver))
                 conversationId = message.receiver;
         
-            if (message.sender != that.backend.getUsername())
-                that.backend.notification(that.backend.getAvatar(message.sender), "Neue Nachricht von " + message.sender.escape(), message.text, conversationId);
+            // show system tray notification
+            that.backend.notification(that.backend.getAvatar(message.sender), "Neue Nachricht von " + message.sender.escape(), message.text, conversationId);
 
             if(that.currentConversation == conversationId)
                 that.backend.getConversation(that.currentConversation);
