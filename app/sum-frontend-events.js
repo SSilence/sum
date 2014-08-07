@@ -199,9 +199,45 @@ define('sum-frontend-events', Class.extend({
         });
         
         // download file
-        $('body').delegate(".entry-file-action", "click", function(e) {
+        $('body').delegate(".entry-file-download", "click", function(e) {
             var messageId = $(this).parents('.entry').attr('id');
-            that.backend.cancelFileInvite(messageId);
+            var message = that.backend.getMessage(messageId);
+            
+            $('#fileDialogSaveFile').attr('nwsaveas', message.path);
+            $('#fileDialogSaveFile').change(function() {
+                // check file given?
+                if ($(this).val() === '')
+                    return;
+                
+                // set target
+                var target = $(this).val();
+                $(this).val('');
+                message.saved = target;
+                
+                // save file
+                that.backend.saveFile({
+                    message:  message,
+                    success:  function() {
+                                  that.backend.rerenderMessage(message);
+                              },
+                    error:    alertify.error,
+                    progress: function(progress) {
+                                  message.progress = progress;
+                                  that.backend.rerenderMessage(message);
+                              },
+                    cancel:   function() {
+                                  delete message.progress;
+                                  that.backend.rerenderMessage(message);
+                              }
+                });
+            });
+            $('#fileDialogSaveFile').trigger('click');
+        });
+        
+        // cancel download process
+        $('body').delegate(".entry-file-cancel-download", "click", function(e) {
+            var messageId = $(this).parents('.entry').attr('id');
+            that.backend.cancelFileDownload(messageId);
         });
     },
     
@@ -558,8 +594,8 @@ define('sum-frontend-events', Class.extend({
         });
         $('#fileDialogFile').trigger('click');
     },
-    
 
+    
     /**
      * show add room dialog popup
      */

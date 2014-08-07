@@ -762,6 +762,41 @@ define('sum-backend', Class.extend({
             });
         }
     },
+    
+    
+    /**
+     * download file from user and save it
+     * @param params (object) params for file download
+     */
+    saveFile: function(params) {
+        var user = this.getUser(params.message.sender);
+        if (user === false || user.status === 'offline') {
+            error('user not found or user offline');
+            return;
+        }
+        
+        // download file
+        this.backendClient.file({
+            user:     user, 
+            file:     params.message.id, 
+            target:   params.message.saved, 
+            size:     params.message.size, 
+            success:  params.success, 
+            error:    params.error, 
+            progress: params.progress,
+            cancel:   params.cancel
+        });
+    },
+    
+    
+    /**
+     * cancel running file download
+     * @param (string) messageId download id
+     */
+    cancelFileDownload: function(messageId) {
+        this.backendClient.cancelList[this.backendClient.cancelList.length] = messageId;
+    },
+    
 
     
     

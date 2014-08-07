@@ -122,21 +122,20 @@ define('sum-frontend-messages', Class.extend({
         // render received invite
         } else {
             // download in progress
-            if (typeof message.progress === 'number') {
+            if (typeof message.progress === 'number' && message.progress < 99) {
                 message.text = message.text + '<div class="entry-file-progress" style="width:' + message.progress + '%"></div>';
-                message.text = message.text + '<input class="cancel" type="button" value="abbrechen" />';
+                message.text = message.text + '<input class="cancel entry-file-cancel-download" type="button" value="abbrechen" />';
             
             // canceled
             } else if (typeof message.canceled !== 'undefined') {
                 message.text = message.text + '<div class="entry-file-canceled">Die Datei wurde zur&uuml;ckgezogen</div>';
             
             // ready for download
-            } else {
-                message.text = message.text + '<input class="save" type="button" value="download" />';
-            }
+            } else if (typeof message.progress === 'undefined' || message.progress === 0) {
+                message.text = message.text + '<input class="save entry-file-download" type="button" value="download" />';
             
             // open
-            if (typeof message.saved !== 'undefined') {
+            } else if (typeof message.saved !== 'undefined' && message.progress >= 99) {
                 message.text = message.text + '<input class="save open" type="button" value="&ouml;ffnen" />';
             }
         }

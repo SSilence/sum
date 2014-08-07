@@ -723,6 +723,12 @@ body {
         .entry-content .entry-file-canceled {
             color:#ff0000;
         }
+        
+        .entry-file-progress {
+            padding:5px;
+            background:#68b54d;
+            height:10px;
+        }
 
 
 
