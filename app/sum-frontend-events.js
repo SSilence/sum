@@ -47,6 +47,12 @@ define('sum-frontend-events', Class.extend({
      */
     historyCursor: 0,
     
+    
+    /**
+     * window height before last resize event
+     */
+    lastWindowHeight: $(window).height(),
+    
 
     /**
      * initialize events (clicks, ...)
@@ -598,8 +604,8 @@ define('sum-frontend-events', Class.extend({
         $('#content-wrapper').height(windowHeight - headerHeight - messageHeight - padding);
 
         // set new position for rooms popups
-        var diff = windowHeight - this.frontend.lastWindowHeight;
-        this.frontend.lastWindowHeight = windowHeight;
+        var diff = windowHeight - this.lastWindowHeight;
+        this.lastWindowHeight = windowHeight;
         $('.rooms-popup').each(function(index, item) {
             $(item).css('top', parseInt($(item).css('top')) + diff);
         });
