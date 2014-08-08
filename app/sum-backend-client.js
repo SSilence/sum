@@ -91,19 +91,13 @@ define('sum-backend-client', Class.extend({
                 
                 // on data chunk received
                 aes.on('data', function (chunk) {
-                    $.each(that.cancelList, function(index, item) {
-                        if (item === params.file) {
-                            base64reader.emit('end');
-                            base64reader.emit('close');
-                            aes.emit('end');
-                            aes.emit('close');
-                            response.emit('end');
-                            response.emit('close');
-                            params.cancel();
-                            return false;
-                        }
-                    });
-                
+                    // cancel download?
+                    if (that.checkCancelResponse(response, params.file)) {
+                        params.cancel();
+                        return;
+                    }
+                    
+                    // target not created: continue
                     if (fs.existsSync(params.target) === false)
                         return;
                     
@@ -121,5 +115,38 @@ define('sum-backend-client', Class.extend({
             },
             params.error
         );
+    },
+    
+    
+    /**
+     * cancels download
+     * @return (boolean) true if canceled
+     * @param (object) response object
+     * @param (string) current file id
+     */
+    checkCancelResponse: function(response, file) {
+        var cancel = false;
+        
+        // search id
+        $.each(this.cancelList, function(index, item) {        
+            if (item === file) {
+                response.removeAllListeners("data");
+                response.destroy();
+                cancel = true;
+                return false;
+            }
+        });
+        
+        // remove id from list
+        if (cancel === true) {
+            var newCancelList = [];
+            $.each(this.cancelList, function(index, item) {
+                if (item !== file)
+                    newCancelList[newCancelList.lenth] = item;
+            });
+            this.cancelList = newCancelList;
+        }
+        
+        return cancel;
     }
 }));

@@ -771,7 +771,7 @@ define('sum-backend', Class.extend({
     saveFile: function(params) {
         var user = this.getUser(params.message.sender);
         if (user === false || user.status === 'offline') {
-            error('user not found or user offline');
+            this.error('user not found or user offline');
             return;
         }
         
