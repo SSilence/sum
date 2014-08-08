@@ -1,5 +1,3 @@
-if (typeof gui == 'undefined') gui = require('nw.gui');
-
 /**
  * handels userlist file update
  *
