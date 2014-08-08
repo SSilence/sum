@@ -358,6 +358,8 @@ define('sum-frontend-events', Class.extend({
             }
             
             // save in history
+            if (typeof that.history[that.frontend.currentConversation] === 'undefined')
+                that.history[that.frontend.currentConversation] = [];
             var history = that.history[that.frontend.currentConversation];
             history[history.length] = text;
             
