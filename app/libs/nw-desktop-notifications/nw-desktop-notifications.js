@@ -14,7 +14,7 @@
 
 	function makeNewNotifyWindow(){
 		var win = gui.Window.open(
-			'nw-desktop-notifications.html', {
+			'libs/nw-desktop-notifications/nw-desktop-notifications.html', {
 			frame: false,
 			toolbar: false,
 			width: WINDOW_WIDTH,

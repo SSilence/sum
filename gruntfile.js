@@ -21,9 +21,8 @@ module.exports = function(grunt) {
         jasmine : {
             src: [
                 'test/init-mocks.js',
-                'app/injector.js',
-                'app/string-escape.js',
-                'app/config.js',
+                'app/libs/injector.js',
+                'app/libs/string-escape.js',
                 'app/sum-backend-client.js',
                 'app/sum-backend-helpers.js',
                 'app/sum-backend-server.js',
@@ -53,8 +52,8 @@ module.exports = function(grunt) {
             coverage: {
                 src: [
                     'test/init-mocks.js',
-                    'app/injector.js',
-                    'app/string-escape.js',
+                    'app/libs/injector.js',
+                    'app/libs/string-escape.js',
                     'app/sum-backend-client.js',
                     'app/sum-backend-helpers.js',
                     'app/sum-backend-server.js',

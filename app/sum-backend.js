@@ -22,7 +22,7 @@ define('sum-backend', Class.extend({
 
 
     /**
-     * backends client
+     * backends userlist updater
      */
     backendUserlist: injected('sum-backend-userlist'),
 
@@ -123,7 +123,7 @@ define('sum-backend', Class.extend({
             // create/update userfile (holds additional information as avatar, key, ip, ...)
             that.backendUserlist.userlistUpdateUsersOwnFile(that.ip, that.port, that.key, that.backendHelpers.loadAvatar(), that.version, function() {
                 // afterwards start userlist updater
-                that.backendUserlist.userlistUpdateTimer(that);
+                that.backendUserlist.userlistUpdateTimer();
             });
         });
     },

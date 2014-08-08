@@ -21,6 +21,12 @@ define('sum-backend-command', Class.extend({
     
     
     /**
+     * backends userlist updater
+     */
+    backendUserlist: injected('sum-backend-userlist'),
+    
+    
+    /**
      * execute command.
      * @param (string) command given by message input
      * @param (string) current conversation
@@ -89,6 +95,12 @@ define('sum-backend-command', Class.extend({
             this.backend.renderSystemMessage('versions of users<br />\n' + versions, conversation);
         
         
+        // /reload
+        } else if(command == '/reload') {
+            this.backendUserlist.userlistUpdateTimer();
+            this.backend.renderSystemMessage('userlist reload', conversation);
+            
+            
         // /restart
         } else if(command == '/restart') {
             document.location.reload(true);
