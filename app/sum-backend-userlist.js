@@ -33,12 +33,6 @@ define('sum-backend-userlist', Class.extend({
 
 
     /**
-     * don't send notifications on first update run on program startup
-     */
-    firstUpdate: true,
-
-
-    /**
      * count userfile update error
      */
     userfileError: 0,
@@ -259,9 +253,8 @@ define('sum-backend-userlist', Class.extend({
         users = this.backendHelpers.sortUserlistByUsername(users);
 
         // show notification for users which are now online/offline/removed
-        this.showOnlineOfflineNotifications(users);
-        this.firstUpdate = false;
-
+        this.backend.showOnlineOfflineNotifications(users);
+        
         // save userlist
         this.backend.userlist = users;
 
@@ -307,47 +300,6 @@ define('sum-backend-userlist', Class.extend({
         });
 
         return users;
-    },
-
-
-    /**
-     * show notification for users which are now online/offline/removed
-     * @param users userlist
-     */
-    showOnlineOfflineNotifications: function(users) {
-        if (this.firstUpdate === false) {
-            var online = this.backendHelpers.getUsersNotInListOne(
-                this.backendHelpers.getUsersByStatus(this.backend.userlist, 'online'), 
-                this.backendHelpers.getUsersByStatus(users, 'online')
-            );
-            var offline = this.backendHelpers.getUsersNotInListOne(
-                this.backendHelpers.getUsersByStatus(this.backend.userlist, 'offline'), 
-                this.backendHelpers.getUsersByStatus(users, 'offline')
-            );
-            var removed = this.backendHelpers.getUsersNotInListOne(users, this.backend.userlist);
-            var i = 0;
-            var message;
-            
-            if (typeof this.backend.userOnlineNotice != 'undefined')
-                for (i = 0; i < online.length; i++) {
-                    message = online[i].username + ' ist jetzt online';
-                    this.backend.renderSystemMessage(message, online[i].username);
-                    this.backend.renderSystemMessage(message, config.room_all);
-                    this.backend.userOnlineNotice(online[i].avatar, online[i].username);
-                }
-
-            if (typeof this.backend.userOfflineNotice != 'undefined')
-                for (i = 0; i < offline.length; i++) {
-                    message = offline[i].username + ' ist jetzt offline';
-                    this.backend.renderSystemMessage(message, offline[i].offline);
-                    this.backend.renderSystemMessage(message, config.room_all);
-                    this.backend.userOfflineNotice(offline[i].avatar, offline[i].username);
-                }
-
-            if (typeof this.backend.userRemovedNotice != 'undefined')
-                for (i = 0; i < removed.length; i++) {
-                    this.backend.userRemovedNotice(removed[i].avatar, removed[i].username);
-                }
-        }
     }
+
 }));

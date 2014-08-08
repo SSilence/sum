@@ -417,5 +417,5 @@ define('sum-backend-helpers', Class.extend({
             }
         }
         return false;
-    },
+    }
 }));

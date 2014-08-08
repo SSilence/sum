@@ -34,6 +34,12 @@ define('sum-backend', Class.extend({
 
 
     /**
+     * don't send notifications on first update run on program startup
+     */
+    firstUpdate: true,
+    
+    
+    /**
      * current version
      */
     version: '',
@@ -864,6 +870,49 @@ define('sum-backend', Class.extend({
             if (that.backendHelpers.isVersionNewer(that.version, given))
                 callback(given);
         }, function() { /* on error do nothing */ });
+    },
+    
+    
+    /**
+     * show notification for users which are now online/offline/removed
+     * @param (array) newuserlist
+     */
+    showOnlineOfflineNotifications: function(newuserlist) {
+        if (this.firstUpdate === false) {
+            var online = this.backendHelpers.getUsersNotInListOne(
+                this.backendHelpers.getUsersByStatus(this.userlist, 'online'), 
+                this.backendHelpers.getUsersByStatus(newuserlist, 'online')
+            );
+            var offline = this.backendHelpers.getUsersNotInListOne(
+                this.backendHelpers.getUsersByStatus(this.userlist, 'offline'), 
+                this.backendHelpers.getUsersByStatus(newuserlist, 'offline')
+            );
+            var removed = this.backendHelpers.getUsersNotInListOne(newuserlist, this.userlist);
+            var i = 0;
+            var message;
+            
+            if (typeof this.userOnlineNotice != 'undefined')
+                for (i = 0; i < online.length; i++) {
+                    message = online[i].username + ' ist jetzt online';
+                    this.renderSystemMessage(message, online[i].username);
+                    this.renderSystemMessage(message, config.room_all);
+                    this.userOnlineNotice(online[i].avatar, online[i].username);
+                }
+
+            if (typeof this.userOfflineNotice != 'undefined')
+                for (i = 0; i < offline.length; i++) {
+                    message = offline[i].username + ' ist jetzt offline';
+                    this.renderSystemMessage(message, offline[i].offline);
+                    this.renderSystemMessage(message, config.room_all);
+                    this.userOfflineNotice(offline[i].avatar, offline[i].username);
+                }
+
+            if (typeof this.userRemovedNotice != 'undefined')
+                for (i = 0; i < removed.length; i++) {
+                    this.userRemovedNotice(removed[i].avatar, removed[i].username);
+                }
+        }
+        this.firstUpdate = false;
     }
     
 }));
