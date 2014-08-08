@@ -24,6 +24,11 @@ define('sum-frontend-messages', Class.extend({
      * @returns {string} rendered message
      */
     renderMessage: function (message) {
+        // don't render file invite cancel
+        if (message.type === 'file-invite-cancel')
+            return '';
+    
+    
         var markup = '<li id="' + message.id + '" class="entry">';
         
         // render message depending on his type
@@ -86,7 +91,7 @@ define('sum-frontend-messages', Class.extend({
             text = hljs.highlight(message.language, text).value;
         else
             text = hljs.highlightAuto(text).value;
-
+        
         var formattedMessage = $.extend({}, message);
         formattedMessage.text = '<pre><code class="has-numbering">' + text + '</code></pre>';
         return this.renderTextMessage(formattedMessage, false);
@@ -99,13 +104,15 @@ define('sum-frontend-messages', Class.extend({
      * @returns {string} source code block markup
      */
     renderFileInvite: function (message) {
+        // show filename
         message.text = 'Download bereitgestellt:';
         message.text = message.text + '<div class="entry-file-label">' + message.path + ' (' + this.frontendHelpers.humanFileSize(message.size) + ')</div>';
         
         // render sent invite
         if(this.backend.isCurrentUser(message.sender)) {
+            // show downloader
             if (typeof message.loaded !== 'undefined') {
-                message.text += '<ul class="entry-file-loaded">';
+                message.text += 'Heruntergeladen von: <ul class="entry-file-loaded">';
                 $.each(message.loaded, function(index, user) {
                     message.text = message.text + '<li>' + user.escape() + '</li>';
                 });
@@ -127,16 +134,16 @@ define('sum-frontend-messages', Class.extend({
                 message.text = message.text + '<input class="cancel entry-file-cancel-download" type="button" value="abbrechen" />';
             
             // canceled
-            } else if (typeof message.canceled !== 'undefined') {
+            } else if (typeof message.canceled !== 'undefined' && message.progress !== 100) {
                 message.text = message.text + '<div class="entry-file-canceled">Die Datei wurde zur&uuml;ckgezogen</div>';
             
             // ready for download
             } else if (typeof message.progress === 'undefined' || message.progress === 0) {
-                message.text = message.text + '<input class="save entry-file-download" type="button" value="download" />';
+                message.text = message.text + '<input class="save entry-file-download" type="button" value="herunterladen" />';
             
             // open
-            } else if (typeof message.saved !== 'undefined' && message.progress >= 99) {
-                message.text = message.text + '<input class="save open" type="button" value="&ouml;ffnen" />';
+            } else if (typeof message.saved !== 'undefined' && message.progress === 100) {
+                message.text = message.text + '<input class="save entry-file-open" type="button" value="&ouml;ffnen" /> <input class="cancel entry-file-download" type="button" value="erneut herunterladen" />';
             }
         }
 

@@ -53,7 +53,7 @@ define('sum-frontend-events', Class.extend({
      */
     lastWindowHeight: $(window).height(),
     
-
+    
     /**
      * initialize events (clicks, ...)
      */
@@ -81,7 +81,7 @@ define('sum-frontend-events', Class.extend({
 
         // open external links in new window
         $('body').delegate("a.extern", "click", function(e) {
-            gui.Shell.openExternal($(this).attr('href'));
+            that.backend.openUrl($(this).attr('href'));
             e.preventDefault();
             return false;
         });
@@ -203,8 +203,9 @@ define('sum-frontend-events', Class.extend({
             var messageId = $(this).parents('.entry').attr('id');
             var message = that.backend.getMessage(messageId);
             
-            $('#fileDialogSaveFile').attr('nwsaveas', message.path);
-            $('#fileDialogSaveFile').change(function() {
+            var fileInput = $('<input type="file"/>');
+            fileInput.attr('nwsaveas', message.path);
+            fileInput.change(function() {
                 // check file given?
                 if ($(this).val() === '')
                     return;
@@ -231,13 +232,19 @@ define('sum-frontend-events', Class.extend({
                               }
                 });
             });
-            $('#fileDialogSaveFile').trigger('click');
+            fileInput.trigger('click');
         });
         
         // cancel download process
         $('body').delegate(".entry-file-cancel-download", "click", function(e) {
             var messageId = $(this).parents('.entry').attr('id');
             that.backend.cancelFileDownload(messageId);
+        });
+        
+        // open downloaded file
+        $('body').delegate(".entry-file-open", "click", function(e) {
+            var messageId = $(this).parents('.entry').attr('id');
+            that.backend.openFile(messageId);
         });
     },
     
@@ -410,8 +417,8 @@ define('sum-frontend-events', Class.extend({
             $('.rooms li, .contacts li').removeClass('active');
             $(this).addClass('active');
             that.frontend.currentConversation = user;
-            that.backend.getConversation(user);
             that.backend.updateUserlist(that.frontend.currentConversation);
+            that.backend.getConversation(user);
             $('#main-metadata').css('visibility', 'visible');
         });
 
@@ -425,8 +432,8 @@ define('sum-frontend-events', Class.extend({
             $('.rooms li, .contacts li').removeClass('active');
             $(this).addClass('active');
             that.frontend.currentConversation = room;
-            that.backend.getConversation(that.frontend.currentConversation);
             that.backend.updateUserlist(that.frontend.currentConversation);
+            that.backend.getConversation(that.frontend.currentConversation);
             $('#main-metadata').css('visibility', 'visible');
         });
 
@@ -524,7 +531,9 @@ define('sum-frontend-events', Class.extend({
      */
     selectAvatar: function() {
         var that = this;
-        $('#fileDialogAvatar').change(function() {
+        var fileInput = $('<input type="file" />');
+        fileInput.attr('accept', '.jpg,.jpeg,.png,.gif');
+        fileInput.change(function() {
             // check file given?
             if ($(this).val() === '')
                 return;
@@ -567,7 +576,7 @@ define('sum-frontend-events', Class.extend({
                 alertify.error
             );
         });
-        $('#fileDialogAvatar').trigger('click');
+        fileInput.trigger('click');
     },
 
     
@@ -576,7 +585,8 @@ define('sum-frontend-events', Class.extend({
      */
     selectFile: function() {
         var that = this;
-        $('#fileDialogFile').change(function() {
+        var fileInput = $('<input type="file" />');
+        fileInput.change(function() {
             // check file given?
             if ($(this).val() === '')
                 return;
@@ -592,7 +602,7 @@ define('sum-frontend-events', Class.extend({
             $(this).val('');
             that.backend.sendFileInvite(file, that.frontend.currentConversation);
         });
-        $('#fileDialogFile').trigger('click');
+        fileInput.trigger('click');
     },
 
     

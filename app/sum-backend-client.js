@@ -49,7 +49,7 @@ define('sum-backend-client', Class.extend({
                     success(res);
                 }
             } else {
-                error('Bei der Kommunikation mit ' + receiver.username.escape() + ' ist ein Fehler aufgetreten');
+                error('Bei der Kommunikation mit ' + receiver.username.escape() + ' ist ein Fehler aufgetreten', res.statusCode);
             }
         });
 
@@ -74,7 +74,8 @@ define('sum-backend-client', Class.extend({
             params.user,
             {
                 type: 'file-request',
-                file: params.file
+                file: params.file,
+                sender: params.sender
             },
             function(response) {
                 // decryption stream (password is file id, thats save because file id will be sent rsa encrypted)
@@ -88,6 +89,11 @@ define('sum-backend-client', Class.extend({
                 response.pipe(base64reader)  // decode base64
                         .pipe(aes)              // decrypt
                         .pipe(file);            // write in file
+                
+                // write file error
+                file.on('error', function() {
+                    params.error('Fehler beim Schreiben der Datei');
+                });
                 
                 // on data chunk received
                 aes.on('data', function (chunk) {
@@ -109,11 +115,17 @@ define('sum-backend-client', Class.extend({
                 
                 // on last data chunk received: file load complete
                 aes.on('end', function (chunk) {
+                    params.progress(100);
                     if (typeof params.success !== 'undefined')
                         params.success();
                 });
             },
-            params.error
+            function(error, status) {
+                if (typeof status !== 'undefined' && status === 404)
+                    params.error('Die Datei steht nicht mehr zum Download zur Verf&uuml;gung');
+                else
+                    params.error(error);
+            }
         );
     },
     

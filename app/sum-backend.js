@@ -778,6 +778,7 @@ define('sum-backend', Class.extend({
         // download file
         this.backendClient.file({
             user:     user, 
+            sender:   this.backendHelpers.getUsername(),
             file:     params.message.id, 
             target:   params.message.saved, 
             size:     params.message.size, 
@@ -797,7 +798,40 @@ define('sum-backend', Class.extend({
         this.backendClient.cancelList[this.backendClient.cancelList.length] = messageId;
     },
     
+    
+    /**
+     * will be called by server after successfully sending a file to another user
+     * @param (string) messageId of file invite
+     * @param (string) sender who fetched this file
+     */
+    finishedFileRequest: function(messageId, sender) {
+        var message = this.backendHelpers.findMessage(this.conversations, messageId);
+        if (typeof message.loaded === 'undefined')
+            message.loaded = [];
+        if ($.inArray(sender, message.loaded) === -1)
+            message.loaded[message.loaded.length] = sender;
+        this.rerenderMessage(message);
+    },
+    
 
+    /**
+     * open downloaded file
+     * @param (string) messageId download id
+     */
+    openFile: function(messageId) {
+        var message = this.backendHelpers.findMessage(this.conversations, messageId);
+        gui.Shell.openExternal(message.saved);
+    },
+    
+    
+    /**
+     * open url
+     * @param (string) given url
+     */
+    openUrl: function(url) {
+        gui.Shell.openExternal(url);
+    },
+    
     
     
     // Application handling

@@ -205,12 +205,8 @@ define('sum-backend-server', Class.extend({
             if (msg === false || msg.canceled === true || fs.existsSync(msg.path) === false) {
                 response.writeHeader(404, {"Content-Type": "text/plain"});
                 response.end();
+                return;
             }
-            
-            // handler on file was send successfully
-            response.on("end", function() {
-                // this.backend.finishedFileRequest(request.file);
-            });
             
             // stream file
             fs.createReadStream(msg.path)
@@ -218,6 +214,9 @@ define('sum-backend-server', Class.extend({
               .pipe(base64.encode())    // encode base64
               .pipe(response);          // send
        
+            // handler on file was send successfully
+            this.backend.finishedFileRequest(request.file, request.sender);
+            
         
         
         // accept room invite

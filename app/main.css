@@ -725,9 +725,15 @@ body {
         }
         
         .entry-file-progress {
+            margin-top:5px;
+            margin-bottom:5px;
             padding:5px;
             background:#68b54d;
-            height:10px;
+            height:5px;
+        }
+        
+        .entry-file-open {
+            float:left;
         }
 
 
