@@ -2,6 +2,7 @@ if (typeof fs == 'undefined') fs = require('fs');
 if (typeof NodeRSA == 'undefined') NodeRSA = require('node-rsa');
 if (typeof os == 'undefined') os = require('os');
 if (typeof lockFile == 'undefined') lockFile = require('lockfile');
+if (typeof crypto == 'undefined') crypto = require('crypto');
 
 /**
  * helpers for backend
@@ -54,6 +55,26 @@ define('sum-backend-helpers', Class.extend({
         return new NodeRSA({b: 2048});
     },
 
+    
+    /**
+     * returns sha256 hash
+     * @return (string) sha256 hash
+     * @param (string) text to hash
+     */
+    sha256: function(text) {
+        return require('crypto').createHash('sha256').update(config.sha256_salt + text).digest('hex');
+    },
+    
+    
+    /**
+     * returns md5 hash
+     * @return (string) md5 hash
+     * @param (string) text to hash
+     */
+    md5: function(text) {
+        return require('crypto').createHash('md5').update(text).digest('hex');
+    },
+    
 
     /**
      * decrypt with AES
@@ -62,9 +83,9 @@ define('sum-backend-helpers', Class.extend({
      * @param (string) encryptdata encrypted data to decrypt
      */
     aesdecrypt: function(cryptkey, encryptdata) {
-        cryptkey = crypto.createHash('sha256').update(cryptkey).digest();
+        cryptkey = require('crypto').createHash('sha256').update(cryptkey).digest();
         encryptdata = new Buffer(encryptdata, 'base64').toString('binary');
-        var decipher = crypto.createDecipheriv('aes-256-cbc', cryptkey, config.iv);
+        var decipher = require('crypto').createDecipheriv('aes-256-cbc', cryptkey, config.iv);
         var decoded = decipher.update(encryptdata, 'binary', 'utf8');
         decoded += decipher.final('utf8');
         return decoded;
@@ -77,9 +98,9 @@ define('sum-backend-helpers', Class.extend({
      * @param (string) cryptkey password
      * @param (string) encryptdata cleartext to encrypt
      */
-    aesencrypt: function(cryptkey, cleardata) {
-        cryptkey = crypto.createHash('sha256').update(cryptkey).digest();
-        var encipher = crypto.createCipheriv('aes-256-cbc', cryptkey, config.iv);
+    aesencrypt: function(cryptkey, cleardata, iv) {
+        cryptkey = require('crypto').createHash('sha256').update(cryptkey).digest();
+        var encipher = require('crypto').createCipheriv('aes-256-cbc', cryptkey, config.iv);
         var encryptdata = encipher.update(cleardata, 'utf8', 'binary');
         encryptdata += encipher.final('binary');
         encode_encryptdata = new Buffer(encryptdata, 'binary').toString('base64');

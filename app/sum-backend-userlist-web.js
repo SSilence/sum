@@ -58,14 +58,16 @@ define('sum-backend-userlist-web', Class.extend({
         // send detail information
         request.post(config.web_url, { 
             form: { 
-                'user': CryptoJS.MD5(user), 
+                'user': this.backendHelpers.sha256(this.backendHelpers.getUsername()), 
                 'detail': detail
             }
         }, function optionalCallback (err, httpResponse, body) {
             if (err) {
-                that.error(err);
+                that.backend.error(err);
             } else {
-                success();
+                that.userfileTimestamp = new Date().getTime();
+                if (typeof success != 'undefined')
+                    success();
             }
         });
     },
@@ -90,7 +92,7 @@ define('sum-backend-userlist-web', Class.extend({
 
         }).on('error', function(e) {
             that.backend.error(e.message);
-             that.restartUpdateTimer();
+            that.restartUpdateTimer();
         }).end();
     },
     
@@ -102,15 +104,18 @@ define('sum-backend-userlist-web', Class.extend({
     userlistUpdate: function(encryptedUsers) {
         var that = this;
         
-        if ($.isArray(encryptedUsers)) {
-            this.backend.error(error);
+        if ($.isArray(encryptedUsers) === false) {
+            this.backend.error('invalid encrypted userlist from server');
             this.restartUpdateTimer();
+            return;
         }
         
         // decrypt users array
         var users = [];
         $.each(encryptedUsers, function(index, encryptedUser) {
-            users[users.length] = JSON.parse(that.backendHelpers.aesdecrypt(config.web_aes_key, encryptedUser));
+            if ($.trim(encryptedUser).length>0) {
+                users[users.length] = JSON.parse(that.backendHelpers.aesdecrypt(config.web_aes_key, encryptedUser));
+            }
         });
         
         // remove orphaned user entries
@@ -246,13 +251,13 @@ define('sum-backend-userlist-web', Class.extend({
     loadUserinfos: function(user, success, error) {
         var that = this;
         
-        request.get(config.web_url + '?user=' + CryptoJS.MD5(user),
+        request.get(config.web_url + '?user=' + this.backendHelpers.sha256(user),
             function(err, httpResponse, body) {
                 if (err) {
                     error(err);
                     return;
                 }
-                var decrypt = JSON.parse(this.backendHelpers.aesdecrypt(config.web_aes_key, body));
+                var decrypt = JSON.parse(that.backendHelpers.aesdecrypt(config.web_aes_key, body));
                 success(decrypt);
             }
         );
@@ -271,12 +276,12 @@ define('sum-backend-userlist-web', Class.extend({
         
         request.post(config.web_url, { 
             form: { 
-                'user': CryptoJS.MD5(user.username), 
+                'user': this.backendHelpers.sha256(user.username), 
                 'pulse': encrypted
             }
         }, function(err, httpResponse, body) {
             if (err) {
-                that.error(err);
+                that.backend.error(err);
             }
         });
     },
@@ -289,7 +294,7 @@ define('sum-backend-userlist-web', Class.extend({
     deleteInactiveUser: function(user) {
         request.post(config.web_url, { 
             form: { 
-                'user': CryptoJS.MD5(user), 
+                'user': this.backendHelpers.sha256(user), 
                 'delete': true
             } 
         });
@@ -300,8 +305,9 @@ define('sum-backend-userlist-web', Class.extend({
      * initialize next run of this userlist update job
      */
     restartUpdateTimer: function() {
+        var that = this;
         window.setTimeout(function() {
-            this.userlistUpdateTimer();
+            that.userlistUpdateTimer();
         }, config.user_list_update_intervall);
     }
     

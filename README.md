@@ -95,9 +95,14 @@ SUM.exe KarlMusermann
 
 
 Following configuration parameters are available in config.ini:
+* ``userlist``: use file or web for user management
+* ``web_url``: url for web backend
+* ``web_aes_key``: password for encrypting userdata
+* ``sha256_salt``: salt for sha256 hashing
 * ``user_file``: path of the file where all users register themself
 * ``user_file_extended``: file per user where avatar and key will be stored. ? will be replaced by the md5 hash of the username
 * ``lock_file``: path of the lock file for the user file. ensures that only one user access the user file
+* ``iv``: initialization vector for aes encryption
 * ``version_file``: path of version file
 * ``version_update``: link to version update file
 * ``version_update_intervall``: how often sum checks for new version
@@ -127,7 +132,6 @@ Special thanks to the great programmers of this libraries which will be used in 
 * ini: https://github.com/isaacs/ini
 * nw-desktop-notifications: https://github.com/robrighter/nw-desktop-notifications
 * alertify: http://fabien-d.github.io/alertify.js/
-* cryptojs: https://code.google.com/p/crypto-js/
 * ionicons: http://ionicons.com/
 * jquery custom content scroller: http://manos.malihu.gr/jquery-custom-content-scroller/
 * Font Oswald: http://www.fontsquirrel.com/fonts/oswald

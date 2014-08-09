@@ -44,8 +44,7 @@ module.exports = function(grunt) {
                     'app/libs/jquery-custom-content-scroller/jquery.mCustomScrollbar.min.js', 
                     'app/libs/alertify/alertify.min.js', 
                     'app/libs/jcrop/jquery.Jcrop.min.js', 
-                    'app/libs/selectize/selectize.js', 
-                    'app/libs/crypto-js/md5.js', 
+                    'app/libs/selectize/selectize.js',
                     'app/libs/highlight/highlight.pack.js', 
                     'app/libs/jquery.waitforimages/jquery.waitforimages.js'
                 ]

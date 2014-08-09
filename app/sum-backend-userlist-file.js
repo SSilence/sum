@@ -45,7 +45,7 @@ define('sum-backend-userlist-file', Class.extend({
      * @param success (callback) will be executed after successfully writing file
      */
     userlistUpdateUsersOwnFile: function(ip, port, key, avatar, version, success) {
-        var file = config.user_file_extended.replace(/\?/, CryptoJS.MD5(this.backendHelpers.getUsername()));
+        var file = config.user_file_extended.replace(/\?/, this.backendHelpers.md5(this.backendHelpers.getUsername()));
         var that = this;
         this.backendHelpers.writeJsonFile(
             file,
@@ -207,7 +207,7 @@ define('sum-backend-userlist-file', Class.extend({
                 users[currentIndex].userfileTimestamp != that.userinfos[users[currentIndex].username].timestamp) {
 
                 // read userinfos from file
-                var file = config.user_file_extended.replace(/\?/, CryptoJS.MD5(users[currentIndex].username));
+                var file = config.user_file_extended.replace(/\?/, that.backendHelpers.md5(users[currentIndex].username));
                 that.backendHelpers.readJsonFile(
                     file,
                     function(userinfos) {

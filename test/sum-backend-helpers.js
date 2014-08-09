@@ -157,8 +157,8 @@ describe('backend helper', function() {
                 return { toString: function() {} };
             }
         };
-        backendHelper.encrypt(key, testData);
-        backendHelper.decrypt(key, testData);
+        backendHelper.rsaencrypt(key, testData);
+        backendHelper.rsadecrypt(key, testData);
     });
     
     
