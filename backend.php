@@ -60,6 +60,14 @@ if(isset($_POST["user"]) && isset($_POST["detail"]) && strlen(trim($_POST["user"
     return;
 }
 
+// delete user
+if(isset($_POST["user"]) && isset($_POST["delete"])) {
+    $sth = $db->prepare('DELETE FROM user WHERE user=:user');
+    $sth->bindParam(':user', $_POST["user"], PDO::PARAM_STR);
+    $sth->execute();
+    return;
+}
+
 // get detail user information (avatar, key, ip, port)
 if(isset($_GET["user"]) && strlen(trim($_GET["user"]))) {
     $sth = $db->prepare("SELECT user, pulse, detail FROM user WHERE user = :user");
@@ -76,15 +84,11 @@ if(isset($_GET["user"]) && strlen(trim($_GET["user"]))) {
 }
 
 // otherwise send pulse user information
-$sth = $db->prepare("SELECT user, pulse, detail FROM user");
+$sth = $db->prepare("SELECT user, pulse FROM user");
 $sth->execute();
 $users = array();
-while($row = $sth->fetch()) {
-    $users[] = array(
-        'user'  => $row['user'],
-        'pulse' => $row['pulse']
-    );
-}
+while($row = $sth->fetch())
+    $users[] = $row['pulse'];
 
 header('Content-type: application/json');
 die(json_encode($users));

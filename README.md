@@ -145,6 +145,7 @@ Special thanks to the great programmers of this libraries which will be used in 
 * grunt coverage template: https://github.com/maenu/grunt-template-jasmine-istanbul
 * jasmine unit test: http://jasmine.github.io/
 * wait for images: https://github.com/alexanderdickson/waitForImages
+* request: https://github.com/mikeal/request
 
   [1]: http://nodejs.org/
   [2]: http://www.jrsoftware.org/isinfo.php

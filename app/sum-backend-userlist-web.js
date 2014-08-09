@@ -1,10 +1,13 @@
+if (typeof http == 'undefined') http = require('http');
+if (typeof request == 'undefined') request = require('request');
+
 /**
- * handels userlist file update
+ * handels userlist file update by using a web backend (see backend.php)
  *
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-define('sum-backend-userlist', Class.extend({
+define('sum-backend-userlist-web', Class.extend({
 
     /**
      * backends
@@ -31,12 +34,6 @@ define('sum-backend-userlist', Class.extend({
 
 
     /**
-     * count userfile update error
-     */
-    userfileError: 0,
-
-
-    /**
      * write extended userfile with avatar, ip, chatport and other less frequently updated information
      * @param ip (string) current ip address
      * @param port (int) current port
@@ -45,25 +42,32 @@ define('sum-backend-userlist', Class.extend({
      * @param success (callback) will be executed after successfully writing file
      */
     userlistUpdateUsersOwnFile: function(ip, port, key, avatar, version, success) {
-        var file = config.user_file_extended.replace(/\?/, CryptoJS.MD5(this.backendHelpers.getUsername()));
         var that = this;
-        this.backendHelpers.writeJsonFile(
-            file,
-            {
-                ip: ip,
-                port: port,
-                key: key.getPublicPEM(),
-                avatar: avatar,
-                version: version
-            },
-            function() {
-                that.userfileTimestamp = new Date().getTime();
-                if (typeof success != 'undefined')
-                    success();
-            },
-            that.backend.error
-        );
-
+        var request = require('request');
+        
+        // encrypt detail information
+        var details = JSON.stringify({
+            ip: ip,
+            port: port,
+            key: key.getPublicPEM(),
+            avatar: avatar,
+            version: version
+        });
+        var detail = this.backendHelpers.aesencrypt(config.web_aes_key, details);
+        
+        // send detail information
+        request.post(config.web_url, { 
+            form: { 
+                'user': CryptoJS.MD5(user), 
+                'detail': detail
+            }
+        }, function optionalCallback (err, httpResponse, body) {
+            if (err) {
+                that.error(err);
+            } else {
+                success();
+            }
+        });
     },
 
 
@@ -72,70 +76,46 @@ define('sum-backend-userlist', Class.extend({
      */
     userlistUpdateTimer: function() {
         var that = this;
-        this.backendHelpers.lock(function(err) {
-            // can't get lock for exclusive userfile access? retry in random timeout
-            if (typeof err != 'undefined') {
-                console.info(new Date() + " Lockfile nicht bekommen");
-                console.info(err);
-                var randomTimeout = Math.floor(Math.random() * config.lock_retry_maximum) + config.lock_retry_minimum;
-                window.setTimeout(function() {
-                    that.userlistUpdateTimer();
-                }, randomTimeout);
-                console.info(new Date() + " random timeout " + randomTimeout);
-                return;
-            }
+        http.get(config.web_url, function(res) {
+            var data = "";
 
-            // have lock? Update userlist
-            that.userlistUpdater();
-        });
-    },
+            res.on('data', function(chunk){
+                data += chunk;
+            });
 
-
-    /**
-     * all users are registered in a single json file. This method updates or adds
-     * an entry of the current user.
-     */
-    userlistUpdater: function() {
-        var that = this;
-        that.backendHelpers.readJsonFile(
-            config.user_file,
-            function(users) {
+            res.on('end', function(){
+                var users = JSON.parse(data);
                 that.userlistUpdate(users);
-            },
-            function(err) {
-                // userfile does not exist or wrong json parse error? create new one
-                if (typeof err != 'undefined' && (typeof err.code != 'undefined' || err === 'json parse error')) {
-                    that.userlistUpdate([]);
-                    return;
-                }
+            });
 
-                // more than 5 retries failed
-                if (that.userfileError > 5)
-                    that.backend.error('Zugriff auf die Userliste nicht möglich');
-                else
-                    that.userfileError++;
-
-                // start next run
-                window.setTimeout(function() {
-                    that.userlistUpdateTimer();
-                }, config.user_list_update_intervall);
-            }
-        );
+        }).on('error', function(e) {
+            that.backend.error(e.message);
+             that.restartUpdateTimer();
+        }).end();
     },
-
-
+    
+    
     /**
      * updates userlist
-     * @param users list of users
+     * @param encryptedUsers list of users
      */
-    userlistUpdate: function(users) {
-        // reset error counter
-        this.userfileError = 0;
-
+    userlistUpdate: function(encryptedUsers) {
+        var that = this;
+        
+        if ($.isArray(encryptedUsers)) {
+            this.backend.error(error);
+            this.restartUpdateTimer();
+        }
+        
+        // decrypt users array
+        var users = [];
+        $.each(encryptedUsers, function(index, encryptedUser) {
+            users[users.length] = JSON.parse(that.backendHelpers.aesdecrypt(config.web_aes_key, encryptedUser));
+        });
+        
+        // remove orphaned user entries
         var currentuser = this.backendHelpers.getUsername();
         var now = new Date().getTime();
-
-        // remove orphaned user entries
         var userlist = [];
         for(var i=0; i<users.length; i++) {
             // ignore entries without username and timestamp
@@ -154,35 +134,31 @@ define('sum-backend-userlist', Class.extend({
                 }
 
                 userlist[userlist.length] = users[i];
+            
+            // delete inactive user
+            } else {
+                this.deleteInactiveUser(users[i].username);
             }
         }
 
         // add current user
-        userlist[userlist.length] = {
+        var currentUser = {
             timestamp: now,
             status: 'online',
             userfileTimestamp: this.userfileTimestamp,
             rooms: this.backend.roomlist,
             username: currentuser
         };
-
-        // write back updated userfile
-        var that = this;
-        this.backendHelpers.writeJsonFile(
-            config.user_file,
-            userlist,
-            function() {
-                // release lock
-                that.backendHelpers.unlock();
-            },
-            this.backend.error
-        );
-
-        // load additional userinfos and update local userlist
+        userlist[userlist.length] = currentUser;
+        
+        // update currents user entry in web backend
+        this.updateCurrentUser(currentUser);
+        
+        // load additional userinfos
         this.userlistLoadAdditionalUserinfos(userlist);
     },
-
-
+    
+    
     /**
      * loads all additional userinfos from users single files
      * @param users (array) fetched users
@@ -207,9 +183,8 @@ define('sum-backend-userlist', Class.extend({
                 users[currentIndex].userfileTimestamp != that.userinfos[users[currentIndex].username].timestamp) {
 
                 // read userinfos from file
-                var file = config.user_file_extended.replace(/\?/, CryptoJS.MD5(users[currentIndex].username));
-                that.backendHelpers.readJsonFile(
-                    file,
+                that.loadUserinfos(
+                    users[currentIndex].username,
                     function(userinfos) {
                         // merge user and userinfos
                         if (typeof userinfos.ip != 'undefined' && typeof userinfos.port != 'undefined' && typeof userinfos.key != 'undefined') {
@@ -237,16 +212,13 @@ define('sum-backend-userlist', Class.extend({
         for (var i=0; i<users.length; i++)
             loadUserinfos(i);
     },
-
-
+    
+    
     /**
      * refresh current userlist after reading userfile
      * @param users (array) fetched users
      */
     userlistRefreshFrontend: function(users) {
-        // fix corrupt userlist
-        users = this.compensateCorruptUserlist(users);
-
         // sort userlist by username
         users = this.backendHelpers.sortUserlistByUsername(users);
 
@@ -261,43 +233,76 @@ define('sum-backend-userlist', Class.extend({
             this.backend.hasUserlistUpdate();
 
         // initialize next update
-        var that = this;
-        window.setTimeout(function() {
-            that.userlistUpdateTimer();
-        }, config.user_list_update_intervall);
+        this.restartUpdateTimer();
     },
-
-
+    
+    
     /**
-     * Compensates corrupt or wrong userfile. If a user is in local userlist and not in userlist.json
-     * and user is not timedout for removing from list, the user will be restored in the userlist.
-     * @param users userlist
-     * @returns (array) userlist with restored users
+     * loads additional userinfos
+     * @param (string) user name
+     * @param (function) success callback
+     * @param (function) error callback
      */
-    compensateCorruptUserlist: function(users) {
-        // search in old userlist
-        $.each(this.backend.userlist, function(index, oldUser) {
-            var found = false;
-
-            // search oldUser in new userlist
-            $.each(users, function(index, user) {
-                if(oldUser.username == user.username) {
-                    found = true;
-                    return false;
+    loadUserinfos: function(user, success, error) {
+        var that = this;
+        
+        request.get(config.web_url + '?user=' + CryptoJS.MD5(user),
+            function(err, httpResponse, body) {
+                if (err) {
+                    error(err);
+                    return;
                 }
-                return true;
-            });
-
-            // if user is not in new userlist and not timedout: restore it
-            var now = new Date().getTime();
-            if (found === false && oldUser.timestamp + config.user_remove > now) {
-                users[users.length] = oldUser;
+                var decrypt = JSON.parse(this.backendHelpers.aesdecrypt(config.web_aes_key, body));
+                success(decrypt);
             }
-
-            return true;
+        );
+    },
+    
+    
+    /**
+     * update currents user entry in web backend
+     * @param (object) user
+     */
+    updateCurrentUser: function(user) {
+        var that = this;
+        
+        // encrypt user information
+        var encrypted = this.backendHelpers.aesencrypt(config.web_aes_key, JSON.stringify(user));
+        
+        request.post(config.web_url, { 
+            form: { 
+                'user': CryptoJS.MD5(user.username), 
+                'pulse': encrypted
+            }
+        }, function(err, httpResponse, body) {
+            if (err) {
+                that.error(err);
+            }
         });
-
-        return users;
+    },
+    
+    
+    /**
+     * delete inactive user form web backend
+     * @param (string) user name
+     */
+    deleteInactiveUser: function(user) {
+        request.post(config.web_url, { 
+            form: { 
+                'user': CryptoJS.MD5(user), 
+                'delete': true
+            } 
+        });
+    },
+    
+    
+    /**
+     * initialize next run of this userlist update job
+     */
+    restartUpdateTimer: function() {
+        window.setTimeout(function() {
+            this.userlistUpdateTimer();
+        }, config.user_list_update_intervall);
     }
-
+    
 }));

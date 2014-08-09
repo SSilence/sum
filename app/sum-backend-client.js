@@ -1,5 +1,6 @@
 if (typeof base64  == 'undefined') base64  = require('base64-stream');
 if (typeof fs == 'undefined') fs = require('fs');
+if (typeof http == 'undefined') http = require('http');
 
 /**
  * client for sending encrypted chat messages and status updates
@@ -30,7 +31,7 @@ define('sum-backend-client', Class.extend({
      */
     send: function(receiver, message, success, error) {
         // encrypt message
-        var encMessage = this.backendHelpers.encrypt(new NodeRSA(receiver.key), message);
+        var encMessage = this.backendHelpers.rsaencrypt(new NodeRSA(receiver.key), message);
 
         // send message
         var request = http.request({
@@ -39,7 +40,7 @@ define('sum-backend-client', Class.extend({
             path: '/',
             method: 'POST',
             headers: {
-                'Content-Txype': 'application/json',
+                'Content-Type': 'application/json',
                 'Content-Length': encMessage.length
             }
         }, function(res) {

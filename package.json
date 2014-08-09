@@ -22,7 +22,8 @@
     "lockfile": "~0.4.1",
     "node-rsa": "~0.1.53",
     "ini": "~1.2.1",
-    "base64-stream": "~0.1.2"
+    "base64-stream": "~0.1.2",
+    "request": "~2.40.0"
   },
   "devDependencies": {
     "grunt": "~0.4.5",

@@ -55,7 +55,7 @@ define('sum-backend-server', Class.extend({
                 // parse decrypted json
                 var req = {};
                 try {
-                    var reqStr = that.backendHelpers.decrypt(that.backend.key, body);
+                    var reqStr = that.backendHelpers.rsadecrypt(that.backend.key, body);
                     req = JSON.parse(reqStr);
                 } catch(e) {
                     that.backend.error('Ungueltige Nachricht erhalten (verschluesselung oder JSON konnte nicht verarbeitet werden)');

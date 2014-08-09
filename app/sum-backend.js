@@ -24,7 +24,7 @@ define('sum-backend', Class.extend({
     /**
      * backends userlist updater
      */
-    backendUserlist: injected('sum-backend-userlist'),
+    backendUserlist: injected('sum-backend-userlist-file'),
 
 
     /**
@@ -104,6 +104,10 @@ define('sum-backend', Class.extend({
      * initialize backend
      */
     initialize: function() {
+        // set userlist handling
+        if (config.userlist === 'web')
+            this.backendUserlist = inject('sum-backend-userlist-web');
+    
         // get current version
         var packagejson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
         this.version = packagejson.version;

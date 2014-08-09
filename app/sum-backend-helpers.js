@@ -56,6 +56,60 @@ define('sum-backend-helpers', Class.extend({
 
 
     /**
+     * decrypt with AES
+     * @return (string) decrypted text
+     * @param (string) cryptkey password
+     * @param (string) encryptdata encrypted data to decrypt
+     */
+    aesdecrypt: function(cryptkey, encryptdata) {
+        cryptkey = crypto.createHash('sha256').update(cryptkey).digest();
+        encryptdata = new Buffer(encryptdata, 'base64').toString('binary');
+        var decipher = crypto.createDecipheriv('aes-256-cbc', cryptkey, config.iv);
+        var decoded = decipher.update(encryptdata, 'binary', 'utf8');
+        decoded += decipher.final('utf8');
+        return decoded;
+    },
+ 
+ 
+    /**
+     * encrypt with AES
+     * @return (string) clear text
+     * @param (string) cryptkey password
+     * @param (string) encryptdata cleartext to encrypt
+     */
+    aesencrypt: function(cryptkey, cleardata) {
+        cryptkey = crypto.createHash('sha256').update(cryptkey).digest();
+        var encipher = crypto.createCipheriv('aes-256-cbc', cryptkey, config.iv);
+        var encryptdata = encipher.update(cleardata, 'utf8', 'binary');
+        encryptdata += encipher.final('binary');
+        encode_encryptdata = new Buffer(encryptdata, 'binary').toString('base64');
+        return encode_encryptdata;
+    },
+    
+    
+    /**
+     * encrypt with RSA
+     * @return encrypted string
+     * @param key (string) public key for encryption
+     * @param data (mixed) data for encryption
+     */
+    rsaencrypt: function(key, data) {
+        return key.encrypt(data, 'base64');
+    },
+
+
+    /**
+     * decrypt with RSA
+     * @return (string) decrypted string
+     * @param key (string) public key for decryption
+     * @param data (mixed) data for decryption
+     */
+    rsadecrypt: function(key, data) {
+        return key.decrypt(data).toString();
+    },
+    
+    
+    /**
      * returns current ip
      * @return (string or boolean) the ip of the current user
      */
@@ -183,28 +237,6 @@ define('sum-backend-helpers', Class.extend({
      */
     unlock: function() {
         lockFile.unlock(config.lock_file, function(err) {});
-    },
-
-
-    /**
-     * encrypt with RSA
-     * @return encrypted string
-     * @param key (string) public key for encryption
-     * @param data (mixed) data for encryption
-     */
-    encrypt: function(key, data) {
-        return key.encrypt(data, 'base64');
-    },
-
-
-    /**
-     * decrypt with RSA
-     * @return (string) decrypted string
-     * @param key (string) public key for decryption
-     * @param data (mixed) data for decryption
-     */
-    decrypt: function(key, data) {
-        return key.decrypt(data).toString();
     },
 
 
