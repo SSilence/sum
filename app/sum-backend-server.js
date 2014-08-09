@@ -64,6 +64,17 @@ define('sum-backend-server', Class.extend({
                     return;
                 }
 
+                // check signature of request
+                var signed = false;
+                if (typeof req.sender === 'string' && typeof req.signature === 'string') {
+                    var user = that.backend.getUser(req.sender);
+                    if (user !== false) {
+                        var usersKey = new NodeRSA(that.backend.getUser(req.sender).key);
+                        signed = that.backendHelpers.verifyMessage(req, usersKey);
+                    }
+                }
+                req.signed = signed;
+
                 // is type given?
                 if(typeof req.type != "undefined") {
                     that.handle(req, response);
@@ -99,6 +110,7 @@ define('sum-backend-server', Class.extend({
         //    'receiver': 'receiver',
         //    'language': 'auto' (for codeblock-message)
         //    'size': <size in bytes> (for file -invite)
+        //    'signature': <signed by other user>
         //};
         if (request.type == 'text-message' || request.type == 'codeblock-message' || request.type == 'file-invite') {
             if (typeof request.sender == 'undefined' || typeof request.receiver == 'undefined' || 
@@ -136,6 +148,7 @@ define('sum-backend-server', Class.extend({
         //     'room': 'roomname',
         //     'sender': 'sender',
         //     'receiver': 'receiver'
+        //     'signature': <signed by other user>
         // };
         } else if(request.type == 'invite') {
             if (typeof request.room == 'undefined' || typeof request.sender == 'undefined' || typeof request.receiver == 'undefined') {
@@ -171,6 +184,7 @@ define('sum-backend-server', Class.extend({
         //     'id' 'uuid',
         //     'type': 'file-invite-cancel',
         //     'file': '<file uuid>'
+        //     'signature': <signed by other user>
         // };
         } else if(request.type == 'file-invite-cancel') {
             if (typeof request.file == 'undefined') {
@@ -226,6 +240,7 @@ define('sum-backend-server', Class.extend({
         //     'room': 'roomname',
         //     'sender': 'sender',
         //     'receiver': 'receiver'
+        //     'signature': <signed by other user>
         // };
         } else if(request.type == 'invite-accept') {
             this.backend.renderSystemMessage(request.sender + ' hat die Einladung angenommen', request.room);
@@ -239,6 +254,7 @@ define('sum-backend-server', Class.extend({
         //     'room': 'roomname',
         //     'sender': 'sender',
         //     'receiver': 'receiver'
+        //    'signature': <signed by other user>
         // };
         } else if(request.type == 'invite-decline') {
             this.backend.renderSystemMessage(request.sender + ' hat die Einladung abgelehnt', request.room);
@@ -260,7 +276,7 @@ define('sum-backend-server', Class.extend({
         response.writeHeader(400, {"Content-Type": "text/plain"});
         response.end();
     },
-    
+
     
     /**
      * find a free port.

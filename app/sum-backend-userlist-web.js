@@ -44,14 +44,16 @@ define('sum-backend-userlist-web', Class.extend({
     userlistUpdateUsersOwnFile: function(ip, port, key, avatar, version, success) {
         var that = this;
         var request = require('request');
-        
+        var sign = this.backendHelpers.sign(key, ip + port);
+
         // encrypt detail information
         var details = JSON.stringify({
             ip: ip,
             port: port,
             key: key.getPublicPEM(),
             avatar: avatar,
-            version: version
+            version: version,
+            signature: sign
         });
         var detail = this.backendHelpers.aesencrypt(config.web_aes_key, details);
         

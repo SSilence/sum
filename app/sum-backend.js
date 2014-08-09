@@ -473,13 +473,15 @@ define('sum-backend', Class.extend({
         // send decline message to invitor
         var roomObj = this.backendHelpers.getRoom(this.invited, room);
         var user = this.backendHelpers.getUser(this.userlist, roomObj.invited);
+        var message = {
+            'type': 'invite-decline',
+            'room': room,
+            'sender': this.backendHelpers.getUsername(),
+            'receiver': user.username
+        };
         this.backendClient.send(
-            user, {
-                'type': 'invite-decline',
-                'room': room,
-                'sender': this.backendHelpers.getUsername(),
-                'receiver': user.username
-            },
+            user,
+            this.backendHelpers.signMessage(message, this.key),
             function() {},
             this.error);
         
@@ -497,13 +499,15 @@ define('sum-backend', Class.extend({
         // send acccept message to invitor
         var roomObj = this.backendHelpers.getRoom(this.invited, room);
         var user = this.backendHelpers.getUser(this.userlist, roomObj.invited);
+        var message = {
+            'type': 'invite-accept',
+            'room': room,
+            'sender': this.backendHelpers.getUsername(),
+            'receiver': user.username
+        };
         this.backendClient.send(
-            user, {
-                'type': 'invite-accept',
-                'room': room,
-                'sender': this.backendHelpers.getUsername(),
-                'receiver': user.username
-            },
+            user,
+            this.backendHelpers.signMessage(message, this.key),
             function() {},
             this.error);
             
@@ -561,7 +565,7 @@ define('sum-backend', Class.extend({
         // send invite to all users
         for (i=0; i<users.length; i++) {
             message.receiver = users[i].username;
-            this.backendClient.send(users[i], message, function() {}, this.error);
+            this.backendClient.send(users[i], this.backendHelpers.signMessage(message, this.key), function() {}, this.error);
             this.renderSystemMessage(users[i].username + ' eingeladen', room);
         }
     },
@@ -707,7 +711,7 @@ define('sum-backend', Class.extend({
                 continue;
 
             // send message
-            this.backendClient.send(users[i], message, function() {
+            this.backendClient.send(users[i], this.backendHelpers.signMessage(message, this.key), function() {
                 that.getConversation(message.receiver);
             }, this.error);
         }

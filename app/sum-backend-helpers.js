@@ -122,13 +122,38 @@ define('sum-backend-helpers', Class.extend({
     /**
      * decrypt with RSA
      * @return (string) decrypted string
-     * @param key (string) public key for decryption
-     * @param data (mixed) data for decryption
+     * @param (string) key public key for decryption
+     * @param (mixed) data for decryption
      */
     rsadecrypt: function(key, data) {
         return key.decrypt(data).toString();
     },
-    
+
+
+    /**
+     * sign given data with given key
+     * @returns (string) signature
+     * @param (object) key private key
+     * @param (string) data for signing
+     */
+    sign: function(key, data) {
+        var hash = this.sha256(data);
+        return key.sign(hash, 'base64').toString();
+    },
+
+
+    /**
+     * verify signature
+     * @param key (object) key private
+     * @param data (string) for verifying
+     * @param signature (string) given signature
+     * @returns true on success, false otherwise
+     */
+    verify: function(key, data, signature) {
+        var hash = this.sha256(data);
+        return key.verify(hash, signature, 'utf8', 'base64');
+    },
+
     
     /**
      * returns current ip
@@ -470,5 +495,32 @@ define('sum-backend-helpers', Class.extend({
             }
         }
         return false;
+    },
+
+
+    /**
+     * sign given message
+     * @return (object) signed message
+     * @param (object) message unsigned
+     * @param (object) key for signing
+     */
+    signMessage: function(message, key) {
+        var sign = this.sign(key, JSON.stringify(message));
+        return $.extend(message, { signature: sign });
+    },
+
+
+    /**
+     * verify messages signature
+     * @param message given message
+     * @param key given public key
+     */
+    verifyMessage: function(message, key) {
+        if (typeof message.signature !== 'string')
+            return false;
+
+        var messageWithoutSign = $.extend({}, message);
+        delete messageWithoutSign.signature;
+        return this.verify(key, JSON.stringify(messageWithoutSign), message.signature);
     }
 }));

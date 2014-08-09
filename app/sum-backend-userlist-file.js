@@ -47,6 +47,8 @@ define('sum-backend-userlist-file', Class.extend({
     userlistUpdateUsersOwnFile: function(ip, port, key, avatar, version, success) {
         var file = config.user_file_extended.replace(/\?/, this.backendHelpers.md5(this.backendHelpers.getUsername()));
         var that = this;
+        var sign = this.backendHelpers.sign(key, ip + port);
+
         this.backendHelpers.writeJsonFile(
             file,
             {
@@ -54,7 +56,8 @@ define('sum-backend-userlist-file', Class.extend({
                 port: port,
                 key: key.getPublicPEM(),
                 avatar: avatar,
-                version: version
+                version: version,
+                signature: sign
             },
             function() {
                 that.userfileTimestamp = new Date().getTime();
