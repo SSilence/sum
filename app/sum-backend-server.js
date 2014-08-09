@@ -184,7 +184,8 @@ define('sum-backend-server', Class.extend({
         //     'id' 'uuid',
         //     'type': 'file-invite-cancel',
         //     'file': '<file uuid>'
-        //     'signature': <signed by other user>
+        //     'signature': <signed by other user>,
+        //    'sender': 'sender'
         // };
         } else if(request.type == 'file-invite-cancel') {
             if (typeof request.file == 'undefined') {

@@ -749,7 +749,8 @@ define('sum-backend', Class.extend({
             'type': 'file-invite',
             'size': fileSize,
             'receiver': user,
-            'path': file
+            'path': file,
+            'sender': this.backendHelpers.getUsername()
         };
         this.sendMessage(invite);
     },
@@ -772,7 +773,8 @@ define('sum-backend', Class.extend({
             this.sendMessage({
                 'type': 'file-invite-cancel',
                 'receiver': message.receiver,
-                'file': messageId
+                'file': messageId,
+                'sender': this.backendHelpers.getUsername()
             });
         }
     },
