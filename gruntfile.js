@@ -95,7 +95,16 @@ module.exports = function(grunt) {
                 linux32: false,
                 linux64: false
             },
-            src: ['./app/**', './package.json', './config.ini', './node_modules/ini/**', './node_modules/lockfile/**', './node_modules/node-rsa/**']
+            src: ['./app/**', 
+                  './gamez/**', 
+                  './package.json', 
+                  './config.ini', 
+                  './node_modules/ini/**', 
+                  './node_modules/lockfile/**', 
+                  './node_modules/node-rsa/**', 
+                  './node_modules/base64-stream/**',
+                  './node_modules/request/**'
+            ]
         },
 
         /* create setup file with inno setup */
