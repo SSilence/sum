@@ -16,6 +16,24 @@ define('sum-backend', Class.extend({
 
 
     /**
+     * backends crypto functions
+     */
+    backendCrypto: injected('sum-backend-crypto'),
+
+
+    /**
+     * backends filesystem functions
+     */
+    backendFilesystem: injected('sum-backend-filesystem'),
+
+
+    /**
+     * backends storage functions
+     */
+    backendStorage: injected('sum-backend-storage'),
+
+
+    /**
      * backends client
      */
     backendClient: injected('sum-backend-client'),
@@ -113,7 +131,7 @@ define('sum-backend', Class.extend({
         this.version = packagejson.version;
 
         // initial generate rsa keys
-        this.key = this.backendHelpers.generateKeypair();
+        this.key = this.backendCrypto.generateKeypair();
 
         // set ip
         this.ip = this.backendHelpers.getIp();
@@ -122,7 +140,7 @@ define('sum-backend', Class.extend({
         this.initTray();
 
         // load rooms where user was in on last logout
-        this.roomlist = this.backendHelpers.loadRoomlist();
+        this.roomlist = this.backendStorage.loadRoomlist();
 
         // start backend server for chat communication
         var that = this;
@@ -131,7 +149,7 @@ define('sum-backend', Class.extend({
             that.port = port;
 
             // create/update userfile (holds additional information as avatar, key, ip, ...)
-            that.backendUserlist.userlistUpdateUsersOwnFile(that.ip, that.port, that.key, that.backendHelpers.loadAvatar(), that.version, function() {
+            that.backendUserlist.userlistUpdateUsersOwnFile(that.ip, that.port, that.key, that.backendStorage.loadAvatar(), that.version, function() {
                 // afterwards start userlist updater
                 that.backendUserlist.userlistUpdateTimer();
             });
@@ -389,7 +407,7 @@ define('sum-backend', Class.extend({
      * @param avatar (string) base64 encoded avatar
      */
     saveAvatar: function(avatar) {
-        window.localStorage.avatar = avatar;
+        this.backendStorage.saveAvatar(avatar);
         var that = this;
         this.backendUserlist.userlistUpdateUsersOwnFile(this.ip, this.port, this.key, avatar, this.version, function() {
             that.backendUserlist.userlistUpdateTimer(this);
@@ -421,7 +439,7 @@ define('sum-backend', Class.extend({
      * @param error (function) will be executed on error
      */
     getFile: function(file, success, error) {
-        this.backendHelpers.readFile(file, success, error);
+        this.backendFilesystem.readFile(file, success, error);
     },
     
     
@@ -481,7 +499,7 @@ define('sum-backend', Class.extend({
         };
         this.backendClient.send(
             user,
-            this.backendHelpers.signMessage(message, this.key),
+            this.backendCrypto.signMessage(message, this.key),
             function() {},
             this.error);
         
@@ -507,7 +525,7 @@ define('sum-backend', Class.extend({
         };
         this.backendClient.send(
             user,
-            this.backendHelpers.signMessage(message, this.key),
+            this.backendCrypto.signMessage(message, this.key),
             function() {},
             this.error);
             
@@ -522,7 +540,7 @@ define('sum-backend', Class.extend({
 
         // add room to roomlist
         this.roomlist[this.roomlist.length] = { 'name': room };
-        this.backendHelpers.saveRoomlist(this.roomlist);
+        this.backendStorage.saveRoomlist(this.roomlist);
         this.updateRoomlist();
     },
 
@@ -536,7 +554,7 @@ define('sum-backend', Class.extend({
         room = room.trim();
         this.inviteUsers(room, users);
         this.roomlist[this.roomlist.length] = { 'name': room };
-        this.backendHelpers.saveRoomlist(this.roomlist);
+        this.backendStorage.saveRoomlist(this.roomlist);
         this.updateRoomlist();
     },
 
@@ -565,7 +583,7 @@ define('sum-backend', Class.extend({
         // send invite to all users
         for (i=0; i<users.length; i++) {
             message.receiver = users[i].username;
-            this.backendClient.send(users[i], this.backendHelpers.signMessage(message, this.key), function() {}, this.error);
+            this.backendClient.send(users[i], this.backendCrypto.signMessage(message, this.key), function() {}, this.error);
             this.renderSystemMessage(users[i].username + ' eingeladen', room);
         }
     },
@@ -583,7 +601,7 @@ define('sum-backend', Class.extend({
             }
         }
         this.roomlist = newRoomlist;
-        this.backendHelpers.saveRoomlist(this.roomlist);
+        this.backendStorage.saveRoomlist(this.roomlist);
         this.updateRoomlist();
     },
 
@@ -711,7 +729,7 @@ define('sum-backend', Class.extend({
                 continue;
 
             // send message
-            this.backendClient.send(users[i], this.backendHelpers.signMessage(message, this.key), function() {
+            this.backendClient.send(users[i], this.backendCrypto.signMessage(message, this.key), function() {
                 that.getConversation(message.receiver);
             }, this.error);
         }
@@ -875,7 +893,7 @@ define('sum-backend', Class.extend({
      */
     isNewerVersionAvailable: function(callback) {
         var that = this;
-        this.backendHelpers.readFile(config.version_file, function(given) {
+        this.backendFilesystem.readFile(config.version_file, function(given) {
             given = given.toString();
             if (that.backendHelpers.isVersionNewer(that.version, given))
                 callback(given);

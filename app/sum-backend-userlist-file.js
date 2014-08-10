@@ -19,6 +19,18 @@ define('sum-backend-userlist-file', Class.extend({
 
 
     /**
+     * backends crypto functions
+     */
+    backendCrypto: injected('sum-backend-crypto'),
+
+
+    /**
+     * backends filesystem functions
+     */
+    backendFilesystem: injected('sum-backend-filesystem'),
+
+
+    /**
      * timestamp userfile was written
      */
     userfileTimestamp: false,
@@ -45,11 +57,11 @@ define('sum-backend-userlist-file', Class.extend({
      * @param success (callback) will be executed after successfully writing file
      */
     userlistUpdateUsersOwnFile: function(ip, port, key, avatar, version, success) {
-        var file = config.user_file_extended.replace(/\?/, this.backendHelpers.md5(this.backendHelpers.getUsername()));
+        var file = config.user_file_extended.replace(/\?/, this.backendCrypto.md5(this.backendHelpers.getUsername()));
         var that = this;
-        var sign = this.backendHelpers.sign(key, ip + port);
+        var sign = this.backendCrypto.sign(key, ip + port);
 
-        this.backendHelpers.writeJsonFile(
+        this.backendFilesystem.writeJsonFile(
             file,
             {
                 ip: ip,
@@ -75,7 +87,7 @@ define('sum-backend-userlist-file', Class.extend({
      */
     userlistUpdateTimer: function() {
         var that = this;
-        this.backendHelpers.lock(function(err) {
+        this.backendFilesystem.lock(function(err) {
             // can't get lock for exclusive userfile access? retry in random timeout
             if (typeof err != 'undefined') {
                 console.info(new Date() + " Lockfile nicht bekommen");
@@ -100,7 +112,7 @@ define('sum-backend-userlist-file', Class.extend({
      */
     userlistUpdater: function() {
         var that = this;
-        that.backendHelpers.readJsonFile(
+        that.backendFilesystem.readJsonFile(
             config.user_file,
             function(users) {
                 that.userlistUpdate(users);
@@ -171,12 +183,12 @@ define('sum-backend-userlist-file', Class.extend({
 
         // write back updated userfile
         var that = this;
-        this.backendHelpers.writeJsonFile(
+        this.backendFilesystem.writeJsonFile(
             config.user_file,
             userlist,
             function() {
                 // release lock
-                that.backendHelpers.unlock();
+                that.backendFilesystem.unlock();
             },
             this.backend.error
         );
@@ -210,8 +222,8 @@ define('sum-backend-userlist-file', Class.extend({
                 users[currentIndex].userfileTimestamp != that.userinfos[users[currentIndex].username].timestamp) {
 
                 // read userinfos from file
-                var file = config.user_file_extended.replace(/\?/, that.backendHelpers.md5(users[currentIndex].username));
-                that.backendHelpers.readJsonFile(
+                var file = config.user_file_extended.replace(/\?/, that.backendCrypto.md5(users[currentIndex].username));
+                that.backendFilesystem.readJsonFile(
                     file,
                     function(userinfos) {
                         // merge user and userinfos

@@ -22,6 +22,12 @@ define('sum-backend-userlist-web', Class.extend({
 
 
     /**
+     * backends crypto functions
+     */
+    backendCrypto: injected('sum-backend-crypto'),
+
+
+    /**
      * timestamp userfile was written
      */
     userfileTimestamp: false,
@@ -44,7 +50,7 @@ define('sum-backend-userlist-web', Class.extend({
     userlistUpdateUsersOwnFile: function(ip, port, key, avatar, version, success) {
         var that = this;
         var request = require('request');
-        var sign = this.backendHelpers.sign(key, ip + port);
+        var sign = this.backendCrypto.sign(key, ip + port);
 
         // encrypt detail information
         var details = JSON.stringify({
@@ -55,12 +61,12 @@ define('sum-backend-userlist-web', Class.extend({
             version: version,
             signature: sign
         });
-        var detail = this.backendHelpers.aesencrypt(config.web_aes_key, details);
+        var detail = this.backendCrypto.aesencrypt(config.web_aes_key, details);
         
         // send detail information
         request.post(config.web_url, { 
             form: { 
-                'user': this.backendHelpers.sha256(this.backendHelpers.getUsername()), 
+                'user': this.backendCrypto.sha256(this.backendHelpers.getUsername()),
                 'detail': detail
             }
         }, function optionalCallback (err, httpResponse, body) {
@@ -116,7 +122,7 @@ define('sum-backend-userlist-web', Class.extend({
         var users = [];
         $.each(encryptedUsers, function(index, encryptedUser) {
             if ($.trim(encryptedUser).length>0) {
-                users[users.length] = JSON.parse(that.backendHelpers.aesdecrypt(config.web_aes_key, encryptedUser));
+                users[users.length] = JSON.parse(that.backendCrypto.aesdecrypt(config.web_aes_key, encryptedUser));
             }
         });
         
@@ -253,13 +259,13 @@ define('sum-backend-userlist-web', Class.extend({
     loadUserinfos: function(user, success, error) {
         var that = this;
         
-        request.get(config.web_url + '?user=' + this.backendHelpers.sha256(user),
+        request.get(config.web_url + '?user=' + this.backendCrypto.sha256(user),
             function(err, httpResponse, body) {
                 if (err) {
                     error(err);
                     return;
                 }
-                var decrypt = JSON.parse(that.backendHelpers.aesdecrypt(config.web_aes_key, body));
+                var decrypt = JSON.parse(that.backendCrypto.aesdecrypt(config.web_aes_key, body));
                 success(decrypt);
             }
         );
@@ -274,11 +280,11 @@ define('sum-backend-userlist-web', Class.extend({
         var that = this;
         
         // encrypt user information
-        var encrypted = this.backendHelpers.aesencrypt(config.web_aes_key, JSON.stringify(user));
+        var encrypted = this.backendCrypto.aesencrypt(config.web_aes_key, JSON.stringify(user));
         
         request.post(config.web_url, { 
             form: { 
-                'user': this.backendHelpers.sha256(user.username), 
+                'user': this.backendCrypto.sha256(user.username),
                 'pulse': encrypted
             }
         }, function(err, httpResponse, body) {
@@ -296,7 +302,7 @@ define('sum-backend-userlist-web', Class.extend({
     deleteInactiveUser: function(user) {
         request.post(config.web_url, { 
             form: { 
-                'user': this.backendHelpers.sha256(user), 
+                'user': this.backendCrypto.sha256(user),
                 'delete': true
             } 
         });

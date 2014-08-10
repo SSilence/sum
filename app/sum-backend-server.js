@@ -1,7 +1,6 @@
 if (typeof net == 'undefined') net = require('net');
 if (typeof http == 'undefined') http = require('http');
 if (typeof crypto == 'undefined') crypto = require('crypto');
-if (typeof stream == 'undefined') stream = require('stream');
 if (typeof base64  == 'undefined') base64 = require('base64-stream');
 if (typeof fs == 'undefined') fs = require('fs');
 
@@ -23,6 +22,12 @@ define('sum-backend-server', Class.extend({
      * backends helpers
      */
     backendHelpers: injected('sum-backend-helpers'),
+
+
+    /**
+     * backends crypto functions
+     */
+    backendCrypto: injected('sum-backend-crypto'),
 
 
     /**
@@ -55,7 +60,7 @@ define('sum-backend-server', Class.extend({
                 // parse decrypted json
                 var req = {};
                 try {
-                    var reqStr = that.backendHelpers.rsadecrypt(that.backend.key, body);
+                    var reqStr = that.backendCrypto.rsadecrypt(that.backend.key, body);
                     req = JSON.parse(reqStr);
                 } catch(e) {
                     that.backend.error('Ungueltige Nachricht erhalten (verschluesselung oder JSON konnte nicht verarbeitet werden)');
@@ -70,7 +75,7 @@ define('sum-backend-server', Class.extend({
                     var user = that.backend.getUser(req.sender);
                     if (user !== false) {
                         var usersKey = new NodeRSA(that.backend.getUser(req.sender).key);
-                        signed = that.backendHelpers.verifyMessage(req, usersKey);
+                        signed = that.backendCrypto.verifyMessage(req, usersKey);
                     }
                 }
                 req.signed = signed;

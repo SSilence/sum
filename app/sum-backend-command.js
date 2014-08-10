@@ -12,8 +12,14 @@ define('sum-backend-command', Class.extend({
      * backends helpers
      */
     backendHelpers: injected('sum-backend-helpers'),
-    
-    
+
+
+    /**
+     * backends filesystem functions
+     */
+    backendFilesystem: injected('sum-backend-filesystem'),
+
+
     /**
      *  the current backend
      */
@@ -29,20 +35,20 @@ define('sum-backend-command', Class.extend({
         
         // /gamez
         if (command === '/gamez') {
-            var gamez = this.backendHelpers.getDirectories('./gamez/').join(', ');
+            var gamez = this.backendFilesystem.getDirectories('./gamez/').join(', ');
             this.backend.renderSystemMessage('gamez gefunden: ' + gamez, conversation);
 
             
         // /gamez <gamename>
         } else if(command.indexOf('/gamez') === 0) {
-            var available = this.backendHelpers.getDirectories('./gamez/');
+            var available = this.backendFilesystem.getDirectories('./gamez/');
             var game = command.replace(/\/gamez /, '');
             if ($.inArray(game, available) === -1) {
                 this.backend.renderSystemMessage('game ' + game + ' nicht gefunden', conversation);
             } else {
                 this.backend.renderSystemMessage('starte ' + game, conversation);
                 var that = this;
-                that.backendHelpers.readJsonFile(
+                that.backendFilesystem.readJsonFile(
                     './gamez/' + game + '/window.js',
                     function(window) {
                         that.openGameWindow(game, window.width, window.height);

@@ -15,7 +15,13 @@ define('sum-backend-client', Class.extend({
      */
     backendHelpers: injected('sum-backend-helpers'),
 
-    
+
+    /**
+     * backends crypto functions
+     */
+    backendCrypto: injected('sum-backend-crypto'),
+
+
     /**
      * list of message id for canceling download
      */
@@ -31,7 +37,7 @@ define('sum-backend-client', Class.extend({
      */
     send: function(receiver, message, success, error) {
         // encrypt message
-        var encMessage = this.backendHelpers.rsaencrypt(new NodeRSA(receiver.key), message);
+        var encMessage = this.backendCrypto.rsaencrypt(new NodeRSA(receiver.key), message);
 
         // send message
         var request = http.request({

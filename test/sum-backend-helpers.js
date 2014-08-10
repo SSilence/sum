@@ -64,13 +64,6 @@ describe('backend helper', function() {
     });
     
     
-    it('generateKeypair: starts keypair generation correctly', function() {
-        NodeRSA = jasmine.createSpy('NodeRSA');
-        backendHelper.generateKeypair();
-        expect(NodeRSA).toHaveBeenCalledWith({b: 2048});
-    });
-    
-    
     it('getUsername: returns the username from environment variable', function() {
         process = {};
         process.env = {};
@@ -83,84 +76,7 @@ describe('backend helper', function() {
         config.username = 'blub';
         expect(backendHelper.getUsername()).toBe('blub');
     });
-    
-    
-    it('writeJsonFile: writes back a json file', function() {
-        var file = 'c:/tmp/test.json';
-        var content = { example: 'value1', example2: 'value2' };
-        fs = jasmine.createSpyObj('fs', ['writeFile']);
-        backendHelper.writeJsonFile(file, content);
-        expect(fs.writeFile).toHaveBeenCalledWith(file, JSON.stringify(content, null, 4), 'utf8', jasmine.any(Function));
-    });
-    
-    
-    it('writeJsonFile: handels error correctly with default error handler (which throws an error)', function() {
-        fs = jasmine.createSpyObj('fs', ['writeFile']);
-        fs.writeFile.and.throwError("bla");
-        expect(function() {
-            backendHelper.writeJsonFile("", ""); 
-        }).toThrowError("bla");
-    });
-    
-    
-    it('readJsonFile: reads json files and parses json correctly', function() {
-        var file = 'c:/tmp/test.json';
-        var content = "{ 'example': 'value1', 'example2': 'value2' }";
-        fs = jasmine.createSpyObj('fs', ['readFile']);
-        fs.readFile.and.callFake(function(file, format, callback) {
-            var success = function(data) {
-                expect(data).not.toBeUndefined();
-                expect(typeof data.example != 'undefined').toBe(true);
-            };
-            callback(undefined, content);
-        });
-        
-        backendHelper.readJsonFile(file, function(data) {});
-        expect(fs.readFile).toHaveBeenCalledWith(file, 'utf8', jasmine.any(Function));
-    });
-    
-    
-    it('readFile: reads a file', function() {
-        var file = 'c:/tmp/test.json';
-        var testData = 'data123';
-        fs = jasmine.createSpyObj('fs', ['readFile']);
-        fs.readFile.and.callFake(function(file, callback) {
-            var success = function(data) {
-                expect(data).not.toBeUndefined();
-                expect(data).toBe(testData);
-            };
-            callback(undefined, testData);
-        });
-        
-        backendHelper.readFile(file, function(data) {});
-        expect(fs.readFile).toHaveBeenCalledWith(file, jasmine.any(Function));
-    });
-    
-    
-    it('lock, unlock: starts get and release lockFile from lockfile lib', function() {
-        lockFile = jasmine.createSpyObj('lockFile', ['lock', 'unlock']);
-        backendHelper.lock();
-        backendHelper.unlock();
-        expect(lockFile.lock).toHaveBeenCalled();
-        expect(lockFile.unlock).toHaveBeenCalled();
-    });
-    
-    
-    it('encrypt, decrypt: encrypt and decrypt will be delegated to node rsa', function() {
-        var testData = 'test123';
-        var key = {
-            encrypt: function(data, format) {
-                expect(data).toBe(testData);
-            },
-            decrypt: function(data, format) {
-                expect(data).toBe(testData);
-                return { toString: function() {} };
-            }
-        };
-        backendHelper.rsaencrypt(key, testData);
-        backendHelper.rsadecrypt(key, testData);
-    });
-    
+
     
     it('getUser: search user in userlist', function() {
         expect(backendHelper.getUser(testUserlist, 'Anton')).toBe(testUserlist[2]);
