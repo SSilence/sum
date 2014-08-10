@@ -191,7 +191,7 @@ define('sum-frontend-helpers', Class.extend({
             var lines = $(this).text().split(/\r\n|\r|\n/).length;
             var $numbering = $('<ul/>').addClass('pre-numbering');
             $(this).addClass('has-numbering').parent().append($numbering);
-            for(i=1;i<=lines;i++)
+            for(var i=1;i<=lines;i++)
                 $numbering.append($('<li/>').text(i));
         });
     },

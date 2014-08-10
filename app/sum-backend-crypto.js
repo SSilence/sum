@@ -65,7 +65,7 @@ define('sum-backend-crypto', Class.extend({
         var encipher = require('crypto').createCipheriv('aes-256-cbc', cryptkey, config.iv);
         var encryptdata = encipher.update(cleardata, 'utf8', 'binary');
         encryptdata += encipher.final('binary');
-        encode_encryptdata = new Buffer(encryptdata, 'binary').toString('base64');
+        var encode_encryptdata = new Buffer(encryptdata, 'binary').toString('base64');
         return encode_encryptdata;
     },
     
