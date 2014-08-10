@@ -11,12 +11,6 @@ if (typeof http == 'undefined') http = require('http');
 define('sum-backend-client', Class.extend({
 
     /**
-     * backends helpers
-     */
-    backendHelpers: injected('sum-backend-helpers'),
-
-
-    /**
      * backends crypto functions
      */
     backendCrypto: injected('sum-backend-crypto'),

@@ -19,12 +19,6 @@ define('sum-backend-server', Class.extend({
 
 
     /**
-     * backends helpers
-     */
-    backendHelpers: injected('sum-backend-helpers'),
-
-
-    /**
      * backends crypto functions
      */
     backendCrypto: injected('sum-backend-crypto'),
@@ -160,24 +154,27 @@ define('sum-backend-server', Class.extend({
                 return this.sendError(request, response);
             }
 
+            var invitations = $.grep(this.backend.invited, function (e){
+                return e.name === request.room;
+            });
+
             // only accept one invitation per room
-            if (this.backendHelpers.isUserInRoomList(this.backend.invited, request.room)) {
-                return;
+            if (invitations.length === 0) {
+                // insert invitation
+
+                this.backend.invited[this.backend.invited.length] = {
+                    name: request.room,
+                    invited: request.sender
+                };
+
+                // show notification
+                if (typeof this.backend.roomInvite != "undefined")
+                    this.backend.roomInvite(request.room, request.sender);
+
+                // update roomlist
+                this.backend.updateRoomlist();
             }
 
-            // insert invitation
-            this.backend.invited[this.backend.invited.length] = {
-                name: request.room,
-                invited: request.sender
-            };
-
-            // show notification
-            if(typeof this.backend.roomInvite != "undefined")
-                this.backend.roomInvite(request.room, request.sender);
-
-            // update roomlist
-            this.backend.updateRoomlist();
-            
             // send ok
             response.writeHeader(200, {"Content-Type": "text/plain"});
             response.end();

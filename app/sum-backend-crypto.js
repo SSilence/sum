@@ -9,7 +9,6 @@ if (typeof crypto == 'undefined') crypto = require('crypto');
  */
 define('sum-backend-crypto', Class.extend({
 
-
     /**
      * returns new RSA Key Pair
      * @return (NodeRSA) new RSA keypair
