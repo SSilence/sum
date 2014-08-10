@@ -27,10 +27,9 @@ define('sum-frontend-messages', Class.extend({
         // don't render file invite cancel
         if (message.type === 'file-invite-cancel')
             return '';
-    
-    
+
         var markup = '<li id="' + message.id + '" class="entry">';
-        
+
         // render message depending on his type
         if(message.type === 'text-message' || message.type === 'message')
             markup += this.renderTextMessage(message);

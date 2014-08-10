@@ -194,7 +194,8 @@ define('sum-backend-server', Class.extend({
         // };
         } else if(request.type == 'room-invite-accept') {
             this.backend.renderSystemMessage(request.sender + ' hat die Einladung angenommen', request.room);
-
+            response.writeHeader(200, {"Content-Type": "text/plain"});
+            response.end();
 
 
             // decline room invite
@@ -208,6 +209,8 @@ define('sum-backend-server', Class.extend({
             // };
         } else if(request.type == 'room-invite-decline') {
             this.backend.renderSystemMessage(request.sender + ' hat die Einladung abgelehnt', request.room);
+            response.writeHeader(200, {"Content-Type": "text/plain"});
+            response.end();
 
 
         // cancel file invitation
@@ -263,9 +266,11 @@ define('sum-backend-server', Class.extend({
             // handler on file was send successfully
             this.backend.finishedFileRequest(request.file, request.sender);
 
-        
-        } else
+        } else {
             this.backend.error('Ungültigen Nachrichtentyp erhalten: ' + JSON.stringify(request));
+            response.writeHeader(200, {"Content-Type": "text/plain"});
+            response.end();
+        }
     },
 
     
