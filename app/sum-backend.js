@@ -492,7 +492,7 @@ define('sum-backend', Class.extend({
         var roomObj = this.backendHelpers.getRoom(this.invited, room);
         var user = this.backendHelpers.getUser(this.userlist, roomObj.invited);
         var message = {
-            'type': 'invite-decline',
+            'type': 'room-invite-decline',
             'room': room,
             'sender': this.backendHelpers.getUsername(),
             'receiver': user.username
@@ -518,7 +518,7 @@ define('sum-backend', Class.extend({
         var roomObj = this.backendHelpers.getRoom(this.invited, room);
         var user = this.backendHelpers.getUser(this.userlist, roomObj.invited);
         var message = {
-            'type': 'invite-accept',
+            'type': 'room-invite-accept',
             'room': room,
             'sender': this.backendHelpers.getUsername(),
             'receiver': user.username
@@ -574,7 +574,7 @@ define('sum-backend', Class.extend({
         users = usersFromList;
 
         var message = {
-            'type': 'invite',
+            'type': 'room-invite',
             'room': room,
             'sender': this.backendHelpers.getUsername(),
             'receiver': ''
@@ -866,7 +866,36 @@ define('sum-backend', Class.extend({
         gui.Shell.openExternal(url);
     },
     
-    
+
+
+
+    // game handling
+
+    /**
+     * returns all available games
+     * @returns (array) of game names
+     */
+    gamez: function() {
+        return this.backendFilesystem.getDirectories('./gamez/');
+    },
+
+
+    /**
+     * starts a given game
+     * @param (string) game name
+     */
+    openGame: function(game) {
+        var that = this;
+        this.backendFilesystem.readJsonFile('./gamez/' + game + '/window.js',
+            function(window) {
+                that.backendHelpers.openGameWindow(game, window.width, window.height);
+            },
+            function() {
+                that.backendHelpers.openGameWindow(game);
+            });
+    },
+
+
     
     // Application handling
     

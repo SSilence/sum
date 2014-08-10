@@ -155,7 +155,7 @@ define('sum-backend-server', Class.extend({
         //     'receiver': 'receiver'
         //     'signature': <signed by other user>
         // };
-        } else if(request.type == 'invite') {
+        } else if(request.type == 'room-invite') {
             if (typeof request.room == 'undefined' || typeof request.sender == 'undefined' || typeof request.receiver == 'undefined') {
                 return this.sendError(request, response);
             }
@@ -181,9 +181,35 @@ define('sum-backend-server', Class.extend({
             // send ok
             response.writeHeader(200, {"Content-Type": "text/plain"});
             response.end();
-                    
-            
-            
+
+
+        // accept room invite
+        // {
+        //     'id' 'uuid',
+        //     'type': 'invite-accept',
+        //     'room': 'roomname',
+        //     'sender': 'sender',
+        //     'receiver': 'receiver'
+        //     'signature': <signed by other user>
+        // };
+        } else if(request.type == 'room-invite-accept') {
+            this.backend.renderSystemMessage(request.sender + ' hat die Einladung angenommen', request.room);
+
+
+
+            // decline room invite
+            // {
+            //     'id' 'uuid',
+            //     'type': 'invite-decline',
+            //     'room': 'roomname',
+            //     'sender': 'sender',
+            //     'receiver': 'receiver'
+            //    'signature': <signed by other user>
+            // };
+        } else if(request.type == 'room-invite-decline') {
+            this.backend.renderSystemMessage(request.sender + ' hat die Einladung abgelehnt', request.room);
+
+
         // cancel file invitation
         // {
         //     'id' 'uuid',
@@ -236,36 +262,7 @@ define('sum-backend-server', Class.extend({
        
             // handler on file was send successfully
             this.backend.finishedFileRequest(request.file, request.sender);
-            
-        
-        
-        // accept room invite
-        // {
-        //     'id' 'uuid',
-        //     'type': 'invite-accept',
-        //     'room': 'roomname',
-        //     'sender': 'sender',
-        //     'receiver': 'receiver'
-        //     'signature': <signed by other user>
-        // };
-        } else if(request.type == 'invite-accept') {
-            this.backend.renderSystemMessage(request.sender + ' hat die Einladung angenommen', request.room);
-        
-        
-        
-        // decline room invite
-        // {
-        //     'id' 'uuid',
-        //     'type': 'invite-decline',
-        //     'room': 'roomname',
-        //     'sender': 'sender',
-        //     'receiver': 'receiver'
-        //    'signature': <signed by other user>
-        // };
-        } else if(request.type == 'invite-decline') {
-            this.backend.renderSystemMessage(request.sender + ' hat die Einladung abgelehnt', request.room);
-        
-        
+
         
         } else
             this.backend.error('Ungültigen Nachrichtentyp erhalten: ' + JSON.stringify(request));

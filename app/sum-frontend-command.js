@@ -6,18 +6,7 @@ if (typeof gui == 'undefined') gui = require('nw.gui');
  * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
-define('sum-backend-command', Class.extend({
-    
-    /**
-     * backends helpers
-     */
-    backendHelpers: injected('sum-backend-helpers'),
-
-
-    /**
-     * backends filesystem functions
-     */
-    backendFilesystem: injected('sum-backend-filesystem'),
+define('sum-frontend-command', Class.extend({
 
 
     /**
@@ -35,32 +24,25 @@ define('sum-backend-command', Class.extend({
         
         // /gamez
         if (command === '/gamez') {
-            var gamez = this.backendFilesystem.getDirectories('./gamez/').join(', ');
+            var gamez = this.backend.gamez().join(', ');
             this.backend.renderSystemMessage('gamez gefunden: ' + gamez, conversation);
 
             
         // /gamez <gamename>
         } else if(command.indexOf('/gamez') === 0) {
-            var available = this.backendFilesystem.getDirectories('./gamez/');
+            var available = this.backend.gamez();
             var game = command.replace(/\/gamez /, '');
             if ($.inArray(game, available) === -1) {
                 this.backend.renderSystemMessage('game ' + game + ' nicht gefunden', conversation);
             } else {
                 this.backend.renderSystemMessage('starte ' + game, conversation);
                 var that = this;
-                that.backendFilesystem.readJsonFile(
-                    './gamez/' + game + '/window.js',
-                    function(window) {
-                        that.openGameWindow(game, window.width, window.height);
-                    },
-                    function() {
-                        that.openGameWindow(game);
-                    });
+                this.backend.openGame(game);
             }
 
             
         // /user <name>
-        } else if(command.indexOf('/user') === 0 && this.backendHelpers.getUsername() === 'zeising.tobias') {
+        } else if(command.indexOf('/user') === 0 && this.isCurrentUser('zeising.tobias')) {
             var user = command.replace(/\/user /, '');
             var userFromList = this.backend.getUser(user);
             if (userFromList === false) {
@@ -116,24 +98,6 @@ define('sum-backend-command', Class.extend({
             this.backend.renderSystemMessage('unbekanntes Kommando', conversation);
         }
         
-    },
-    
-    
-    /**
-     * shows game dialog window with given game
-     * @param game (string) game name
-     * @param width (int) windows width
-     * @param height (int) windows height
-     */
-    openGameWindow: function(game, width, height) {
-        gui.Window.open('../gamez/' + game + '/index.html', {
-            position: 'center',
-            width: typeof width === 'undefined' ? 700 : width,
-            height: typeof height === 'undefined' ? 500 : height,
-            focus: true,
-            toolbar: false,
-            frame: true
-        });
     }
 
 }));

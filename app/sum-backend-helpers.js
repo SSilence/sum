@@ -1,4 +1,5 @@
 if (typeof os == 'undefined') os = require('os');
+if (typeof gui == 'undefined') gui = require('nw.gui');
 
 /**
  * helpers for backend
@@ -246,5 +247,23 @@ define('sum-backend-helpers', Class.extend({
             }
         });
         return found;
+    },
+
+
+    /**
+     * shows game dialog window with given game
+     * @param game (string) game name
+     * @param width (int) windows width
+     * @param height (int) windows height
+     */
+    openGameWindow: function(game, width, height) {
+        gui.Window.open('../gamez/' + game + '/index.html', {
+            position: 'center',
+            width: typeof width === 'undefined' ? 700 : width,
+            height: typeof height === 'undefined' ? 500 : height,
+            focus: true,
+            toolbar: false,
+            frame: true
+        });
     }
 }));

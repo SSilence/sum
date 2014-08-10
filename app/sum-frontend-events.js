@@ -15,7 +15,7 @@ define('sum-frontend-events', Class.extend({
     /**
      * backends command handler
      */
-    backendCommand: injected('sum-backend-command'),
+    backendCommand: injected('sum-frontend-command'),
 
 
     /**
