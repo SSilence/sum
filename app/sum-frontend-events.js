@@ -60,6 +60,7 @@ define('sum-frontend-events', Class.extend({
     initialize: function() {
         this.initGeneral();
         this.initMenue();
+        this.initKeyMenue();
         this.initMessages();
         this.initMessageMenue();
         this.initMessageInput();
@@ -89,9 +90,14 @@ define('sum-frontend-events', Class.extend({
         // close menues when clicking somewhere
         $('body').click(function(event) {
             // no click inside main menue: close it
-            if ($(event.target).parents('#main-menue-dropdown').length===0 && event.target.id != 'main-menue' && event.target.id != 'fileDialogAvatar') {
+            if ($(event.target).parents('#main-menue-dropdown').length===0 && event.target.id != 'main-menue') {
                 $('#main-menue-dropdown li').show();
                 $('#main-menue-avatar-croper, #main-menue-dropdown').hide();
+            }
+            
+            // no click inside key menue: close it
+            if ($(event.target).parents('#key-menue-dropdown').length===0 && event.target.id != 'key-menue') {
+                $('#key-menue-dropdown').hide();
             }
 
             // no click inside add menue: close it
@@ -122,7 +128,7 @@ define('sum-frontend-events', Class.extend({
         $('#main-menue').click(function() {
             $('#main-menue-dropdown').toggle();
         });
-
+        
         // menue: select avatar
         $('#main-menue-avatar').click(function() {
             that.selectAvatar();
@@ -182,6 +188,17 @@ define('sum-frontend-events', Class.extend({
         // menue: quit
         $('#main-close').click(function() {
             that.backend.close();
+        });
+    },
+    
+    
+    /**
+     * initialize key menue
+     */
+    initKeyMenue: function() {
+        // key menue: toggle
+        $('#key-menue').click(function() {
+            $('#key-menue-dropdown').toggle();
         });
     },
     

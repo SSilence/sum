@@ -523,6 +523,7 @@ body {
                 margin-right:10px;
             }
 
+        #key-menue,
         #main-menue,
         #main-close {
             position:absolute;
@@ -534,10 +535,16 @@ body {
             -webkit-app-region: no-drag;
         }
 
+        #key-menue {
+            margin-left:-120px;
+            
+        }
+        
         #main-menue {
             margin-left:-80px;
         }
 
+        #key-menue-dropdown,
         #main-menue-dropdown {
             display:none;
             position: absolute;
@@ -554,6 +561,7 @@ body {
             -webkit-app-region: no-drag;
         }
 
+            #key-menue-dropdown:after, #key-menue-dropdown:before,
             #main-menue-dropdown:after, #main-menue-dropdown:before {
                 bottom: 100%;
                 left: 70%;
@@ -565,6 +573,7 @@ body {
                 pointer-events: none;
             }
 
+            #key-menue-dropdown:after,
             #main-menue-dropdown:after {
                 border-color: rgba(241, 241, 241, 0);
                 border-bottom-color: #f7f7f7;
@@ -572,6 +581,7 @@ body {
                 margin-left: -15px;
             }
 
+            #key-menue-dropdown:before,
             #main-menue-dropdown:before {
                 border-color: rgba(218, 218, 218, 0);
                 border-bottom-color: #dadada;
@@ -579,6 +589,7 @@ body {
                 margin-left: -16px;
             }
 
+            #key-menue-dropdown li,
             #main-menue-dropdown li {
                 list-style:none;
                 padding:10px;
@@ -587,6 +598,7 @@ body {
                 cursor:pointer;
             }
 
+                #key-menue-dropdown li:hover,
                 #main-menue-dropdown li:hover {
                     background:#f9f9f9;
                 }
@@ -606,7 +618,31 @@ body {
                 #canvas {
                     display:none;
                 }
-
+        
+        #key-menue-dropdown {
+            margin-left:-276px;
+        }
+        
+            #message-add-menue-dropdown li > span,
+            #key-menue-dropdown li > span {
+                width:14px;
+                text-align:center;
+            }
+        
+            #key-menue-dropdown li {
+                display:none;
+            }
+            
+            #key-menue-dropdown #key-menue-enable {
+                display:block;
+                font-size:0.8em;
+            }
+            
+            #key-menue-dropdown #key-menue-enable input {
+                margin-top:10px;
+            }
+            
+        
     #content {
         padding:20px;
         padding-top:0;

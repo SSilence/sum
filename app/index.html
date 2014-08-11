@@ -55,13 +55,19 @@
 
                 </div>
 
+                <!-- metadata of current chat -->
                 <div id="main-metadata">
                     <img src="" class="avatar" />
                     <span>Name</span>
                     <span class="online"></span>
                 </div>
+                
+                <!-- buttons -->
+                <div id="key-menue" class="ion-checkmark"></div>
                 <div id="main-menue" class="ion-navicon-round"></div>
                 <div id="main-close" class="ion-close-round"></div>
+                
+                <!-- main menue -->
                 <ul id="main-menue-dropdown">
                     <li id="main-menue-avatar-croper">
                         <input class="save" type="button" value="speichern" /> <input class="cancel" type="button" value="abbrechen" />
@@ -70,6 +76,20 @@
                     <li id="main-menue-avatar"><span class="ion-image"></span> neuen Avatar setzen</li>
                     <li id="main-menue-about"><span class="ion-information-circled"></span> &Uuml;ber SUM</li>
                     <li id="main-menue-quit"><span class="ion-log-out"></span> SUM Beenden</li>
+                </ul>
+                
+                <!-- key menue -->
+                <ul id="key-menue-dropdown">
+                    <li id="key-menue-enable">
+                        Wenn die Schl&uuml;sselverwaltung aktiviert wird, so kann f&uuml;r Kommunikationspartner die Identit&auml;t sicher festgestellt werden.<br />
+                        <input class="save" type="button" value="aktivieren" />
+                    </li>
+                    <li id="key-menue-manage"><span class="ion-key"></span> Schl&uuml;ssel bearbeiten</li>
+                    <li id="key-menue-password"><span class="ion-edit"></span> Schl&uuml;ssel Passwort &auml;ndern</li>
+                    <li id="key-menue-reset"><span class="ion-refresh"></span> Schl&uuml;ssel zur&uuml;cksetzen</li>
+                    <li id="key-menue-export"><span class="ion-arrow-left-c"></span> Schl&uuml;ssel exportieren</li>
+                    <li id="key-menue-import"><span class="ion-arrow-right-c"></span> Schl&uuml;ssel importieren</li>
+                    <li id="key-menue-disable"><span class="ion-close"></span> Schl&uuml;ssel deaktivieren</li>
                 </ul>
             </div>
 
@@ -120,10 +140,7 @@
             </div>
         </div>
 
-        <!-- hidden file input dialog -->
-        <input style="display:none;" id="fileDialogAvatar" accept=".jpg,.jpeg,.png,.gif" type="file" />
         
-
         <!-- javascripts -->
         <script src="libs/alertify/alertify.min.js"></script>
         <script src="libs/nw-desktop-notifications/nw-desktop-notifications.js"></script>
