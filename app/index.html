@@ -16,12 +16,21 @@
         <link rel="stylesheet" href="main.css">
     </head>
     <body>
-
+    
+        <!-- login -->
+        <div id="login">
+            <div>
+                <div><span class="ion-speakerphone"></span>SUM Messenger</div>
+                <label>Passwort:</label> <input type="password" class="password">
+                <input class="save" type="button" value="einloggen" /> <span class="reset">Schl&uuml;ssel zur&uuml;cksetzen</span>
+            </div>
+        </div>
+    
         <!-- left menue -->
         <div id="nav">
 
             <!-- header -->
-            <div class="heading" href="#">
+            <div class="heading">
                 <span class="ion-speakerphone"></span>SUM Messenger
                 <span class="version"></span>
             </div>
@@ -80,16 +89,70 @@
                 
                 <!-- key menue -->
                 <ul id="key-menue-dropdown">
+                    <!-- manage keys -->
+                    <li id="key-menue-manage-container">
+                        <select id="key-menue-keys" multiple="multiple">
+                            <option value="asd">asd</option>
+                        </select>
+                        <input class="save" type="button" value="hinzuf&uuml;gen" /> <input class="cancel" type="button" value="entfernen" />
+                    </li>
+                    
+                    <!-- change password / enable key management -->
+                    <li id="key-menue-password-container">
+                        <p>F&uuml;r den eigenen Schl&uuml;ssel muss ein Passwort vergeben werden. Dieses muss bei jedem Start von SUM eingegeben werden.</p>
+                        <label>altes Passwort:</label> <input type="password" class="old-password" />
+                        <label>neues Passwort:</label> <input type="password" class="new-password" />
+                        <label>neues Passwort Wiederholung:</label> <input type="password"  class="new-password-again" />
+                        <input class="save" type="button" value="speichern" /> <input class="cancel" type="button" value="abbrechen" />
+                    </li>
+                    
+                    <!-- enable key -->
                     <li id="key-menue-enable">
-                        Wenn die Schl&uuml;sselverwaltung aktiviert wird, so kann f&uuml;r Kommunikationspartner die Identit&auml;t sicher festgestellt werden.<br />
+                        <p>Wenn die Schl&uuml;sselverwaltung aktiviert wird, so kann f&uuml;r Kommunikationspartner die Identit&auml;t sicher festgestellt werden.</p>
                         <input class="save" type="button" value="aktivieren" />
                     </li>
-                    <li id="key-menue-manage"><span class="ion-key"></span> Schl&uuml;ssel bearbeiten</li>
-                    <li id="key-menue-password"><span class="ion-edit"></span> Schl&uuml;ssel Passwort &auml;ndern</li>
-                    <li id="key-menue-reset"><span class="ion-refresh"></span> Schl&uuml;ssel zur&uuml;cksetzen</li>
-                    <li id="key-menue-export"><span class="ion-arrow-left-c"></span> Schl&uuml;ssel exportieren</li>
-                    <li id="key-menue-import"><span class="ion-arrow-right-c"></span> Schl&uuml;ssel importieren</li>
-                    <li id="key-menue-disable"><span class="ion-close"></span> Schl&uuml;ssel deaktivieren</li>
+                    
+                    <!-- import key -->
+                    <li id="key-menue-import-container">
+                        <label>Passwort:</label> <input type="password" class="password" />
+                        <label>Key:</label> <input type="file" />
+                        <input class="save" type="button" value="importieren" />
+                    </li>
+                    
+                    <!-- import key -->
+                    <li id="key-menue-share-container">
+                        <p>Hiermit kann der eigene &ouml;ffentliche Schl&uuml;ssel exportiert und an andere Benutzer weitergegeben werden. Wenn diese denn
+                        Schl&uuml;ssel unter "Schl&uuml;ssel bearbeiten" importieren, k&ouml;nnen sie sehen, ob eine Nachricht wirklich von dir verschickt wurde.</p>
+                        <input class="save" type="button" value="speichern" />
+                    </li>
+                    
+                    <!-- export key -->
+                    <li id="key-menue-export-container">
+                        <p>Hiermit kann der eigene &ouml;ffentliche und <b>private</b> Schl&uuml;ssel exportiert. Dieser darf auf keinen Fall an andere weitergegeben werden. Dies dient nur dazu um ein Backup von dem Schl&uuml;ssel zu erstellen.</p>
+                        <input class="save" type="button" value="speichern" />
+                    </li>
+                    
+                    <!-- disable key -->
+                    <li id="key-menue-disable-container">
+                        <p>Hiermit wird die Schl&uuml;sselverwaltung deaktiviert. Der private Schl&uuml;ssel wird zur&uuml;ckgesetzt.</p>
+                        <input class="save" type="button" value="deaktivieren" /> <input class="cancel" type="button" value="abbrechen" />
+                    </li>
+                    
+                    <!-- reset key -->
+                    <li id="key-menue-reset-container">
+                        <p>Der private Schl&uuml;ssel wird zur&uuml;ckgesetzt. Andere Benutzer m&uuml;ssen den &ouml;ffentlichen Schl&uuml;ssel erneut importieren.</p>
+                        <label>neues Passwort:</label> <input type="password" class="new-password" />
+                        <label>neues Passwort Wiederholung:</label> <input type="password"  class="new-password-again" />
+                        <input class="save" type="button" value="deaktivieren" /> <input class="cancel" type="button" value="abbrechen" />
+                    </li>
+                    
+                    <li id="key-menue-manage" class="menue"><span class="ion-key"></span> Schl&uuml;ssel bearbeiten</li>
+                    <li id="key-menue-password" class="menue"><span class="ion-edit"></span> Schl&uuml;ssel Passwort &auml;ndern</li>
+                    <li id="key-menue-reset" class="menue"><span class="ion-refresh"></span> Schl&uuml;ssel zur&uuml;cksetzen</li>
+                    <li id="key-menue-share" class="menue"><span class="ion-share"></span> Schl&uuml;ssel weitergeben</li>
+                    <li id="key-menue-export" class="menue"><span class="ion-arrow-left-c"></span> Schl&uuml;ssel exportieren</li>
+                    <li id="key-menue-import" class="menue"><span class="ion-arrow-right-c"></span> Schl&uuml;ssel importieren</li>
+                    <li id="key-menue-disable" class="menue"><span class="ion-close"></span> Schl&uuml;ssel deaktivieren</li>
                 </ul>
             </div>
 

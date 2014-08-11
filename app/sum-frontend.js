@@ -46,10 +46,14 @@ define('sum-frontend', Class.extend({
      * initialize frontend
      */
     initialize: function() {
-        // ser version
+        // hide/show login
+        if (this.backend.showLogin() === false)
+            $('body').addClass('loggedin');
+        
+        // set version
         $('title').html($('title').html() + ' ' + this.backend.version);
         $('.version').html(this.backend.version);
-
+        
         // set currentConversation
         this.currentConversation = config.room_all;
 
@@ -85,7 +89,7 @@ define('sum-frontend', Class.extend({
         this.backend.updateUserlist(this.currentConversation);
         this.backend.updateRoomlist();
         this.backend.getConversation(this.currentConversation);
-
+        
         // check whether new version is available
         this.checkVersion();
     },

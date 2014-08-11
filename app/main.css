@@ -93,6 +93,7 @@ body {
 }
 
 #nav {
+    display:none;
     width:25%;
     position: fixed;
     overflow: hidden;
@@ -100,6 +101,7 @@ body {
 }
 
 #main {
+    display:none;
     margin-left:25%;
     padding:10px;
 }
@@ -115,6 +117,14 @@ body {
     border-top:1px solid #dadada;
 }
 
+.loggedin #nav,
+.loggedin #main {
+    display:block;
+}
+
+.loggedin #login {
+    display:none;
+}
 
 
 /*****************/
@@ -168,6 +178,54 @@ body {
 }
 
 
+
+/*********/
+/* login */
+/*********/
+
+#login {
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    background:#54728c;
+    min-height: 100%;
+    color:#ffffff;
+    height:100%;
+}
+
+    #login > div {
+        width:300px;
+        height:150px;
+        position:absolute;
+        left:50%;
+        top:50%;
+        margin-top:-75px;
+        margin-left:-150px;
+    }
+    
+    #login > div > div > span {
+        margin-right:20px;
+    }
+    
+    #login > div > div {
+        font-size:1.4em;
+        margin-bottom:20px;
+    }
+    
+    #login .save {
+        margin-left:89px;
+        margin-top:10px;
+    }
+    
+    #login .reset {
+        font-size:0.7em;
+        color:#bbbbbb;
+        cursor:pointer;
+    }
+
+
+
 /**************/
 /* left menue */
 /**************/
@@ -175,6 +233,7 @@ body {
 /* header */
 #nav {
     background:#f1f1f1;
+    color:#ffffff;
 }
 
 #nav .heading {
@@ -621,6 +680,7 @@ body {
         
         #key-menue-dropdown {
             margin-left:-276px;
+            font-size:0.8em;
         }
         
             #message-add-menue-dropdown li > span,
@@ -629,13 +689,17 @@ body {
                 text-align:center;
             }
         
+            #key-menue-dropdown select,
+            #key-menue-dropdown label {
+                display:block;
+            }
+        
             #key-menue-dropdown li {
                 display:none;
             }
             
             #key-menue-dropdown #key-menue-enable {
                 display:block;
-                font-size:0.8em;
             }
             
             #key-menue-dropdown #key-menue-enable input {

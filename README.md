@@ -137,7 +137,6 @@ Special thanks to the great programmers of this libraries which will be used in 
 * Font Oswald: http://www.fontsquirrel.com/fonts/oswald
 * jCrop: http://deepliquid.com/content/Jcrop.html
 * selectize.js: http://brianreavis.github.io/selectize.js/
-* crypto-js: https://code.google.com/p/crypto-js/
 * highlight.js: http://highlightjs.org/
 * Simple Class Creation and Inheritance: http://ejohn.org/blog/simple-javascript-inheritance/
 * WebIconset.com Emoticons: http://www.webiconset.com/emoticons-smilies-icon-set/

@@ -866,7 +866,18 @@ define('sum-backend', Class.extend({
         gui.Shell.openExternal(url);
     },
     
+    
 
+    // key management handling
+    
+    /**
+     * return true if key management will be used
+     * @return (boolean) true if key management is active, false otherwise
+     */
+    showLogin:function() {
+        return this.backendStorage.hasKey();
+    },
+    
 
 
     // game handling

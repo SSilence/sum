@@ -1,6 +1,7 @@
 /**
  * messages for the frontend
  *
+ * @copyright  Copyright (c) Tobias Zeising (http://www.aditu.de)
  * @copyright  Copyright (c) Andreas Schiefele
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */

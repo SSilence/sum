@@ -41,13 +41,13 @@ define('sum-backend-crypto', Class.extend({
     /**
      * decrypt with AES
      * @return (string) decrypted text
-     * @param (string) cryptkey password
+     * @param (string) password password
      * @param (string) encryptdata encrypted data to decrypt
      */
-    aesdecrypt: function(cryptkey, encryptdata) {
-        cryptkey = require('crypto').createHash('sha256').update(cryptkey).digest();
+    aesdecrypt: function(password, encryptdata) {
+        password = require('crypto').createHash('sha256').update(password).digest();
         encryptdata = new Buffer(encryptdata, 'base64').toString('binary');
-        var decipher = require('crypto').createDecipheriv('aes-256-cbc', cryptkey, config.iv);
+        var decipher = require('crypto').createDecipheriv('aes-256-cbc', password, config.iv);
         var decoded = decipher.update(encryptdata, 'binary', 'utf8');
         decoded += decipher.final('utf8');
         return decoded;
@@ -57,12 +57,12 @@ define('sum-backend-crypto', Class.extend({
     /**
      * encrypt with AES
      * @return (string) clear text
-     * @param (string) cryptkey password
+     * @param (string) password password
      * @param (string) encryptdata cleartext to encrypt
      */
-    aesencrypt: function(cryptkey, cleardata, iv) {
-        cryptkey = require('crypto').createHash('sha256').update(cryptkey).digest();
-        var encipher = require('crypto').createCipheriv('aes-256-cbc', cryptkey, config.iv);
+    aesencrypt: function(password, cleardata) {
+        password = require('crypto').createHash('sha256').update(password).digest();
+        var encipher = require('crypto').createCipheriv('aes-256-cbc', password, config.iv);
         var encryptdata = encipher.update(cleardata, 'utf8', 'binary');
         encryptdata += encipher.final('binary');
         var encode_encryptdata = new Buffer(encryptdata, 'binary').toString('base64');

@@ -7,6 +7,12 @@
 define('sum-backend-storage', Class.extend({
 
     /**
+     * backends crypto functions
+     */
+    backendCrypto: injected('sum-backend-crypto'),
+    
+
+    /**
      * load avatar from local storage
      * @return (string) base64 encoded avatar
      */
@@ -20,7 +26,7 @@ define('sum-backend-storage', Class.extend({
      * @param (string) avatar base64 encoded avatar
      */
     saveAvatar: function(avatar) {
-        window.localStorage.avatar = avatar;
+        localStorage.avatar = avatar;
     },
 
     
@@ -41,5 +47,53 @@ define('sum-backend-storage', Class.extend({
         if (typeof localStorage.roomlist != 'undefined' && localStorage.roomlist !== null)
             return JSON.parse(localStorage.roomlist);
         return [];
+    },
+    
+    
+    /**
+     * return true if key is set (key management will be used).
+     * @return (boolean) true if key management is active, false otherwise
+     */
+    hasKey:function() {
+        return (typeof localStorage.keypair != 'undefined');
+    },
+    
+    
+    /**
+     * load stored key pair
+     * @return (NodeRSA|boolean) loaded key pair or false on decryption/parse error
+     * @param (string) keys password
+     */
+    loadKey: function(password) {
+        if (typeof localStorage.keypair != 'undefined') {
+            var encrypted = localStorage.keypair;
+            var decrypted = this.backendCrypto.aesdecrypt(password, encrypted);
+            try {
+                var keypair = JSON.parse(decrypted);
+                var key = new NodeRSA();
+                key.loadFromPEM(keypair.publicKey);
+                key.loadFromPEM(keypair.privateKey);
+                return key;
+            } catch (err) {
+                return false;
+            }
+        }
+    },
+    
+    
+    /**
+     * save key pair in local storage
+     * @param (NodeRSA) key
+     * @param (string) password
+     */
+    saveKey: function(key, password) {
+        var keypair = {
+            'publicKey': key.getPublicPEM(),
+            'privateKey': key.getPrivatePEM()
+        };
+        var encrypted = this.backendCrypto.aesencrypt(password, JSON.stringify(keypair));
+        localStorage.keypair = encrypted;
     }
+    
+    
 }));
