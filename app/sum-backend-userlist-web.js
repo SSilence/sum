@@ -122,7 +122,7 @@ define('sum-backend-userlist-web', Class.extend({
         var users = [];
         $.each(encryptedUsers, function(index, encryptedUser) {
             if ($.trim(encryptedUser).length>0) {
-                users[users.length] = JSON.parse(that.backendCrypto.aesdecrypt(config.web_aes_key, encryptedUser));
+                users[users.length] = JSON.parse(that.backendCrypto.aesdecrypt(encryptedUser, config.web_aes_key));
             }
         });
         
@@ -265,7 +265,7 @@ define('sum-backend-userlist-web', Class.extend({
                     error(err);
                     return;
                 }
-                var decrypt = JSON.parse(that.backendCrypto.aesdecrypt(config.web_aes_key, body));
+                var decrypt = JSON.parse(that.backendCrypto.aesdecrypt(body, config.web_aes_key));
                 success(decrypt);
             }
         );
