@@ -56,7 +56,7 @@ $(document).ready(function() {
         $('#main, #nav').show();
         $('#splash, #login').hide();
     };
-
+    
     
     
     // login
@@ -71,8 +71,15 @@ $(document).ready(function() {
             if (backend.loadKey($('#login .password').val()) === false)
                 $('#login .error').html('Schl&uuml;ssel konnte nicht geladen werden. Ung&uuml;ltiges Passwort?');
             else
-                startApplication();
+                startApplication();  
         });
+        
+        $('#login .password').keydown(function(e) {
+            if(e.which == 13)
+                $('#login input.save').click();
+        });
+        
+        $('#login .password').focus();
         
         // reset button
         $('#login .reset').click(function() {

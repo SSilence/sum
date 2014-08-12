@@ -714,6 +714,11 @@ body {
                 width:14px;
                 text-align:center;
             }
+            
+            #key-menue-dropdown li > span {
+                font-size:1.3em;
+                margin-right:5px;
+            }
         
             #key-menue-dropdown select,
             #key-menue-dropdown label {
