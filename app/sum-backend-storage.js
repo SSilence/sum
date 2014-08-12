@@ -110,7 +110,7 @@ define('sum-backend-storage', Class.extend({
      * purge key pair
      */
     resetKey: function() {
-        delete localStorage.removeItem('keypair');
+        localStorage.removeItem('keypair');
     },
     
     

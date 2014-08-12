@@ -224,7 +224,7 @@ define('sum-frontend-events', Class.extend({
                 return false;
             }
             return true;
-        }
+        };
 
         // cancel button (all = back to menue)
         $('#key-menue-dropdown .cancel').click(function() {
