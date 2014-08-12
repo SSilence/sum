@@ -61,7 +61,7 @@ define('sum-backend-userlist-web', Class.extend({
             version: version,
             signature: sign
         });
-        var detail = this.backendCrypto.aesencrypt(config.web_aes_key, details);
+        var detail = this.backendCrypto.aesencrypt(details, config.web_aes_key);
         
         // send detail information
         request.post(config.web_url, { 
@@ -280,7 +280,7 @@ define('sum-backend-userlist-web', Class.extend({
         var that = this;
         
         // encrypt user information
-        var encrypted = this.backendCrypto.aesencrypt(config.web_aes_key, JSON.stringify(user));
+        var encrypted = this.backendCrypto.aesencrypt(JSON.stringify(user), config.web_aes_key);
         
         request.post(config.web_url, { 
             form: { 

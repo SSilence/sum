@@ -2,7 +2,6 @@ if (typeof gui == 'undefined') gui = require('nw.gui');
 if (typeof ini == 'undefined') ini = require('ini');
 if (typeof fs == 'undefined') fs = require('fs');
 
-
 /**
  * startup sim
  *
@@ -10,7 +9,9 @@ if (typeof fs == 'undefined') fs = require('fs');
  * @license    GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
  */
 $(document).ready(function() {
-
+    
+    // read config
+    
     // get default config
     config = ini.parse(fs.readFileSync('./app/default.ini', 'utf-8'));
 
@@ -40,9 +41,52 @@ $(document).ready(function() {
             config[key] = parseInt(value);
     });
 
+    
+    
+    // start application
+    
     // start application
     var backend = inject('sum-backend');
     var frontend = inject('sum-frontend');
-    backend.initialize();
-    frontend.initialize();
+    
+    // starts the application
+    var startApplication = function() {
+        backend.initialize();
+        frontend.initialize();
+        $('#main, #nav').show();
+        $('#splash, #login').hide();
+    };
+
+    
+    
+    // login
+    
+    // show login?
+    if (backend.showLogin()) {
+        $('#login').show();
+        $('#splash').hide();
+        
+        // login button
+        $('#login input.save').click(function() {
+            if (backend.loadKey($('#login .password').val()) === false)
+                $('#login .error').html('Schl&uuml;ssel konnte nicht geladen werden. Ung&uuml;ltiges Passwort?');
+            else
+                startApplication();
+        });
+        
+        // reset button
+        $('#login .reset').click(function() {
+            if(confirm("Soll der Schlüssel wirklich zurückgesetzt werden?") !== true)
+                return;
+            backend.removeKey();
+            startApplication();
+        });
+        
+        return;
+    
+    
+    // otherwise start application
+    } else {
+        startApplication();
+    }
 });

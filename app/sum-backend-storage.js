@@ -60,15 +60,24 @@ define('sum-backend-storage', Class.extend({
     
     
     /**
+     * load stored key pair without encrypting it
+     * @return (string) encrypted keys
+     */
+    loadKeyEncrypted: function() {
+        return localStorage.keypair;
+    },
+    
+    
+    /**
      * load stored key pair
      * @return (NodeRSA|boolean) loaded key pair or false on decryption/parse error
      * @param (string) keys password
      */
     loadKey: function(password) {
         if (typeof localStorage.keypair != 'undefined') {
-            var encrypted = localStorage.keypair;
-            var decrypted = this.backendCrypto.aesdecrypt(password, encrypted);
             try {
+                var encrypted = localStorage.keypair;
+                var decrypted = this.backendCrypto.aesdecrypt(encrypted, password);
                 var keypair = JSON.parse(decrypted);
                 var key = new NodeRSA();
                 key.loadFromPEM(keypair.publicKey);
@@ -78,6 +87,7 @@ define('sum-backend-storage', Class.extend({
                 return false;
             }
         }
+        return false;
     },
     
     
@@ -91,9 +101,41 @@ define('sum-backend-storage', Class.extend({
             'publicKey': key.getPublicPEM(),
             'privateKey': key.getPrivatePEM()
         };
-        var encrypted = this.backendCrypto.aesencrypt(password, JSON.stringify(keypair));
+        var encrypted = this.backendCrypto.aesencrypt(JSON.stringify(keypair), password);
         localStorage.keypair = encrypted;
-    }
+    },
     
+    
+    /**
+     * purge key pair
+     */
+    resetKey: function() {
+        delete localStorage.removeItem('keypair');
+    },
+    
+    
+    /**
+     * loads all public keys of other users
+     * @return (array) of objects with username, key property
+     */
+    loadPublicKeys: function() {
+        if(typeof localStorage.publickeys !== 'undefined') {
+            try {
+                return JSON.parse(localStorage.publickeys);
+            } catch(err) {
+                return false;
+            }
+        }
+        return false;
+    },
+    
+    
+    /**
+     * save all public keys of other users
+     * @param (array) of username: key objects
+     */
+    savePublicKeys: function(keys) {
+        localStorage.publickeys = JSON.stringify(keys);
+    }
     
 }));

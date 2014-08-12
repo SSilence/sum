@@ -66,6 +66,30 @@ define('sum-backend-filesystem', Class.extend({
 
 
     /**
+     * write in file
+     * @param file (string) filename for writing the content
+     * @param content (string) will be json encoded written into file
+     * @param success (callback) will be called on success
+     * @param error (function) will be executed on error
+     */
+    writeFile: function(file, content, success, error) {
+        if (typeof error == 'undefined')
+            error = function(error) {
+                throw new Error(error);
+            };
+
+        fs.writeFile(file, content, 'utf8', function(err) {
+            if(err) {
+                console.error(new Date() + " Fehler beim Schreiben der Datei " + file);
+                console.error(err);
+                error('Fehler beim Schreiben der Userliste: ' + err);
+            } else if (typeof success != 'undefined')
+                success();
+        });
+    },
+    
+    
+    /**
      * read file and return as ByteBuffer
      * @param file (string) path and filenam
      * @param success (function) contains file data

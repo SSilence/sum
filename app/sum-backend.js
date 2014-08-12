@@ -106,6 +106,12 @@ define('sum-backend', Class.extend({
 
 
     /**
+     * all public keys of other users for verifing signature
+     */
+    publicKeys: [],
+    
+    
+    /**
      * enable/disable notifications
      */
     enableNotifications: true,
@@ -131,11 +137,17 @@ define('sum-backend', Class.extend({
         this.version = packagejson.version;
 
         // initial generate rsa keys
-        this.key = this.backendCrypto.generateKeypair();
+        if (this.key === false)
+            this.key = this.backendCrypto.generateKeypair();
 
         // set ip
         this.ip = this.backendHelpers.getIp();
 
+        // load public keys
+        var publicKeys = this.backendStorage.loadPublicKeys();
+        if (publicKeys !== false)
+            this.publicKeys = publicKeys;
+        
         // init node webkit tray icon
         this.initTray();
 
@@ -871,11 +883,187 @@ define('sum-backend', Class.extend({
     // key management handling
     
     /**
+     * returns public keys of other users
+     * @return (array) public keys as object with username and key property
+     */
+    getPublicKeys: function() {
+        return this.publicKeys;
+    },
+    
+    
+    /**
+     * returns public key of given user
+     * @return (string|boolean) key or false
+     * @param (string) user name
+     */
+    getPublicKey: function(user) {
+        var found = false;
+        $.each(this.publicKeys, function(index, item) {
+            if (item.username === user) {
+                found = item.key;
+                return false;
+            }
+        });
+        return found;
+    },
+    
+    
+    /**
      * return true if key management will be used
      * @return (boolean) true if key management is active, false otherwise
      */
     showLogin:function() {
         return this.backendStorage.hasKey();
+    },
+    
+    
+    /**
+     * reset key
+     * @param (string) password for new key
+     */
+    resetKey: function(password) {
+        this.backendStorage.resetKey();
+        this.key = this.backendCrypto.generateKeypair();
+        this.backendStorage.saveKey(this.key, password);
+    },
+    
+    
+    /**
+     * remove key
+     */
+    removeKey: function() {
+        this.backendStorage.resetKey();
+    },
+    
+    
+    /**
+     * loads key from localstorage
+     * @param (string) password
+     */
+    loadKey:function(password) {
+        this.key = this.backendStorage.loadKey(password);
+        return this.key;
+    },
+    
+    
+    /**
+     * save key in localstorage
+     * @param (string) password
+     */
+    saveKey:function(password) {
+        this.backendStorage.saveKey(this.key, password);
+    },
+    
+    
+    /**
+     * checks whether key password is correct
+     * @return true if correct, false otherwise
+     */
+    checkKeyPassword: function(password) {
+        var key = this.backendStorage.loadKey(password);
+        return key !== false;
+    },
+    
+    
+    /**
+     * adds a public key in localstorage and local public key list
+     * @param (string) path of the public key file for import
+     * @param (function) success callback
+     */
+    addPublicKey: function(path, success) {
+        var that = this;
+        this.backendFilesystem.readJsonFile(path, 
+            function(key) {
+                // validate key format
+                if (typeof key.username === 'undefined' || typeof key.key === 'undefined')
+                    return that.error('Ung&uuml;ltiges Dateiformat');
+                
+                // key already in storage?
+                var found = $.grep(that.publicKeys, function (e){
+                    return e.username === request.username && e.key === request.key;
+                });
+                if (found.length !== 0)
+                    return that.error('Schl&uuml;ssel wurde bereits importiert');
+                
+                // add key
+                that.publicKeys[that.publicKeys.length] = key;
+                
+                // save key
+                that.backendStorage.savePublicKeys(that.publicKeys);
+                
+                success();
+            },
+            function() { 
+                that.error('Datei konnte nicht geladen werden');
+            });
+    },
+    
+    
+    /**
+     * removes a public key in localstorage and local public key list
+     * @param (string) username of the public key
+     */
+    removePublicKey: function(username) {
+        var newPublicKeys = [];
+        $.each(this.publicKeys, function(index, item) {
+            if (item.username !== username)
+                newPublicKeys[newPublicKeys.length] = item;
+        });
+        this.publicKeys = newPublicKeys;
+        
+        // save keys
+        this.backendStorage.savePublicKeys(this.publicKeys);
+    },
+    
+    
+    /**
+     * save public key in given file
+     * @param (string) path target file
+     * @param (function) success callback
+     */
+    exportPublicKey: function(path, success) {
+        var keyToSave = {
+            'username': this.backendHelpers.getUsername(),
+            'key': this.key.getPublicPEM()
+        };
+        this.backendFilesystem.writeJsonFile(path, keyToSave, success, this.error);
+    },
+    
+    
+    /**
+     * save private and public key in given file
+     * @param (string) path target file
+     * @param (function) success callback
+     */
+    exportKey: function(path, success) {
+        var key = this.backendStorage.loadKeyEncrypted();
+        this.backendFilesystem.writeFile(path, key, success, this.error);
+    },
+    
+    
+    /**
+     * import private and public key from file
+     * @param (string) path target file
+     * @param (string) password for key
+     * @param (function) success callback
+     */
+    importKey: function(path, password, success) {
+        var that = this;
+        this.backendFilesystem.readFile(path, function(encrypted) {
+            try {
+                var decrypted = that.backendCrypto.aesdecrypt(encrypted.toString('utf8'), password);
+                var keypair = JSON.parse(decrypted);
+                var key = new NodeRSA();
+                key.loadFromPEM(keypair.publicKey);
+                key.loadFromPEM(keypair.privateKey);
+                this.key = key;
+                that.saveKey(password);
+                success();
+            } catch(err) {
+                that.error('Der Schl&uuml;ssel konnte nicht importiert werden');
+            }
+            
+        }, this.error);
     },
     
 

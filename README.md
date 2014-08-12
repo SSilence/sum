@@ -149,6 +149,7 @@ Special thanks to the great programmers of this libraries which will be used in 
 * jasmine unit test: http://jasmine.github.io/
 * wait for images: https://github.com/alexanderdickson/waitForImages
 * request: https://github.com/mikeal/request
+* CryptoJS: https://code.google.com/p/crypto-js/
 
   [1]: http://nodejs.org/
   [2]: http://www.jrsoftware.org/isinfo.php

@@ -196,8 +196,252 @@ define('sum-frontend-events', Class.extend({
      * initialize key menue
      */
     initKeyMenue: function() {
+        var that = this;
+        
+        var showMenue = function() {
+            $('#key-menue-dropdown li').hide();
+            if(that.backend.showLogin()===false) {
+                $('#key-menue-enable').show();
+            } else {
+                $('#key-menue-dropdown .menue').show();
+            }
+        };
+        
+        var hideMenue = function() {
+            $('#key-menue-dropdown .menue').hide();
+        };
+        
+        var validateNewPasswords = function(newPassword, newPasswordAgain) {
+            // passwords given
+            if($.trim(newPassword).length === 0 || $.trim(newPasswordAgain).length === 0) {
+                alertify.error('Bitte alle Passwort Felder ausf&uuml;llen');
+                return false;
+            }
+            
+            // new passwords equals?
+            if(newPassword !== newPasswordAgain) {
+                alertify.error('Die neuen Passw&ouml;rter stimmen nicht ueberein');
+                return false;
+            }
+            return true;
+        }
+
+        // cancel button (all = back to menue)
+        $('#key-menue-dropdown .cancel').click(function() {
+            showMenue();
+        });
+    
         // key menue: toggle
         $('#key-menue').click(function() {
+            showMenue();
+            $('#key-menue-dropdown').toggle();
+        });
+        
+        // show enable key management password input
+        $('#key-menue-enable .save').click(function() {
+            $('#key-menue-enable').hide();
+            $('#key-menue-enable-container').show();
+        });
+        
+        // show password input for private key
+        $('#key-menue-password').click(function() {
+            hideMenue();
+            $('#key-menue-password-container').show();
+        });
+        
+        // show manage keys
+        $('#key-menue-manage').click(function() {
+            hideMenue();
+            $('#key-menue-manage-container').show();
+        });
+        
+        // show reset password
+        $('#key-menue-reset').click(function() {
+            hideMenue();
+            $('#key-menue-reset-container').show();
+        });
+        
+        // show share
+        $('#key-menue-share').click(function() {
+            hideMenue();
+            $('#key-menue-share-container').show();
+        });
+        
+        // show export
+        $('#key-menue-export').click(function() {
+            hideMenue();
+            $('#key-menue-export-container').show();
+        });
+        
+        // show import
+        $('#key-menue-import').click(function() {
+            hideMenue();
+            $('#key-menue-import-container').show();
+        });
+        
+        // show disable
+        $('#key-menue-disable').click(function() {
+            hideMenue();
+            $('#key-menue-disable-container').show();
+        });
+        
+        // enable key management: save
+        $('#key-menue-enable-container .save').click(function() {
+            // validate passwords
+            var newPassword = $('#key-menue-enable-container .password').val();
+            var newPasswordAgain = $('#key-menue-enable-container .password-again').val();
+            if (validateNewPasswords(newPassword, newPasswordAgain) === false)
+                return;
+                
+            // save key
+            that.backend.saveKey(newPassword);
+            
+            alertify.log('Schl&uuml;sselverwaltung wurde aktiviert');
+            showMenue();
+        });
+        
+        // manage keys: add new key
+        $('#key-menue-manage-container .save').click(function() {
+            var fileInput = $('<input type="file" />');
+            fileInput.change(function() {
+                // check file given?
+                if ($(this).val() === '')
+                    return;
+
+                // save key
+                that.backend.addPublicKey($(this).val(), function() {
+                    // update public keys
+                    that.frontend.updatePublicKeyList(that.backend.getPublicKeys());
+                });
+            });
+            fileInput.trigger('click');
+        });
+        
+        // manage keys: remove key
+        $('#key-menue-manage-container .remove').click(function() {
+            if ($('#key-menue-keys').val() === '')
+                return that.error('Bitte einen Benutzer auswaehlern');
+            
+            // remove key
+            $.each($('#key-menue-keys').val(), function(index, item) {
+                that.backend.removePublicKey(item);
+            });
+            
+            // update public keys
+            that.frontend.updatePublicKeyList(that.backend.getPublicKeys());
+        });
+        
+        // change password: save
+        $('#key-menue-password-container .save').click(function() {
+            // validate passwords
+            var oldPassword = $('#key-menue-password-container .old-password').val();
+            var newPassword = $('#key-menue-password-container .new-password').val();
+            var newPasswordAgain = $('#key-menue-password-container .new-password-again').val();
+            
+            // passwords given
+            if($.trim(oldPassword).length === 0)
+                return alertify.error('Bitte alle Passwort Felder ausf&uuml;llen');
+            
+            // old password correct?
+            if(that.backend.checkKeyPassword(oldPassword) !== true)
+                return alertify.error('Das alte Passwort ist nicht korrekt');
+            
+            // validate new passwords
+            if (validateNewPasswords(newPassword, newPasswordAgain) === false)
+                return;
+                
+            // change password
+            that.backend.saveKey(newPassword);
+            
+            showMenue();
+            alertify.log('Passwort wurde erfolgreich ge&auml;ndert');
+        });
+        
+        // reset key
+        $('#key-menue-reset-container .save').click(function() {
+            if(confirm("Achtung: Die Anwendung wird neu gestartet. Wirklich fortfahren?") !== true)
+                return;
+                
+            // validate new passwords
+            var newPassword = $('#key-menue-reset-container .new-password').val();
+            var newPasswordAgain = $('#key-menue-reset-container .new-password-again').val();
+            if (validateNewPasswords(newPassword, newPasswordAgain) === false)
+                return;
+                
+            // reset key
+            that.backend.resetKey(newPassword);
+            
+            // restart application
+            document.location.reload(true);
+        });
+        
+        // export public key
+        $('#key-menue-share-container .save').click(function() {
+            var fileInput = $('<input type="file" />');
+            fileInput.attr('nwsaveas', 'public.key');
+            fileInput.change(function() {
+                // check file given?
+                if ($(this).val() === '')
+                    return;
+
+                // export key
+                that.backend.exportPublicKey($(this).val(), function() {
+                    alertify.log('Key wurde erfolgreich exportiert');
+                    $('#key-menue-dropdown').toggle();
+                });
+            });
+            fileInput.trigger('click');
+        });
+        
+        // export key
+        $('#key-menue-export-container .save').click(function() {
+            var fileInput = $('<input type="file" />');
+            fileInput.attr('nwsaveas', 'keypair.key');
+            fileInput.change(function() {
+                // check file given?
+                if ($(this).val() === '')
+                    return;
+
+                // export key
+                that.backend.exportKey($(this).val(), function() {
+                    alertify.log('Key wurde erfolgreich exportiert');
+                    $('#key-menue-dropdown').toggle();
+                });
+            });
+            fileInput.trigger('click');
+        });
+        
+        // import key
+        $('#key-menue-import-container .save').click(function() {
+            var fileInput = $('<input type="file" />');
+            fileInput.change(function() {
+                // check file given?
+                if ($(this).val() === '')
+                    return;
+
+                if(confirm("Achtung: Die Anwendung wird neu gestartet. Wirklich fortfahren?") !== true)
+                    return;    
+                    
+                // import key
+                that.backend.importKey(
+                    $(this).val(), 
+                    $('#key-menue-import-container .password').val(),
+                    function() {
+                        alertify.log('Key wurde erfolgreich importiert');
+                        
+                        // restart application
+                        document.location.reload(true);
+                    });
+            });
+            fileInput.trigger('click');
+        });
+        
+        // disable key managmement
+        $('#key-menue-disable-container .save').click(function() {
+            if(confirm("Achtung: Der private Schlüssel wird unwiderruflich entfernt?") !== true)
+                return;
+            that.backend.removeKey();
+            alertify.log('Schl&uuml;sselverwaltung wurde wieder deaktiviert');
             $('#key-menue-dropdown').toggle();
         });
     },

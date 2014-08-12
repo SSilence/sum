@@ -1,5 +1,6 @@
 if (typeof NodeRSA == 'undefined') NodeRSA = require('node-rsa');
 if (typeof crypto == 'undefined') crypto = require('crypto');
+if (typeof CryptoJS == 'undefined') CryptoJS = require('crypto-js');
 
 /**
  * helpers for encryption and decryption
@@ -39,36 +40,32 @@ define('sum-backend-crypto', Class.extend({
     
 
     /**
-     * decrypt with AES
-     * @return (string) decrypted text
-     * @param (string) password password
-     * @param (string) encryptdata encrypted data to decrypt
-     */
-    aesdecrypt: function(password, encryptdata) {
-        password = require('crypto').createHash('sha256').update(password).digest();
-        encryptdata = new Buffer(encryptdata, 'base64').toString('binary');
-        var decipher = require('crypto').createDecipheriv('aes-256-cbc', password, config.iv);
-        var decoded = decipher.update(encryptdata, 'binary', 'utf8');
-        decoded += decipher.final('utf8');
-        return decoded;
-    },
- 
- 
-    /**
      * encrypt with AES
      * @return (string) clear text
-     * @param (string) password password
      * @param (string) encryptdata cleartext to encrypt
+     * @param (string) password password
      */
-    aesencrypt: function(password, cleardata) {
-        password = require('crypto').createHash('sha256').update(password).digest();
-        var encipher = require('crypto').createCipheriv('aes-256-cbc', password, config.iv);
-        var encryptdata = encipher.update(cleardata, 'utf8', 'binary');
-        encryptdata += encipher.final('binary');
-        var encode_encryptdata = new Buffer(encryptdata, 'binary').toString('base64');
-        return encode_encryptdata;
+    aesencrypt: function(cleardata, password) {
+        var CryptoJS = require('crypto-js');
+        var iv = CryptoJS.enc.Hex.parse(config.iv);
+        var secret = CryptoJS.AES.encrypt(cleardata, password, { iv: iv });
+        return secret.toString();
     },
     
+    
+    /**
+     * decrypt with AES
+     * @return (string) decrypted text
+     * @param (string) encryptdata encrypted data to decrypt
+     * @param (string) password password
+     */
+    aesdecrypt: function(encryptdata, password) {
+        var CryptoJS = require('crypto-js');
+        var iv = CryptoJS.enc.Hex.parse(config.iv);
+        return CryptoJS.AES.decrypt(encryptdata, password, { iv: iv }).toString(CryptoJS.enc.Utf8);
+    },
+    
+ 
     
     /**
      * encrypt with RSA

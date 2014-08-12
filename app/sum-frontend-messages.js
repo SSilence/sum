@@ -61,6 +61,11 @@ define('sum-frontend-messages', Class.extend({
             text = this.frontendHelpers.emoticons(text);
         }
 
+        var signed = '';
+        if (typeof message.signed !== 'undefined' && message.signed === true) {
+            signed = '<span class="entry-sign ion-checkmark-round"></span>';
+        }
+        
         var markup = '<div class="entry-avatar">\
             <img src="' + this.backend.getAvatar(message.sender) + '" class="avatar" />\
         </div>\
@@ -69,6 +74,7 @@ define('sum-frontend-messages', Class.extend({
             <span class="entry-datetime" title="' + new Date(message.datetime).toLocaleString() + '">\
                 ' + this.frontendHelpers.dateAgo(message.datetime) + '\
             </span>\
+                ' + signed + '\
             <div class="entry-content">\
                 ' + text + '\
             </div>\

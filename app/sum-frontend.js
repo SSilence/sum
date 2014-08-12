@@ -85,10 +85,13 @@ define('sum-frontend', Class.extend({
         // initialize backend callbacks
         this.initBackendCallbacks();
 
-        // Userliste und Rooms updaten
+        // update userlist and rooms
         this.backend.updateUserlist(this.currentConversation);
         this.backend.updateRoomlist();
         this.backend.getConversation(this.currentConversation);
+        
+        // update public keys
+        this.updatePublicKeyList(this.backend.getPublicKeys());
         
         // check whether new version is available
         this.checkVersion();
@@ -246,6 +249,19 @@ define('sum-frontend', Class.extend({
         });
     },
 
+    
+    /**
+     * updates list of public keys
+     * @param (array) publicKeys
+     */
+    updatePublicKeyList: function(publicKeys) {
+        var el = $('#key-menue-keys');
+        el.find('option').remove();
+        $.each(publicKeys, function(index, publicKey) {
+            el.append('<option value="' + publicKey.username.escape() + '">' + publicKey.username.escape() + '</option>');
+        });
+    },
+    
 
     /**
      * checks for new sum version
@@ -461,5 +477,4 @@ define('sum-frontend', Class.extend({
         $('#conversationState').removeClass();
         $('#conversationState').addClass(state);
     }
-
 }));

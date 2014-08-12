@@ -117,14 +117,6 @@ body {
     border-top:1px solid #dadada;
 }
 
-.loggedin #nav,
-.loggedin #main {
-    display:block;
-}
-
-.loggedin #login {
-    display:none;
-}
 
 
 /*****************/
@@ -159,6 +151,7 @@ body {
     height:32px;
 }
 
+.remove,
 .save,
 .cancel {
     border-radius:3px;
@@ -172,9 +165,50 @@ body {
     border:1px solid #519339;
 }
 
+.remove,
 .cancel {
     background:#e45857;
     border:1px solid #C94B4B;
+}
+
+.fullscreen {
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    background:#54728c;
+    min-height: 100%;
+    color:#ffffff;
+    height:100%;
+}
+
+.error {
+    color:#ff0000;
+}
+
+.logo {
+    font-size:1.4em;
+    font-size:1.3em;
+    font-family: 'oswaldbook';
+}
+
+    .logo span {
+        margin-right:10px;
+    }
+    
+
+/**********/
+/* splash */
+/**********/
+
+#splash > div {
+    width:170px;
+    height:30px;
+    position:absolute;
+    left:50%;
+    top:50%;
+    margin-left:-85px;
+    margin-top:-15px;
 }
 
 
@@ -184,14 +218,7 @@ body {
 /*********/
 
 #login {
-    position:absolute;
-    left:0;
-    top:0;
-    width:100%;
-    background:#54728c;
-    min-height: 100%;
-    color:#ffffff;
-    height:100%;
+    display:none;
 }
 
     #login > div {
@@ -209,7 +236,6 @@ body {
     }
     
     #login > div > div {
-        font-size:1.4em;
         margin-bottom:20px;
     }
     
