@@ -103,7 +103,8 @@ module.exports = function(grunt) {
                   './node_modules/lockfile/**', 
                   './node_modules/node-rsa/**', 
                   './node_modules/base64-stream/**',
-                  './node_modules/request/**'
+                  './node_modules/request/**',
+                  './node_modules/crypto-js/**'
             ]
         },
 
