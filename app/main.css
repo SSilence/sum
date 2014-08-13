@@ -249,6 +249,14 @@ body {
         color:#bbbbbb;
         cursor:pointer;
     }
+    
+    #login input[type="password"] {
+        padding: 6px 12px;
+        color: #555;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    }
 
 
 
@@ -737,7 +745,26 @@ body {
                 margin-top:10px;
             }
             
-        
+            #key-menue-dropdown .cancel {
+                background:#f7f7f7;
+                border:1px solid #dadada;
+                color:#888;
+            }
+            
+            
+            #key-menue-dropdown select,
+            #key-menue-dropdown input[type="password"],
+            #key-menue-dropdown input[type="text"] {
+                padding: 6px 12px;
+                color: #555;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+                margin-bottom:5px;
+                width:90%;
+            }
+
+
     #content {
         padding:20px;
         padding-top:0;
@@ -835,6 +862,10 @@ body {
 
         .entry-status {
             color:#B8B8B8;
+        }
+        
+        .entry-sign-fail {
+            color:#ff0000;
         }
         
         .entry-content input {

@@ -62,9 +62,10 @@ define('sum-frontend-messages', Class.extend({
         }
 
         var signed = '';
-        if (typeof message.signed !== 'undefined' && message.signed === true) {
+        if (typeof message.signed !== 'undefined' && message.signed === true)
             signed = '<span class="entry-sign ion-checkmark-round"></span>';
-        }
+        else if (typeof message.signed !== 'undefined')
+            signed = '<span class="entry-sign-fail ion-close-round"></span>';
         
         var markup = '<div class="entry-avatar">\
             <img src="' + this.backend.getAvatar(message.sender) + '" class="avatar" />\

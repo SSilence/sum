@@ -64,15 +64,14 @@ define('sum-backend-server', Class.extend({
                 }
 
                 // check signature of request
-                var signed = false;
                 if (typeof req.sender === 'string' && typeof req.signature === 'string') {
                     var key = that.backend.getPublicKey(req.sender);
                     if (key !== false) {
                         var usersKey = new NodeRSA(key);
-                        signed = that.backendCrypto.verifyMessage(req, usersKey);
+                        req.signed = that.backendCrypto.verifyMessage(req, usersKey);
                     }
                 }
-                req.signed = signed;
+                
 
                 // is type given?
                 if(typeof req.type != "undefined") {
