@@ -933,6 +933,8 @@ define('sum-backend', Class.extend({
      */
     removeKey: function() {
         this.backendStorage.resetKey();
+        this.backendStorage.resetPublicKeys();
+        this.publicKeys = [];
     },
     
     

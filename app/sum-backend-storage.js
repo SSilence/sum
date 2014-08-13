@@ -115,6 +115,14 @@ define('sum-backend-storage', Class.extend({
     
     
     /**
+     * purge public keys
+     */
+    resetPublicKeys: function() {
+        localStorage.removeItem('publickeys');
+    },
+    
+    
+    /**
      * loads all public keys of other users
      * @return (array) of objects with username, key property
      */

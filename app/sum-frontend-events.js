@@ -441,6 +441,7 @@ define('sum-frontend-events', Class.extend({
             if(confirm("Achtung: Der private Schlüssel wird unwiderruflich entfernt?") !== true)
                 return;
             that.backend.removeKey();
+            that.frontend.updatePublicKeyList(that.backend.getPublicKeys());
             alertify.log('Schl&uuml;sselverwaltung wurde wieder deaktiviert');
             $('#key-menue-dropdown').toggle();
         });
