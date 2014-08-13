@@ -317,7 +317,7 @@ define('sum-backend', Class.extend({
     notification: function(image, title, text, conversation) {
         if(this.enableNotifications===true) {
             var that = this;
-            window.LOCAL_NW.desktopNotifications.notify(image, title, text, function() {
+            window.LOCAL_NW.desktopNotifications.notify(image, title.escape(), text.escape(), function() {
                 gui.Window.get().show();
                 if (typeof conversation != 'undefined') {
                     that.switchConversation(conversation);
