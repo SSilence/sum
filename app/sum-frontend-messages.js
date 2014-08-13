@@ -118,13 +118,8 @@ define('sum-frontend-messages', Class.extend({
         // render sent invite
         if(this.backend.isCurrentUser(message.sender)) {
             // show downloader
-            if (typeof message.loaded !== 'undefined') {
-                message.text += 'Heruntergeladen von: <ul class="entry-file-loaded">';
-                $.each(message.loaded, function(index, user) {
-                    message.text = message.text + '<li>' + user.escape() + '</li>';
-                });
-                message.text += '</ul>';
-            }
+            if (typeof message.loaded !== 'undefined')
+                message.text += 'Heruntergeladen von: ' + message.loaded.join(', ');
             
             // canceled
             if (typeof message.canceled === 'undefined') {

@@ -980,10 +980,10 @@ define('sum-backend', Class.extend({
                 
                 // key already in storage?
                 var found = $.grep(that.publicKeys, function (e){
-                    return e.username === request.username && e.key === request.key;
+                    return e.username === key.username;
                 });
                 if (found.length !== 0)
-                    return that.error('Schl&uuml;ssel wurde bereits importiert');
+                    return that.error('Schl&uuml;ssel f&uuml;r diesen Benutzer bereits vorhanden');
                 
                 // add key
                 that.publicKeys[that.publicKeys.length] = key;
