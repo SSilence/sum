@@ -74,12 +74,11 @@ $(document).ready(function() {
                 startApplication();  
         });
         
+        // password input field: enter
         $('#login .password').keydown(function(e) {
             if(e.which == 13)
                 $('#login input.save').click();
         });
-        
-        $('#login .password').focus();
         
         // reset button
         $('#login .reset').click(function() {
@@ -88,6 +87,9 @@ $(document).ready(function() {
             backend.removeKey();
             startApplication();
         });
+        
+        // initial focus password field
+        $('#login .password').focus();
         
         return;
     
