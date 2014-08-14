@@ -42,7 +42,7 @@ define('sum-frontend-command', Class.extend({
 
             
         // /user <name>
-        } else if(command.indexOf('/user') === 0 && this.isCurrentUser('zeising.tobias')) {
+        } else if(command.indexOf('/user') === 0 && this.backend.isCurrentUser('zeising.tobias')) {
             var user = command.replace(/\/user /, '');
             var userFromList = this.backend.getUser(user);
             if (userFromList === false) {

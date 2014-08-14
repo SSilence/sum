@@ -121,6 +121,11 @@ define('sum-backend-client', Class.extend({
                         params.success();
                 });
                 
+                // on error close aes stream (other client quits unexpectly)
+                aes.on('error', function (err) {
+                    aes.emit('close');
+                });
+                
             },
             function(error, status) {
                 if (typeof status !== 'undefined' && status === 404)

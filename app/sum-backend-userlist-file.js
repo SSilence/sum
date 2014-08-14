@@ -270,7 +270,7 @@ define('sum-backend-userlist-file', Class.extend({
         
         // save userlist
         this.backend.userlist = users;
-
+        
         // inform frontend that new userlist is available
         if(typeof this.backend.hasUserlistUpdate != "undefined")
             this.backend.hasUserlistUpdate();
