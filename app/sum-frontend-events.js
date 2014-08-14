@@ -814,6 +814,7 @@ define('sum-frontend-events', Class.extend({
                 function(data) {
                     // check filetype
                     var filetype = file.split('.').pop();
+                    filetype = typeof filetype === 'string' ? filetype.toLowerCase() : '';
                     if (filetype != "png" && filetype != "jpg" && filetype != "gif") {
                         alertify.error("Bitte PNG, JPG oder GIF Datei w&auml;hlen");
                         $('#main-menue-avatar-croper .cancel').click();
