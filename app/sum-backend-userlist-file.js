@@ -90,13 +90,10 @@ define('sum-backend-userlist-file', Class.extend({
         this.backendFilesystem.lock(function(err) {
             // can't get lock for exclusive userfile access? retry in random timeout
             if (typeof err != 'undefined') {
-                console.info(new Date() + " Lockfile nicht bekommen");
-                console.info(err);
                 var randomTimeout = Math.floor(Math.random() * config.lock_retry_maximum) + config.lock_retry_minimum;
                 window.setTimeout(function() {
                     that.userlistUpdateTimer();
                 }, randomTimeout);
-                console.info(new Date() + " random timeout " + randomTimeout);
                 return;
             }
 
