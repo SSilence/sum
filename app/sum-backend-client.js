@@ -121,9 +121,6 @@ define('sum-backend-client', Class.extend({
                         params.success();
                 });
                 
-                // catch aes decryption error when other user closes sum
-                response.on('end', function() { aes.emit('close'); });
-                response.on('close', function() { aes.emit('close'); });
             },
             function(error, status) {
                 if (typeof status !== 'undefined' && status === 404)
