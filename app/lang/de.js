@@ -9,6 +9,7 @@ var lang = {
     
     menue_show_status_messages: 'Statusmeldungen anzeigen',
     menue_set_new_avatar: 'neuen Avatar setzen',
+    menue_remove_avatar: 'Avatar entfernen',
     menue_about_sum: '&Uuml;ber SUM',
     menue_quit: 'SUM Beenden',
     
@@ -23,11 +24,11 @@ var lang = {
     menue_key_enable: 'Wenn die Schl&uuml;sselverwaltung aktiviert wird, so kann f&uuml;r Kommunikationspartner die Identit&auml;t sicher festgestellt werden.',
     menue_key_enable_save: 'aktivieren',
     menue_key_enable_password: 'F&uuml;r den eigenen Schl&uuml;ssel muss ein Passwort vergeben werden. Dieses muss bei jedem Start von SUM eingegeben werden.',
-    menue_key_enable_password: 'aktivieren',
+    menue_key_enable_password_save: 'aktivieren',
     menue_key_manage: 'Hier k&ouml;nnen Schl&uuml;ssel anderer Benutzer importiert werden. F&uuml;r diese Benutzer wird die Echtheit der Nachrichten gepr&uuml;ft.',
     menue_key_manage_add: 'hinzuf&uuml;gen',
     menue_key_manage_remove: 'entfernen',
-    menue_key_password: 'F&uuml;r den eigenen Schl&uuml;ssel muss ein Passwort vergeben werden. Dieses muss bei jedem Start von SUM eingegeben werden.',
+    menue_key_password_change: 'F&uuml;r den eigenen Schl&uuml;ssel muss ein Passwort vergeben werden. Dieses muss bei jedem Start von SUM eingegeben werden.',
     menue_key_reset: 'Der private Schl&uuml;ssel wird zur&uuml;ckgesetzt. Andere Benutzer m&uuml;ssen den &ouml;ffentlichen Schl&uuml;ssel erneut importieren.',
     menue_key_reset_save: 'zur&uuml;cksetzen',
     menue_key_share: 'Hiermit kann der eigene &ouml;ffentliche Schl&uuml;ssel exportiert und an andere Benutzer weitergegeben werden. Wenn diese denn Schl&uuml;ssel unter "Schl&uuml;ssel bearbeiten" importieren, k&ouml;nnen sie sehen, ob eine Nachricht wirklich von dir verschickt wurde.',
@@ -121,7 +122,9 @@ var lang = {
     frontend_events_invite_save: 'einladen',
     frontend_events_invite_cancel: 'abbrechen',
     frontend_events_invite_user_placeholder: 'Mitglieder...',
+    frontend_events_avatar_removed: 'Avatar wurde entfernt',
     
+    frontend_helpers_a_few_seconds_ago: 'vor wenigen Sekunden',
     frontend_helpers_a_minute_ago: 'vor einer Minute',
     frontend_helpers_a_hour_ago: 'vor einer Stunde',
     frontend_helpers_n_minutes_ago: 'vor %s Minuten',

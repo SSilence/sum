@@ -9,6 +9,7 @@ var lang = {
     
     menue_show_status_messages: 'show status notifications',
     menue_set_new_avatar: 'set new avatar',
+    menue_remove_avatar: 'remove avatar',
     menue_about_sum: 'about sum',
     menue_quit: 'quit sum',
     
@@ -23,11 +24,11 @@ var lang = {
     menue_key_enable: 'Enabling the key management allows you to verify the identify of your communication partner',
     menue_key_enable_save: 'enable',
     menue_key_enable_password: 'You have to set a password for your own key. You have to enter this password on startup of SUM',
-    menue_key_enable_password: 'enable',
+    menue_key_enable_password_save: 'enable',
     menue_key_manage: 'Here you can import the public keys of other users. For this user the identity will be verified.',
     menue_key_manage_add: 'add key',
     menue_key_manage_remove: 'remove',
-    menue_key_password: 'You have to set a password for your own key. You have to enter this password on startup of SUM',
+    menue_key_password_change: 'You have to set a password for your own key. You have to enter this password on startup of SUM',
     menue_key_reset: 'Your private key will be reseted. Other user have to import your public key again.',
     menue_key_reset_save: 'reset',
     menue_key_share: 'Here you can export your public key. Other users have to import this in the menue "manage keys"',
@@ -121,7 +122,9 @@ var lang = {
     frontend_events_invite_save: 'invite',
     frontend_events_invite_cancel: 'cancel',
     frontend_events_invite_user_placeholder: 'users...',
+    frontend_events_avatar_removed: 'avatar removed',
     
+    frontend_helpers_a_few_seconds_ago: 'a few seconds ago',
     frontend_helpers_a_minute_ago: 'a minute ago',
     frontend_helpers_a_hour_ago: 'one hour ago',
     frontend_helpers_n_minutes_ago: '%s minutes ago',

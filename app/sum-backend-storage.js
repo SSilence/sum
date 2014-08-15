@@ -28,6 +28,14 @@ define('sum-backend-storage', Class.extend({
     saveAvatar: function(avatar) {
         localStorage.avatar = avatar;
     },
+    
+    
+    /**
+     * remove avatar from local storage
+     */
+    removeAvatar: function() {
+        localStorage.removeItem('avatar');
+    },
 
     
     /**

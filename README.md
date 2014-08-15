@@ -7,9 +7,10 @@ Licensed under the GPLv3 license
 Version 0.8.0-SNAPSHOT
 
 
-SUM is a simple instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a file which will be stored at a shared network folder.
+SUM is a simple secure instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a file which will be stored at a shared network folder or optionally by an simple backend written in php. The communication between users is RSA encrypted. User can verify the identity of the other users by sharing their public keys.
 
 [![Build Status](https://travis-ci.org/SSilence/sum.svg?branch=master)](https://travis-ci.org/SSilence/sum) [![Dependency Status](https://david-dm.org/ssilence/sum.svg)](https://david-dm.org/ssilence/sum)
+
 
 
 RUN SUM
@@ -113,6 +114,7 @@ Following configuration parameters are available in config.ini:
 * ``lock_stale``: max age in milliseconds of lock file
 * ``lock_retry_minimum``: retry in minimum random ms when file is locked
 * ``lock_retry_maximum``: retry in maximum random ms when file is locked
+* ``notification_reminder``: timeout for notification about unread messages reminder in ms
 * ``excluded_ips``: ips which will be ignored on creating server
 * ``about_url``: url for menue entry 'about sum'
 * ``highlight_languages_value``: supported highlight.js languages in code input selection (replace value by language key)

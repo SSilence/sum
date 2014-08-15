@@ -68,7 +68,7 @@ define('sum-frontend-helpers', Class.extend({
         var ageInDays = ageInHours / 24;
 
         if(ageInMinutes<1)
-            return ' vor wenigen Sekunden';
+            return ' ' + lang.frontend_helpers_a_few_seconds_ago;
         if(ageInHours<1)
             return ageInMinutes < 2 ? lang.frontend_helpers_a_minute_ago : lang.frontend_helpers_n_minutes_ago.replace(/\%s/, Math.floor(ageInMinutes));
         if(ageInDays<1)

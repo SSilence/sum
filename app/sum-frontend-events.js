@@ -133,6 +133,13 @@ define('sum-frontend-events', Class.extend({
         $('#main-menue-avatar').click(function() {
             that.selectAvatar();
         });
+        
+        // menue: removeAvatar avatar
+        $('#main-menue-remove-avatar').click(function() {
+            that.backend.removeAvatar();
+            alertify.log(lang.frontend_events_avatar_removed);
+            $('#main-menue-dropdown').toggle();
+        });
 
         // menue: save avatar
         $('#main-menue-avatar-croper .save').click(function() {
@@ -319,8 +326,8 @@ define('sum-frontend-events', Class.extend({
         
         // manage keys: remove key
         $('#key-menue-manage-container .remove').click(function() {
-            if ($('#key-menue-keys').val() === '')
-                return that.error(lang.frontend_events_no_user_selected);
+            if ($('#key-menue-keys').val() === '' || $('#key-menue-keys').val() === null)
+                return alertify.error(lang.frontend_events_no_user_selected);
             
             // remove key
             $.each($('#key-menue-keys').val(), function(index, item) {

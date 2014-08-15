@@ -450,6 +450,18 @@ define('sum-backend', Class.extend({
 
     
     /**
+     * remove avatar
+     */
+    removeAvatar: function() {
+        this.backendStorage.removeAvatar();
+        var that = this;
+        this.backendUserlist.userlistUpdateUsersOwnFile(this.ip, this.port, this.key, undefined, this.version, function() {
+            that.backendUserlist.userlistUpdateTimer(this);
+        });
+    },
+    
+    
+    /**
      * get file from filesystem
      * @param file (string) path and filenam
      * @param success (function) contains file data
