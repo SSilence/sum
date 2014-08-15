@@ -24,8 +24,8 @@
             <div>
                 <div class="logo"><span class="ion-speakerphone"></span>SUM Messenger</div>
                 <div class="error"></div>
-                <label>Passwort:</label> <input type="password" class="password">
-                <input class="save" type="button" value="einloggen" /> <span class="reset">Schl&uuml;ssel zur&uuml;cksetzen</span>
+                <label>{lang.login_password}</label> <input type="password" class="password">
+                <input class="save" type="button" value="{lang.login_submit}" /> <span class="reset">{lang.login_reset_key}</span>
             </div>
         </div>
     
@@ -47,7 +47,7 @@
 
             <!-- rooms -->
             <div id="rooms">
-                <h1>R&auml;ume <span id="rooms-add" class="ion-plus-round"></span></h1>
+                <h1>{lang.nav_rooms} <span id="rooms-add" class="ion-plus-round"></span></h1>
 
                 <div id="rooms-wrapper">
                     <ul class="rooms">
@@ -84,87 +84,86 @@
                     <li id="main-menue-avatar-croper">
                         <input class="save" type="button" value="speichern" /> <input class="cancel" type="button" value="abbrechen" />
                     </li>
-                    <li id="main-menue-status"><span class="ion-checkmark-round"></span> Statusmeldungen anzeigen</li>
-                    <li id="main-menue-avatar"><span class="ion-image"></span> neuen Avatar setzen</li>
-                    <li id="main-menue-about"><span class="ion-information-circled"></span> &Uuml;ber SUM</li>
-                    <li id="main-menue-quit"><span class="ion-log-out"></span> SUM Beenden</li>
+                    <li id="main-menue-status"><span class="ion-checkmark-round"></span> {lang.menue_show_status_messages}</li>
+                    <li id="main-menue-avatar"><span class="ion-image"></span> {lang.menue_set_new_avatar}</li>
+                    <li id="main-menue-about"><span class="ion-information-circled"></span> {lang.menue_about_sum}</li>
+                    <li id="main-menue-quit"><span class="ion-log-out"></span> {lang.menue_quit}</li>
                 </ul>
                 
                 <!-- key menue -->
                 <ul id="key-menue-dropdown">
                     <!-- enable key management -->
                     <li id="key-menue-enable">
-                        <p>Wenn die Schl&uuml;sselverwaltung aktiviert wird, so kann f&uuml;r Kommunikationspartner die Identit&auml;t sicher festgestellt werden.</p>
-                        <input class="save" type="button" value="aktivieren" />
+                        <p>{lang.menue_key_enable}</p>
+                        <input class="save" type="button" value="{lang.menue_key_enable_save}" />
                     </li>
                     
                     <!-- enable key management password input -->
                     <li id="key-menue-enable-container">
-                        <p>F&uuml;r den eigenen Schl&uuml;ssel muss ein Passwort vergeben werden. Dieses muss bei jedem Start von SUM eingegeben werden.</p>
-                        <label>Passwort:</label> <input type="password" class="password" />
-                        <label>Passwort Wiederholung:</label> <input type="password"  class="password-again" />
-                        <input class="save" type="button" value="speichern" /> <input class="cancel" type="button" value="abbrechen" />
+                        <p>{lang.menue_key_enable_password}</p>
+                        <label>{lang.menue_key_password}</label> <input type="password" class="password" />
+                        <label>{lang.menue_key_password_again}</label> <input type="password"  class="password-again" />
+                        <input class="save" type="button" value="{lang.menue_key_save}" /> <input class="cancel" type="button" value="{lang.menue_key_cancel}" />
                     </li>
                     
                     <!-- manage keys -->
                     <li id="key-menue-manage-container">
-                        <p>Hier k&ouml;nnen Schl&uuml;ssel anderer Benutzer importiert werden. F&uuml;r diese Benutzer wird die Echtheit der Nachrichten gepr&uuml;ft.</p>
+                        <p>{lang.menue_key_manage}</p>
                         <select id="key-menue-keys" multiple="multiple">
                         </select>
-                        <input class="save" type="button" value="hinzuf&uuml;gen" /> <input class="remove" type="button" value="entfernen" /> <input class="cancel" type="button" value="zur&uuml;ck" />
+                        <input class="save" type="button" value="{lang.menue_key_manage_add}" /> <input class="remove" type="button" value="{lang.menue_key_manage_remove}" /> <input class="cancel" type="button" value="{lang.menue_key_back}" />
                     </li>
                     
                     <!-- change password -->
                     <li id="key-menue-password-container">
-                        <p>F&uuml;r den eigenen Schl&uuml;ssel muss ein Passwort vergeben werden. Dieses muss bei jedem Start von SUM eingegeben werden.</p>
-                        <label>altes Passwort:</label> <input type="password" class="old-password" />
-                        <label>neues Passwort:</label> <input type="password" class="new-password" />
-                        <label>neues Passwort Wiederholung:</label> <input type="password"  class="new-password-again" />
-                        <input class="save" type="button" value="speichern" /> <input class="cancel" type="button" value="abbrechen" />
+                        <p>{lang.menue_key_password}</p>
+                        <label>{lang.menue_key_password_old}</label> <input type="password" class="old-password" />
+                        <label>{lang.menue_key_password_new}</label> <input type="password" class="new-password" />
+                        <label>{lang.menue_key_password_new_again}</label> <input type="password"  class="new-password-again" />
+                        <input class="save" type="button" value="{lang.menue_key_save}" /> <input class="cancel" type="button" value="{lang.menue_key_cancel}" />
                     </li>
                     
                     <!-- reset key -->
                     <li id="key-menue-reset-container">
-                        <p>Der private Schl&uuml;ssel wird zur&uuml;ckgesetzt. Andere Benutzer m&uuml;ssen den &ouml;ffentlichen Schl&uuml;ssel erneut importieren.</p>
-                        <label>neues Passwort:</label> <input type="password" class="new-password" />
-                        <label>neues Passwort Wiederholung:</label> <input type="password"  class="new-password-again" />
-                        <input class="save" type="button" value="zur&uuml;cksetzen" /> <input class="cancel" type="button" value="abbrechen" />
+                        <p>{lang.menue_key_reset}</p>
+                        <label>{lang.menue_key_password_new}</label> <input type="password" class="new-password" />
+                        <label>{lang.menue_key_password_new_again}</label> <input type="password"  class="new-password-again" />
+                        <input class="save" type="button" value="{lang.menue_key_reset_save}" /> <input class="cancel" type="button" value="{lang.menue_key_cancel}" />
                     </li>
                                         
                     <!-- share public key -->
                     <li id="key-menue-share-container">
-                        <p>Hiermit kann der eigene &ouml;ffentliche Schl&uuml;ssel exportiert und an andere Benutzer weitergegeben werden. Wenn diese denn
-                        Schl&uuml;ssel unter "Schl&uuml;ssel bearbeiten" importieren, k&ouml;nnen sie sehen, ob eine Nachricht wirklich von dir verschickt wurde.</p>
-                        <input class="save" type="button" value="speichern" /> <input class="cancel" type="button" value="abbrechen" />
+                        <p>{lang.menue_key_share}</p>
+                        <input class="save" type="button" value="{lang.menue_key_save}" /> <input class="cancel" type="button" value="{lang.menue_key_cancel}" />
                     </li>
                     
                     <!-- export key -->
                     <li id="key-menue-export-container">
-                        <p>Hiermit kann der eigene &ouml;ffentliche und <b>private</b> Schl&uuml;ssel exportiert. Dieser darf auf keinen Fall an andere weitergegeben werden. Dies dient nur dazu um ein Backup von dem Schl&uuml;ssel zu erstellen.</p>
-                        <input class="save" type="button" value="speichern" /> <input class="cancel" type="button" value="abbrechen" />
+                        <p>{lang.menue_key_export}</p>
+                        <input class="save" type="button" value="{lang.menue_key_save}" /> <input class="cancel" type="button" value="{lang.menue_key_cancel}" />
                     </li>
                     
                     <!-- import key -->
                     <li id="key-menue-import-container">
-                        <p>Es muss das Passwort f&uuml;r den zu importierenden Schl&uuml;ssel eingegeben werden.</p>
-                        <label>Passwort:</label> <input type="password" class="password" />
-                        <input class="save" type="button" value="importieren" /> <input class="cancel" type="button" value="abbrechen" />
+                        <p>{lang.menue_key_import}</p>
+                        <label>{lang.menue_key_password}</label> <input type="password" class="password" />
+                        <input class="save" type="button" value="{lang.menue_key_import_save}" /> <input class="cancel" type="button" value="{lang.menue_key_cancel}" />
                     </li>
                     
                     <!-- disable key managmement -->
                     <li id="key-menue-disable-container">
-                        <p>Hiermit wird die Schl&uuml;sselverwaltung deaktiviert. Der private Schl&uuml;ssel wird zur&uuml;ckgesetzt.</p>
-                        <input class="save" type="button" value="deaktivieren" /> <input class="cancel" type="button" value="abbrechen" />
+                        <p>{lang.menue_key_disable}</p>
+                        <input class="save" type="button" value="{lang.menue_key_disable_save}" /> <input class="cancel" type="button" value="{lang.menue_key_cancel}" />
                     </li>
                                         
                     <!-- menue -->
-                    <li id="key-menue-manage" class="menue"><span class="ion-key"></span> Schl&uuml;ssel bearbeiten</li>
-                    <li id="key-menue-password" class="menue"><span class="ion-edit"></span> Schl&uuml;ssel Passwort &auml;ndern</li>
-                    <li id="key-menue-reset" class="menue"><span class="ion-refresh"></span> Schl&uuml;ssel zur&uuml;cksetzen</li>
-                    <li id="key-menue-share" class="menue"><span class="ion-share"></span> Schl&uuml;ssel weitergeben</li>
-                    <li id="key-menue-export" class="menue"><span class="ion-arrow-left-c"></span> Schl&uuml;ssel sichern</li>
-                    <li id="key-menue-import" class="menue"><span class="ion-arrow-right-c"></span> Schl&uuml;ssel wiederherstellen</li>
-                    <li id="key-menue-disable" class="menue"><span class="ion-close"></span> Schl&uuml;ssel deaktivieren</li>
+                    <li id="key-menue-manage" class="menue"><span class="ion-key"></span> {lang.menue_key_entry_manage}</li>
+                    <li id="key-menue-password" class="menue"><span class="ion-edit"></span> {lang.menue_key_entry_password}</li>
+                    <li id="key-menue-reset" class="menue"><span class="ion-refresh"></span> {lang.menue_key_entry_reset}</li>
+                    <li id="key-menue-share" class="menue"><span class="ion-share"></span> {lang.menue_key_entry_share}</li>
+                    <li id="key-menue-export" class="menue"><span class="ion-arrow-left-c"></span> {lang.menue_key_entry_export}</li>
+                    <li id="key-menue-import" class="menue"><span class="ion-arrow-right-c"></span> {lang.menue_key_entry_import}</li>
+                    <li id="key-menue-disable" class="menue"><span class="ion-close"></span> {lang.menue_key_entry_disable}</li>
                 </ul>
             </div>
 
@@ -186,7 +185,7 @@
                     <div id="message-add-menue" class="ion-chevron-up"></div>
 
                     <!-- input field/text -->
-                    <input type="text" id="message-input-textfield" placeholder="schreibe eine Nachricht..." />
+                    <input type="text" id="message-input-textfield" placeholder="{lang.message_input_placeholder}" />
 
                     <!-- button: show/hide emoticons popup -->
                     <div id="message-toggleemots"></div>
@@ -197,19 +196,19 @@
                     <!-- popup for inserting code -->
                     <div id="message-add-code-box">
                         <div id="message-add-code-box-inner">
-                            <div id="message-add-code-box-select"><select id="message-add-code-box-language" placeholder="Syntax-Highlighting"></select></div>
+                            <div id="message-add-code-box-select"><select id="message-add-code-box-language" placeholder="{lang.message_codebox_placeholder}"></select></div>
 
                             <textarea id="message-add-code-box-area"></textarea>
 
-                            <input id="message-add-code-box-send" class="save" type="button" value="senden" /> <input id="message-add-code-box-cancel" class="cancel" type="button" value="abbrechen" />
+                            <input id="message-add-code-box-send" class="save" type="button" value="{lang.message_codebox_send}" /> <input id="message-add-code-box-cancel" class="cancel" type="button" value="{lang.message_codebox_cancel}" />
                         </div>
                     </div>
 
                     <!-- menue for inserting code, files, ... -->
                     <ul id="message-add-menue-dropdown">
-                        <li id="message-add-menue-code"><span class="ion-android-developer"></span> Code senden</li>
-                        <li id="message-add-menue-file"><span class="ion-paperclip"></span> Datei senden</li>
-                        <li id="message-add-menue-clear"><span class="ion-trash-b"></span> Konversation l&ouml;schen</li>
+                        <li id="message-add-menue-code"><span class="ion-android-developer"></span> {lang.menue_message_code}</li>
+                        <li id="message-add-menue-file"><span class="ion-paperclip"></span> {lang.menue_message_file}</li>
+                        <li id="message-add-menue-clear"><span class="ion-trash-b"></span> {lang.menue_message_clear}</li>
                     </ul>
                 </div>
             </div>
@@ -230,6 +229,7 @@
         <script src="libs/highlight/highlight.pack.js"></script>
         <script src="libs/jquery.waitforimages/jquery.waitforimages.js"></script>
 
+        <script src="lang/en.js"></script>
         <script src="sum-init.js"></script>
         <script src="sum-emoticons.js"></script>
         <script src="sum-backend.js"></script>

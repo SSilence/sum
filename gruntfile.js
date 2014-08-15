@@ -21,6 +21,7 @@ module.exports = function(grunt) {
         jasmine : {
             src: [
                 'test/init-mocks.js',
+                'app/lang/en.js',
                 'app/libs/injector.js',
                 'app/libs/string-escape.js',
                 'app/sum-backend-client.js',
@@ -55,6 +56,7 @@ module.exports = function(grunt) {
             coverage: {
                 src: [
                     'test/init-mocks.js',
+                    'app/lang/en.js',
                     'app/libs/injector.js',
                     'app/libs/string-escape.js',
                     'app/sum-backend-client.js',
@@ -149,8 +151,8 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', ['versionupdater', 'jasmine', 'jshint', 'nodewebkit', 'shell']);
-    grunt.registerTask('check', ['jasmine', 'jshint']);
+    grunt.registerTask('default', ['versionupdater', 'jshint', 'jasmine', 'nodewebkit', 'shell']);
+    grunt.registerTask('check', ['jshint', 'jasmine']);
     grunt.registerTask('version', ['versionupdater']);
 
 };

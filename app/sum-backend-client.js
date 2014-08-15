@@ -50,13 +50,13 @@ define('sum-backend-client', Class.extend({
                     success(res);
                 }
             } else {
-                error('Bei der Kommunikation mit ' + receiver.username.escape() + ' ist ein Fehler aufgetreten', res.statusCode);
+                error(lang.backend_client_send_error.replace(/\%s/, receiver.username.escape()), res.statusCode);
             }
         });
 
         // on error
         request.on('error', function(e) {
-            error('Der Benutzer ' + receiver.username.escape() + ' ist nicht erreichber. Fehler: ' + e);
+            error(lang.backend_client_send_not_reachable.replace(/\%s1/, receiver.username.escape()).replace(/\%s2/, e.escape()));
         });
 
         request.write(encMessage);
@@ -93,7 +93,7 @@ define('sum-backend-client', Class.extend({
                 
                 // write file error
                 file.on('error', function() {
-                    params.error('Fehler beim Schreiben der Datei');
+                    params.error(lang.backend_filesystem_write_error);
                 });
                 
                 // on data chunk received
@@ -129,7 +129,7 @@ define('sum-backend-client', Class.extend({
             },
             function(error, status) {
                 if (typeof status !== 'undefined' && status === 404)
-                    params.error('Die Datei steht nicht mehr zum Download zur Verf&uuml;gung');
+                    params.error(lang.backend_client_file_not_available);
                 else
                     params.error(error);
             }

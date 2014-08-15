@@ -113,7 +113,7 @@ define('sum-backend-userlist-web', Class.extend({
         var that = this;
         
         if ($.isArray(encryptedUsers) === false) {
-            this.backend.error('invalid encrypted userlist from server');
+            this.backend.error(lang.backend_userlist_web_decrypt_error);
             this.restartUpdateTimer();
             return;
         }

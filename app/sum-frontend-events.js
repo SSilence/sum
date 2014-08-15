@@ -137,7 +137,7 @@ define('sum-frontend-events', Class.extend({
         // menue: save avatar
         $('#main-menue-avatar-croper .save').click(function() {
             if (that.selection===false) {
-                alertify.error('Bitte einen sichtbaren Bereich w&auml;hlen');
+                alertify.error(lang.frontend_events_save_avatar_no_selection);
                 return;
             }
             $('#main-menue-dropdown li').show();
@@ -181,7 +181,7 @@ define('sum-frontend-events', Class.extend({
 
         // menue: about
         $('#main-menue-about').click(function() {
-            gui.Shell.openExternal('http://www.sum-messenger.org');
+            gui.Shell.openExternal(config.about_url);
             $('#main-menue-dropdown').hide();
         });
 
@@ -214,13 +214,13 @@ define('sum-frontend-events', Class.extend({
         var validateNewPasswords = function(newPassword, newPasswordAgain) {
             // passwords given
             if($.trim(newPassword).length === 0 || $.trim(newPasswordAgain).length === 0) {
-                alertify.error('Bitte alle Passwort Felder ausf&uuml;llen');
+                alertify.error(lang.frontend_events_validate_passwords_missing_field);
                 return false;
             }
             
             // new passwords equals?
             if(newPassword !== newPasswordAgain) {
-                alertify.error('Die neuen Passw&ouml;rter stimmen nicht ueberein');
+                alertify.error(lang.frontend_events_validate_passwords_not_equal_passwords);
                 return false;
             }
             return true;
@@ -296,7 +296,7 @@ define('sum-frontend-events', Class.extend({
             // save key
             that.backend.saveKey(newPassword);
             
-            alertify.log('Schl&uuml;sselverwaltung wurde aktiviert');
+            alertify.log(lang.frontend_events_key_mangement_activated);
             showMenue();
         });
         
@@ -320,7 +320,7 @@ define('sum-frontend-events', Class.extend({
         // manage keys: remove key
         $('#key-menue-manage-container .remove').click(function() {
             if ($('#key-menue-keys').val() === '')
-                return that.error('Bitte einen Benutzer auswaehlern');
+                return that.error(lang.frontend_events_no_user_selected);
             
             // remove key
             $.each($('#key-menue-keys').val(), function(index, item) {
@@ -340,11 +340,11 @@ define('sum-frontend-events', Class.extend({
             
             // passwords given
             if($.trim(oldPassword).length === 0)
-                return alertify.error('Bitte alle Passwort Felder ausf&uuml;llen');
+                return alertify.error(lang.frontend_events_validate_passwords_missing_field);
             
             // old password correct?
             if(that.backend.checkKeyPassword(oldPassword) !== true)
-                return alertify.error('Das alte Passwort ist nicht korrekt');
+                return alertify.error(lang.frontend_events_invalid_old_password);
             
             // validate new passwords
             if (validateNewPasswords(newPassword, newPasswordAgain) === false)
@@ -354,12 +354,12 @@ define('sum-frontend-events', Class.extend({
             that.backend.saveKey(newPassword);
             
             showMenue();
-            alertify.log('Passwort wurde erfolgreich ge&auml;ndert');
+            alertify.log(lang.frontend_events_password_changed);
         });
         
         // reset key
         $('#key-menue-reset-container .save').click(function() {
-            if(confirm("Achtung: Die Anwendung wird neu gestartet. Wirklich fortfahren?") !== true)
+            if(confirm(lang.frontend_events_confirm_app_restart) !== true)
                 return;
                 
             // validate new passwords
@@ -386,7 +386,7 @@ define('sum-frontend-events', Class.extend({
 
                 // export key
                 that.backend.exportPublicKey($(this).val(), function() {
-                    alertify.log('Key wurde erfolgreich exportiert');
+                    alertify.log(lang.frontend_events_export_public_key_success);
                     $('#key-menue-dropdown').toggle();
                 });
             });
@@ -404,7 +404,7 @@ define('sum-frontend-events', Class.extend({
 
                 // export key
                 that.backend.exportKey($(this).val(), function() {
-                    alertify.log('Key wurde erfolgreich exportiert');
+                    alertify.log(lang.frontend_events_export_key_success);
                     $('#key-menue-dropdown').toggle();
                 });
             });
@@ -419,7 +419,7 @@ define('sum-frontend-events', Class.extend({
                 if ($(this).val() === '')
                     return;
 
-                if(confirm("Achtung: Die Anwendung wird neu gestartet. Wirklich fortfahren?") !== true)
+                if(confirm(lang.frontend_events_confirm_app_restart) !== true)
                     return;    
                     
                 // import key
@@ -427,7 +427,7 @@ define('sum-frontend-events', Class.extend({
                     $(this).val(), 
                     $('#key-menue-import-container .password').val(),
                     function() {
-                        alertify.log('Key wurde erfolgreich importiert');
+                        alertify.log(lang.frontend_events_import_key_success);
                         
                         // restart application
                         document.location.reload(true);
@@ -438,11 +438,11 @@ define('sum-frontend-events', Class.extend({
         
         // disable key managmement
         $('#key-menue-disable-container .save').click(function() {
-            if(confirm("Achtung: Der private Schlüssel wird unwiderruflich entfernt?") !== true)
+            if(confirm(lang.frontend_events_confirm_disable) !== true)
                 return;
             that.backend.removeKey();
             that.frontend.updatePublicKeyList(that.backend.getPublicKeys());
-            alertify.log('Schl&uuml;sselverwaltung wurde wieder deaktiviert');
+            alertify.log(lang.frontend_events_disable_success);
             $('#key-menue-dropdown').toggle();
         });
     },
@@ -544,13 +544,13 @@ define('sum-frontend-events', Class.extend({
         $('#message-add-code-box-send').click(function() {
             // code given?
             if ($('#message-add-code-box-area').val().trim().length===0) {
-                alertify.error('bitte eine Nachricht eingeben');
+                alertify.error(lang.frontend_events_enter_message);
                 return;
             }
 
             // chat channel selected?
             if (that.frontend.currentConversation===false) {
-                alertify.error('bitte einen Chat Kanal ausw&auml;hlen');
+                alertify.error(lang.frontend_events_no_chat_channel_selected);
                 return;
             }
 
@@ -609,13 +609,13 @@ define('sum-frontend-events', Class.extend({
 
             // message given?
             if (text.trim().length===0) {
-                alertify.error('bitte eine Nachricht eingeben');
+                alertify.error(lang.frontend_events_enter_message);
                 return;
             }
 
             // chat channel selected?
             if (that.frontend.currentConversation===false) {
-                alertify.error('bitte einen Chat Kanal ausw&auml;hlen');
+                alertify.error(lang.frontend_events_no_chat_channel_selected);
                 return;
             }
             
@@ -689,7 +689,7 @@ define('sum-frontend-events', Class.extend({
         // select room
         $('.rooms').delegate("li", "click", function() {
             if ( $(this).find('.rooms-outside').length>0 ) {
-                alertify.error('Bitte erst Einladung annehmen/ablehnen');
+                alertify.error(lang.frontend_events_select_room_not_in);
                 return;
             }
             var room = $(this).find('.name').html();
@@ -718,19 +718,19 @@ define('sum-frontend-events', Class.extend({
 
             // room name given?
             if($.trim(room).length===0) {
-                alertify.error('Bitte einen Namen für den Raum angeben');
+                alertify.error(lang.frontend_events_add_room_no_name);
                 return;
             }
 
             // don't add room with same name
             if(that.backend.doesRoomExists(room)) {
-                alertify.error('Raum mit dem Namen existiert bereits');
+                alertify.error(lang.frontend_events_room_already_exists);
                 return;
             }
 
             // don't add room of name of a user
             if(that.backend.getUser(room)!==false) {
-                alertify.error('Es existiert bereits ein Benutzer mit diesem Namen');
+                alertify.error(lang.frontend_events_user_with_roomname_exists);
                 return;
             }
 
@@ -739,7 +739,7 @@ define('sum-frontend-events', Class.extend({
 
             // hide popup
             $('.rooms-popup.add').remove();
-            alertify.log('Raum erfolgreich erstellt');
+            alertify.log(lang.frontend_events_room_added);
         });
 
         // rooms invitation: accept
@@ -769,7 +769,7 @@ define('sum-frontend-events', Class.extend({
             that.backend.inviteUsers(room, users);
 
             $('.rooms-popup.edit').remove();
-            alertify.log('Einladungen versendet');
+            alertify.log(lang.frontend_events_invites_sent);
         });
 
         // rooms: invite user cancel
@@ -779,7 +779,7 @@ define('sum-frontend-events', Class.extend({
 
         // rooms: leave
         $('.rooms').delegate("li .rooms-leave", "click", function(e) {
-            if(confirm("Raum wirklich verlassen?") !== true)
+            if(confirm(lang.frontend_events_confirm_room_leave) !== true)
                 return;
             var room = $(this).parent().find('.name').html();
             that.backend.leaveRoom(room);
@@ -816,7 +816,7 @@ define('sum-frontend-events', Class.extend({
                     var filetype = file.split('.').pop();
                     filetype = typeof filetype === 'string' ? filetype.toLowerCase() : '';
                     if (filetype != "png" && filetype != "jpg" && filetype != "gif") {
-                        alertify.error("Bitte PNG, JPG oder GIF Datei w&auml;hlen");
+                        alertify.error(lang.frontend_events_filetype_error);
                         $('#main-menue-avatar-croper .cancel').click();
                         return;
                     }
@@ -858,7 +858,7 @@ define('sum-frontend-events', Class.extend({
 
             // chat channel selected?
             if (that.frontend.currentConversation===false) {
-                alertify.error('bitte einen Chat Kanal ausw&auml;hlen');
+                alertify.error(lang.frontend_events_no_chat_channel_selected);
                 return;
             }
             
@@ -883,9 +883,9 @@ define('sum-frontend-events', Class.extend({
 
         // create popup with text and buttons
         var div = $(this.frontendHelpers.createRoomsPopup(element, "add"));
-        div.append('<input type="text" class="name selectize-input" placeholder="Name des Raums">');
+        div.append('<input type="text" class="name selectize-input" placeholder="' + lang.frontend_events_add_room_placeholder + '">');
         div.append(select);
-        div.append('<input class="save" type="button" value="speichern" /> <input class="cancel" type="button" value="abbrechen" />');
+        div.append('<input class="save" type="button" value="' + lang.frontend_events_add_room_save + '" /> <input class="cancel" type="button" value="' + lang.frontend_events_add_room_cancel + '" />');
 
         // make user select selectize.js
         $(select).selectize({plugins: ['remove_button']});
@@ -903,10 +903,10 @@ define('sum-frontend-events', Class.extend({
 
         // create popup with text and buttons
         var div = $(this.frontendHelpers.createRoomsPopup($('#rooms-add'), "edit"));
-        div.append('<p>Weitere Mitglieder in Gruppe einladen:</p>');
+        div.append('<p>' + lang.frontend_events_invite + '</p>');
         div.append('<input class="name" type="hidden" value="' + room.escape() + '" />');
         div.append(select);
-        div.append('<input class="save" type="button" value="einladen" /> <input class="cancel" type="button" value="abbrechen" />');
+        div.append('<input class="save" type="button" value="' + lang.frontend_events_invite_save + '" /> <input class="cancel" type="button" value="' + lang.frontend_events_invite_cancel + '" />');
 
         // make user select selectize.js
         $(select).selectize({plugins: ['remove_button']});
@@ -922,7 +922,7 @@ define('sum-frontend-events', Class.extend({
 
         // create select with all online users
         var select = document.createElement("select");
-        select.setAttribute('placeholder', 'Mitglieder...');
+        select.setAttribute('placeholder', lang.frontend_events_invite_user_placeholder);
         select.setAttribute('multiple', 'multiple');
         for (var i=0; i<users.length; i++) {
             var option = document.createElement("option");

@@ -42,6 +42,17 @@ $(document).ready(function() {
     });
 
     
+    // read language file and replace index.html language tags
+    lang = require('./lang/en.js');
+    lang = $.extend(lang, require('./lang' + '/' + config.language));
+    $('body > *:not(script)').each(function(index, item) {
+        $(item).html($(item).html().replace(/\{lang.([^\}]+)\}/g, function(all, key) {
+            return lang[key];
+        }));
+    });
+    config.room_all = lang.room_all;
+    
+    
     
     // start application
     
@@ -69,7 +80,7 @@ $(document).ready(function() {
         // login button
         $('#login input.save').click(function() {
             if (backend.loadKey($('#login .password').val()) === false)
-                $('#login .error').html('Schl&uuml;ssel konnte nicht geladen werden. Ung&uuml;ltiges Passwort?');
+                $('#login .error').html(lang.frontend_login_invalid_login);
             else
                 startApplication();  
         });
@@ -82,7 +93,7 @@ $(document).ready(function() {
         
         // reset button
         $('#login .reset').click(function() {
-            if(confirm("Soll der Schlüssel wirklich zurückgesetzt werden?") !== true)
+            if(confirm(lang.frontend_login_confirm_reset_key) !== true)
                 return;
             backend.removeKey();
             startApplication();

@@ -548,7 +548,7 @@ define('sum-backend', Class.extend({
 
         // check still in room?
         if (this.backendHelpers.isUserInRoomList(this.roomlist, room)) {
-            this.error('Du bist bereits in dem Raum');
+            this.error(lang.backend_already_in_room);
             return;
         }
 
@@ -702,13 +702,13 @@ define('sum-backend', Class.extend({
 
         // no room or user found?
         if (users.length===0) {
-            this.error('Ungültiger Benutzer oder Raum');
+            this.error(lang.backend_invalid_user_room);
             return;
         }
 
         // user is offline?
         if (users.length==1 && users[0].status == 'offline') {
-            this.error('Der Benutzer ist nicht online');
+            this.error(lang.backend_not_online);
             return;
         }
 
@@ -771,7 +771,7 @@ define('sum-backend', Class.extend({
     sendFileInvite: function(file, user) {
         // file available?
         if (fs.existsSync(file) === false)
-            this.error('Fehler beim Zugriff auf die Datei');
+            this.error(lang.backend_file_invite_access_error);
                 
         // file size?
         var fileSize = fs.statSync(file).size;
@@ -819,7 +819,7 @@ define('sum-backend', Class.extend({
     saveFile: function(params) {
         var user = this.getUser(params.message.sender);
         if (user === false || user.status === 'offline') {
-            this.error('user not found or user offline');
+            this.error(lang.backend_file_download_not_found);
             return;
         }
         
@@ -980,14 +980,14 @@ define('sum-backend', Class.extend({
             function(key) {
                 // validate key format
                 if (typeof key.username === 'undefined' || typeof key.key === 'undefined')
-                    return that.error('Ung&uuml;ltiges Dateiformat');
+                    return that.error(lang.backend_add_public_key_fileformat_error);
                 
                 // key already in storage?
                 var found = $.grep(that.publicKeys, function (e){
                     return e.username === key.username;
                 });
                 if (found.length !== 0)
-                    return that.error('Schl&uuml;ssel f&uuml;r diesen Benutzer bereits vorhanden');
+                    return that.error(lang.backend_add_public_key_already_imported);
                 
                 // add key
                 that.publicKeys[that.publicKeys.length] = key;
@@ -998,7 +998,7 @@ define('sum-backend', Class.extend({
                 success();
             },
             function() { 
-                that.error('Datei konnte nicht geladen werden');
+                that.error(lang.backend_file_read_error);
             });
     },
     
@@ -1064,7 +1064,7 @@ define('sum-backend', Class.extend({
                 that.saveKey(password);
                 success();
             } catch(err) {
-                that.error('Der Schl&uuml;ssel konnte nicht importiert werden');
+                that.error(lang.backend_import_key_error);
             }
             
         }, this.error);
@@ -1150,13 +1150,15 @@ define('sum-backend', Class.extend({
             var removed = this.backendHelpers.getUsersNotInListOne(newuserlist, this.userlist);
             var i = 0;
             var message;
+            var avatar = 'avatar.png';
             
             if (typeof this.userOnlineNotice != 'undefined')
                 for (i = 0; i < online.length; i++) {
                     message = online[i].username + ' ist jetzt online';
                     this.renderSystemMessage(message, online[i].username);
                     this.renderSystemMessage(message, config.room_all);
-                    this.userOnlineNotice(online[i].avatar, online[i].username);
+                    avatar = (typeof online[i].avatar !== 'undefined' && online[i].avatar.length > 0) ? online[i].avatar : 'avatar.png';
+                    this.userOnlineNotice(avatar, online[i].username);
                 }
 
             if (typeof this.userOfflineNotice != 'undefined')
@@ -1164,12 +1166,14 @@ define('sum-backend', Class.extend({
                     message = offline[i].username + ' ist jetzt offline';
                     this.renderSystemMessage(message, offline[i].offline);
                     this.renderSystemMessage(message, config.room_all);
-                    this.userOfflineNotice(offline[i].avatar, offline[i].username);
+                    avatar = (typeof offline[i].avatar !== 'undefined' && offline[i].avatar.length > 0) ? offline[i].avatar : 'avatar.png';
+                    this.userOfflineNotice(avatar, offline[i].username);
                 }
 
             if (typeof this.userRemovedNotice != 'undefined')
                 for (i = 0; i < removed.length; i++) {
-                    this.userRemovedNotice(removed[i].avatar, removed[i].username);
+                    avatar = (typeof removed[i].avatar !== 'undefined' && removed[i].avatar.length > 0) ? removed[i].avatar : 'avatar.png';
+                    this.userRemovedNotice(avatar, removed[i].username);
                 }
         }
         this.firstUpdate = false;

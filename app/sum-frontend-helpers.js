@@ -70,9 +70,9 @@ define('sum-frontend-helpers', Class.extend({
         if(ageInMinutes<1)
             return ' vor wenigen Sekunden';
         if(ageInHours<1)
-            return ageInMinutes < 2 ? 'vor einer Minute' : ('vor ' + Math.floor(ageInMinutes) + ' Minuten');
+            return ageInMinutes < 2 ? lang.frontend_helpers_a_minute_ago : lang.frontend_helpers_n_minutes_ago.replace(/\%s/, Math.floor(ageInMinutes));
         if(ageInDays<1)
-            return ageInHours < 2 ? 'vor einer Stunde' : ('vor ' + Math.floor(ageInHours) + ' Stunden');
+            return ageInHours < 2 ? lang.frontend_helpers_a_hour_ago : lang.frontend_helpers_n_hours_ago.replace(/\%s/, Math.floor(ageInHours));
 
         var dateObj = new Date(date*1000);
         return dateObj.getHours() + ':' + dateObj.getMinutes() + ':' + dateObj.getSeconds();

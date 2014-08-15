@@ -111,30 +111,30 @@ define('sum-frontend', Class.extend({
 
         // new room invite
         this.backend.onRoomInvite(function(room, user) {
-            var text = user.escape() + ' hat dich in den Raum ' + room.escape() + ' eingeladen';
+            var text = lang.frontend_room_invite.replace(/\%s1/, user.escape()).replace(/\%s2/, room.escape());
             alertify.log(text);
             that.backend.notification("group.png", "", text);
         });
 
         // user is now online
         this.backend.onUserOnlineNotice(function(avatar, text) {
-            text = text.escape() + ' ist jetzt online';
+            text = lang.frontend_online.replace(/\%s/, text.escape());
             alertify.log(text);
-            that.backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", "", text);
+            that.backend.notification(typeof avatar != "undefined" ? avatar : "avatar.png", "", text);
         });
 
         // register callback for a user goes offline
         this.backend.onUserOfflineNotice(function(avatar, text) {
-            text = text.escape() + ' ist jetzt offline';
+            text = lang.frontend_offline.replace(/\%s/, text.escape());
             alertify.log(text);
-            that.backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", "", text);
+            that.backend.notification(typeof avatar != "undefined" ? avatar : "avatar.png", "", text);
         });
 
         // register callback for a user has been removed
         this.backend.onUserRemovedNotice(function(avatar, text) {
-            text = text.escape() + ' verlaesst uns';
+            text = lang.frontend_leave.replace(/\%s/, text.escape());
             alertify.log(text);
-            that.backend.notification(typeof avatar != "undefined" ? avatar : "favicon.png", text);
+            that.backend.notification(typeof avatar != "undefined" ? avatar : "avatar.png", text);
         });
 
         // register callback for incoming new message
@@ -147,7 +147,7 @@ define('sum-frontend', Class.extend({
                 conversationId = message.receiver;
         
             // show system tray notification
-            that.backend.notification(that.backend.getAvatar(message.sender), "Neue Nachricht von " + message.sender.escape(), message.text, conversationId);
+            that.backend.notification(that.backend.getAvatar(message.sender), lang.frontend_new_message + message.sender.escape(), message.text, conversationId);
 
             if(that.currentConversation == conversationId)
                 that.backend.getConversation(that.currentConversation);
@@ -269,7 +269,7 @@ define('sum-frontend', Class.extend({
     checkVersion: function() {
         this.backend.isNewerVersionAvailable(function(version) {
             $('#newversion').show();
-            $('#newversion').html('SUM Version ' + version.escape() + ' ist verfügbar');
+            $('#newversion').html(lang.frontend_new_version.replace(/\%s/, version.escape()));
             $('#newversion').data('url', config.version_update.replace(/\?/, version.escape()));
         });
         var that = this;
@@ -370,9 +370,9 @@ define('sum-frontend', Class.extend({
         // show invite dialog
         $.each(invited, function(index, room) {
             var div = $(that.frontendHelpers.createRoomsPopup($('#rooms-add'), "invite"));
-            div.append('<p>Einladung f&uuml;r den Raum ' + room.name + ' von ' + room.invited + ' annehmen?</p>');
+            div.append('<p>' + lang.frontend_invitation.replace(/\%s1/, room.name.escape()).replace(/\%s2/, room.invited.escape()) + '</p>');
             div.append('<input class="name" type="hidden" value="' + room.name.escape() + '" />');
-            div.append('<input class="save" type="button" value="annehmen" /> <input class="cancel" type="button" value="ablehnen" />');
+            div.append('<input class="save" type="button" value="' + lang.frontend_invitation_accept + '" /> <input class="cancel" type="button" value="' + lang.frontend_invitation_decline + '" />');
         });
 
         // restore scroll state

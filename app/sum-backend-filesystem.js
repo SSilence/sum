@@ -24,7 +24,7 @@ define('sum-backend-filesystem', Class.extend({
 
         fs.writeFile(file, JSON.stringify(content, null, 4), 'utf8', function(err) {
             if(err) {
-                error('Fehler beim Schreiben der Userliste: ' + err);
+                error(lang.backend_filesystem_write_error.replace(/\%s/, err.toString().escape()));
             } else if (typeof success != 'undefined')
                 success();
         });
@@ -51,7 +51,7 @@ define('sum-backend-filesystem', Class.extend({
             try {
                 res = JSON.parse(data);
             } catch (er) {
-                error('json parse error');
+                error(lang.backend_filesystem_read_json_error);
             }
 
             success(res);
@@ -74,7 +74,7 @@ define('sum-backend-filesystem', Class.extend({
 
         fs.writeFile(file, content, 'utf8', function(err) {
             if(err) {
-                error('Fehler beim Schreiben der Userliste: ' + err);
+                error(lang.backend_filesystem_write_error.replace(/\%s/, err.toString().escape()));
             } else if (typeof success != 'undefined')
                 success();
         });
@@ -90,7 +90,7 @@ define('sum-backend-filesystem', Class.extend({
     readFile: function(file, success, error) {
         fs.readFile(file, function (err, data) {
             if (err) {
-                error('Datei konnte nicht geladen werden');
+                error(lang.backend_filesystem_read_error.replace(/\%s/, err.toString().escape()));
                 return;
             }
 

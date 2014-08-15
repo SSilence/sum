@@ -103,6 +103,7 @@ Following configuration parameters are available in config.ini:
 * ``user_file_extended``: file per user where avatar and key will be stored. ? will be replaced by the md5 hash of the username
 * ``lock_file``: path of the lock file for the user file. ensures that only one user access the user file
 * ``iv``: initialization vector for aes encryption
+* ``language``: language (de for German, en for English)
 * ``version_file``: path of version file
 * ``version_update``: link to version update file
 * ``version_update_intervall``: how often sum checks for new version
@@ -112,8 +113,8 @@ Following configuration parameters are available in config.ini:
 * ``lock_stale``: max age in milliseconds of lock file
 * ``lock_retry_minimum``: retry in minimum random ms when file is locked
 * ``lock_retry_maximum``: retry in maximum random ms when file is locked
-* ``room_all``: name of the default room for all users
 * ``excluded_ips``: ips which will be ignored on creating server
+* ``about_url``: url for menue entry 'about sum'
 * ``highlight_languages_value``: supported highlight.js languages in code input selection (replace value by language key)
 
 You can access the debugger by setting ``"toolbar": true`` in ``package.json``

@@ -112,20 +112,20 @@ define('sum-frontend-messages', Class.extend({
      */
     renderFileInvite: function (message) {
         // show filename
-        message.text = 'Download bereitgestellt:';
+        message.text = lang.frontend_messages_new_download;
         message.text = message.text + '<div class="entry-file-label">' + message.path + ' (' + this.frontendHelpers.humanFileSize(message.size) + ')</div>';
         
         // render sent invite
         if(this.backend.isCurrentUser(message.sender)) {
             // show downloader
             if (typeof message.loaded !== 'undefined')
-                message.text += 'Heruntergeladen von: ' + message.loaded.join(', ');
+                message.text = message.text + lang.frontend_messages_downloaded_by + message.loaded.join(', ');
             
             // canceled
             if (typeof message.canceled === 'undefined') {
                 message.text = message.text + '<input class="cancel entry-file-cancel" type="button" value="abbrechen" />';
             } else {
-                message.text = message.text + '<div class="entry-file-canceled">Die Datei wurde zur&uuml;ckgezogen</div>';
+                message.text = message.text + '<div class="entry-file-canceled">' + lang.frontend_messages_download_canceled + '</div>';
             }
         
         // render received invite
@@ -137,15 +137,15 @@ define('sum-frontend-messages', Class.extend({
             
             // canceled
             } else if (typeof message.canceled !== 'undefined' && message.progress !== 100) {
-                message.text = message.text + '<div class="entry-file-canceled">Die Datei wurde zur&uuml;ckgezogen</div>';
+                message.text = message.text + '<div class="entry-file-canceled">' + lang.frontend_messages_download_canceled + '</div>';
             
             // ready for download
             } else if (typeof message.progress === 'undefined' || message.progress === 0) {
-                message.text = message.text + '<input class="save entry-file-download" type="button" value="herunterladen" />';
+                message.text = message.text + '<input class="save entry-file-download" type="button" value="' + lang.frontend_messages_download + '" />';
             
             // open
             } else if (typeof message.saved !== 'undefined' && message.progress === 100) {
-                message.text = message.text + '<input class="save entry-file-open" type="button" value="&ouml;ffnen" /> <input class="cancel entry-file-download" type="button" value="erneut herunterladen" />';
+                message.text = message.text + '<input class="save entry-file-open" type="button" value="' + lang.frontend_messages_open + '" /> <input class="cancel entry-file-download" type="button" value="' + lang.frontend_messages_download_again + '" />';
             }
         }
 

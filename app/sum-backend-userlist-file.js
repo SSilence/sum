@@ -123,7 +123,7 @@ define('sum-backend-userlist-file', Class.extend({
 
                 // more than 5 retries failed
                 if (that.userfileError > 5)
-                    that.backend.error('Zugriff auf die Userliste nicht möglich');
+                    that.backend.error(lang.backend_userlist_file_read_error);
                 else
                     that.userfileError++;
 

@@ -25,7 +25,7 @@ define('sum-frontend-command', Class.extend({
         // /gamez
         if (command === '/gamez') {
             var gamez = this.backend.gamez().join(', ');
-            this.backend.renderSystemMessage('gamez gefunden: ' + gamez, conversation);
+            this.backend.renderSystemMessage(lang.frontend_command_gamez_found.replace(/\%s/, gamez.escape()), conversation);
 
             
         // /gamez <gamename>
@@ -33,9 +33,9 @@ define('sum-frontend-command', Class.extend({
             var available = this.backend.gamez();
             var game = command.replace(/\/gamez /, '');
             if ($.inArray(game, available) === -1) {
-                this.backend.renderSystemMessage('game ' + game + ' nicht gefunden', conversation);
+                this.backend.renderSystemMessage(lang.frontend_command_gamez_not_found.replace(/\%s/, game.escape()), conversation);
             } else {
-                this.backend.renderSystemMessage('starte ' + game, conversation);
+                this.backend.renderSystemMessage(lang.frontend_command_gamez_starting.replace(/\%s/, game.escape()), conversation);
                 var that = this;
                 this.backend.openGame(game);
             }
@@ -46,9 +46,9 @@ define('sum-frontend-command', Class.extend({
             var user = command.replace(/\/user /, '');
             var userFromList = this.backend.getUser(user);
             if (userFromList === false) {
-                this.backend.renderSystemMessage('benutzer ' + user + ' nicht gefunden', conversation);
+                this.backend.renderSystemMessage(lang.frontend_command_user_not_found.replace(/\%s/, user.escape()), conversation);
             } else {
-                var markup = 'informationen zum benutzer ' + user + '<br /><br />';
+                var markup = lang.frontend_command_user_information.replace(/\%s/, user.escape()) + '<br /><br />';
                 $.each(userFromList, function(key, value) {
                     if (key === 'rooms')
                         value = JSON.stringify(value);
@@ -65,7 +65,7 @@ define('sum-frontend-command', Class.extend({
             
         // /version
         } else if(command == '/version') {
-            this.backend.renderSystemMessage('version: ' + this.backend.version, conversation);
+            this.backend.renderSystemMessage(lang.frontend_command_version + this.backend.version, conversation);
 
             
         // /versions
@@ -74,13 +74,13 @@ define('sum-frontend-command', Class.extend({
             $.each(this.backend.userlist, function(index, user) {
                 versions = versions + user.username + ': ' + user.version + '<br />\n';
             });
-            this.backend.renderSystemMessage('versions of users<br />\n' + versions, conversation);
+            this.backend.renderSystemMessage(lang.frontend_command_versions_of_users + '<br />\n' + versions, conversation);
         
         
         // /reload
         } else if(command == '/reload') {
             this.backend.backendUserlist.userlistUpdateTimer();
-            this.backend.renderSystemMessage('userlist reload', conversation);
+            this.backend.renderSystemMessage(lang.frontend_command_reload, conversation);
             
             
         // /restart
@@ -95,7 +95,7 @@ define('sum-frontend-command', Class.extend({
         
         // unknown
         } else {
-            this.backend.renderSystemMessage('unbekanntes Kommando', conversation);
+            this.backend.renderSystemMessage(lang.frontend_command_unknown, conversation);
         }
         
     }

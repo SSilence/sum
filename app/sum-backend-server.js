@@ -42,7 +42,7 @@ define('sum-backend-server', Class.extend({
 
             // error occured
             request.addListener('error', function(error){
-                that.backend.error('server init error: ' + error);
+                that.backend.error(lang.backend_server_init_error.replace(/\%s/, error));
                 next(error);
             });
 
@@ -57,7 +57,7 @@ define('sum-backend-server', Class.extend({
                     var reqStr = that.backendCrypto.rsadecrypt(that.backend.key, body);
                     req = JSON.parse(reqStr);
                 } catch(e) {
-                    that.backend.error('Ungueltige Nachricht erhalten (verschluesselung oder JSON konnte nicht verarbeitet werden)');
+                    that.backend.error(lang.backend_server_invalid_message);
                     response.writeHeader(400, {"Content-Type": "text/plain"});
                     response.end();
                     return;
@@ -77,7 +77,7 @@ define('sum-backend-server', Class.extend({
                 if(typeof req.type != "undefined") {
                     that.handle(req, response);
                 } else {
-                    that.backend.error('invalid request received');
+                    that.backend.error(lang.backend_server_invalid_message);
                     response.writeHeader(400, {"Content-Type": "text/plain"});
                     response.end();
                 }
@@ -189,7 +189,7 @@ define('sum-backend-server', Class.extend({
         //     'signature': <signed by other user>
         // };
         } else if(request.type == 'room-invite-accept') {
-            this.backend.renderSystemMessage(request.sender + ' hat die Einladung angenommen', request.room);
+            this.backend.renderSystemMessage(lang.backend_server_invite_accepted.replace(/\%s/, request.sender), request.room);
             response.writeHeader(200, {"Content-Type": "text/plain"});
             response.end();
 
@@ -204,7 +204,7 @@ define('sum-backend-server', Class.extend({
             //    'signature': <signed by other user>
             // };
         } else if(request.type == 'room-invite-decline') {
-            this.backend.renderSystemMessage(request.sender + ' hat die Einladung abgelehnt', request.room);
+            this.backend.renderSystemMessage(lang.backend_server_invite_declined.replace(/\%s/, request.sender), request.room);
             response.writeHeader(200, {"Content-Type": "text/plain"});
             response.end();
 
@@ -263,8 +263,8 @@ define('sum-backend-server', Class.extend({
             this.backend.finishedFileRequest(request.file, request.sender);
 
         } else {
-            this.backend.error('Ungültigen Nachrichtentyp erhalten: ' + JSON.stringify(request));
-            response.writeHeader(200, {"Content-Type": "text/plain"});
+            this.backend.error(lang.backend_server_invalid_message_type.replace(/\%s/, JSON.stringify(request).escape()));
+            response.writeHeader(400, {"Content-Type": "text/plain"});
             response.end();
         }
     },
@@ -276,7 +276,7 @@ define('sum-backend-server', Class.extend({
      * @param (object) response
      */
     sendError: function(request, response) {
-        this.backend.error('Ungültige Nachricht erhalten: ' + JSON.stringify(request));
+        this.backend.error(lang.backend_server_invalid_message_fields.replace(/\%s/, JSON.stringify(request).escape()));
         response.writeHeader(400, {"Content-Type": "text/plain"});
         response.end();
     },
