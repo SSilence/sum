@@ -56,7 +56,7 @@ define('sum-backend-client', Class.extend({
 
         // on error
         request.on('error', function(e) {
-            error(lang.backend_client_send_not_reachable.replace(/\%s1/, receiver.username.escape()).replace(/\%s2/, e.escape()));
+            error(lang.backend_client_send_not_reachable.replace(/\%s1/, receiver.username.escape()).replace(/\%s2/, e.toString().escape()));
         });
 
         request.write(encMessage);

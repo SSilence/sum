@@ -196,8 +196,6 @@ define('sum-backend', Class.extend({
             gui.Window.get().focus();
         });
     },
-
-
     
 
 
@@ -319,6 +317,11 @@ define('sum-backend', Class.extend({
             var that = this;
             title = typeof title !== 'undefined' ? title.escape() : '';
             text = typeof text !== 'undefined' ? text.escape() : '';
+            image = image.length === 0 ? 'favicon.png' : image;
+            
+            if (image.indexOf('data:') === -1)
+                image = '../../' + image;
+            
             window.LOCAL_NW.desktopNotifications.notify(image, title, text, function() {
                 gui.Window.get().show();
                 if (typeof conversation != 'undefined') {
@@ -1104,6 +1107,15 @@ define('sum-backend', Class.extend({
     
     
     /**
+     * show unread items at icon
+     * @param (int) value to set (only numbers)
+     */
+    setBadge: function(value) {
+        gui.Window.get().setBadgeLabel(""+value);
+    },
+    
+    
+    /**
      * quit application
      */
     quit: function() {
@@ -1150,7 +1162,7 @@ define('sum-backend', Class.extend({
             var removed = this.backendHelpers.getUsersNotInListOne(newuserlist, this.userlist);
             var i = 0;
             var message;
-            var avatar = 'avatar.png';
+            var avatar;
             
             if (typeof this.userOnlineNotice != 'undefined')
                 for (i = 0; i < online.length; i++) {

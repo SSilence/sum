@@ -144,6 +144,7 @@ var lang = {
     frontend_invitation: 'Accept invitation in room %s1 from %s2?',
     frontend_invitation_accept: 'accept',
     frontend_invitation_decline: 'decline',
+    frontend_notifications_reminder: '%s unread messages',
     
     frontend_login_invalid_login: 'Can\'t load key. Invalid password?',
     frontend_login_confirm_reset_key: 'Really reset the key?'

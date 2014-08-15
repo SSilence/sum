@@ -93,6 +93,9 @@ define('sum-frontend', Class.extend({
         // update public keys
         this.updatePublicKeyList(this.backend.getPublicKeys());
         
+        // initialize timer for unread messages
+        this.initNotificationReminder();
+        
         // check whether new version is available
         this.checkVersion();
     },
@@ -156,6 +159,8 @@ define('sum-frontend', Class.extend({
                     that.unreadMessagesCounter[conversationId] = 0;
                 }
                 that.unreadMessagesCounter[conversationId]++;
+                var unread = that.frontendHelpers.countAllUnreadMessages(that.unreadMessagesCounter);
+                that.backend.setBadge(unread);
                 that.backend.updateUserlist(that.currentConversation);
                 that.backend.updateRoomlist();
             }
@@ -249,6 +254,20 @@ define('sum-frontend', Class.extend({
         });
     },
 
+    
+    /**
+     * starts timer for reminder which opens in fix intervall a notification if a unread message is available
+     */
+    initNotificationReminder: function() {
+        var that = this;
+        setTimeout(function() {
+            var unread = that.frontendHelpers.countAllUnreadMessages(that.unreadMessagesCounter);
+            if(unread>0)
+                that.backend.notification('', lang.frontend_notifications_reminder.replace(/\%s/, unread), '');
+            that.initNotificationReminder();
+        }, config.notification_reminder);
+    },
+    
     
     /**
      * updates list of public keys
@@ -390,7 +409,11 @@ define('sum-frontend', Class.extend({
         this.backend.updateUserlist(this.currentConversation);
         this.backend.updateRoomlist();
         this.updateConversationHeader();
-
+        
+        // update badge
+        var unread = this.frontendHelpers.countAllUnreadMessages(this.unreadMessagesCounter);
+        this.backend.setBadge(unread > 0 ? unread : "");
+        
         // show messages
         var that = this;
         var onlyAppendNewMessages = false;

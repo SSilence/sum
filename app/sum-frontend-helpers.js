@@ -212,5 +212,19 @@ define('sum-frontend-helpers', Class.extend({
             ++u;
         } while(bytes >= thresh);
         return bytes.toFixed(1) + ' '+units[u];
+    },
+    
+    
+    /**
+     * returns sum of all unread messages in all conversations
+     * @return (int) amount of unread messages
+     * @param (array) conversations array
+     */
+    countAllUnreadMessages: function(conversations) {
+        var sum = 0;
+        $.each(conversations, function(index, item) {
+            sum += item;
+        });
+        return sum;
     }
 }));
