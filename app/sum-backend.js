@@ -1123,7 +1123,8 @@ define('sum-backend', Class.extend({
      * @param (int) value to set (only numbers)
      */
     setBadge: function(value) {
-        gui.Window.get().setBadgeLabel(""+value);
+        if (typeof gui.Window.get().setBadgeLabel != 'undefined')
+            gui.Window.get().setBadgeLabel(""+value);
     },
     
     

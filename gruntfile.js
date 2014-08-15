@@ -154,5 +154,6 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['versionupdater', 'jshint', 'jasmine', 'nodewebkit', 'shell']);
     grunt.registerTask('check', ['jshint', 'jasmine']);
     grunt.registerTask('version', ['versionupdater']);
+    grunt.registerTask('build', ['nodewebkit']);
 
 };

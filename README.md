@@ -1,13 +1,13 @@
 SUM - S Ultimate Messenger
 ==========================
 
-Copyright (c) 2013 Tobias Zeising, tobias.zeising@aditu.de  
+Copyright (c) 2014 Tobias Zeising, tobias.zeising@aditu.de  
 http://www.aditu.de  
 Licensed under the GPLv3 license  
 Version 0.8.0-SNAPSHOT
 
 
-SUM is a simple secure instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a file which will be stored at a shared network folder or optionally by an simple backend written in php. The communication between users is RSA encrypted. User can verify the identity of the other users by sharing their public keys.
+SUM is a simple secure instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a file which will be stored at a shared network folder or optionally by an simple backend written in php. The communication between users is RSA encrypted. User can verify the identity of the other users by sharing their public keys. SUM is ideal for communication in company's because no messages will be stored anywhere. The integrated public/private key management allows a encrypted communication and ensures a tap-proof and tamper-proof messaging.
 
 [![Build Status](https://travis-ci.org/SSilence/sum.svg?branch=master)](https://travis-ci.org/SSilence/sum) [![Dependency Status](https://david-dm.org/ssilence/sum.svg)](https://david-dm.org/ssilence/sum)
 
@@ -15,6 +15,31 @@ SUM is a simple secure instant messenger for local networks. No server infrastru
 
 RUN SUM
 -------
+
+You can start sum by executing sum.exe. You have to configure at least your backend for using SUM in your own network. Create a config.ini in the folder of your sum.exe.
+
+If you use a shared folder as backend then insert following values in your config.ini:
+```
+userlist = file
+user_file = //myserver/simfolder/userfile.json
+user_file_extended = //myserver/simfolder/?
+lock_file = //myserver/simfolder/userfile.lock
+```
+
+If you use the php based backend, then upload backend.php on your server and configure:
+```
+userlist = web
+web_url = http://myserver/sum/backend.php
+web_aes_key = mysecretpassword
+sha256_salt = anysaltstring
+```
+
+The AES key will be used for encrypting all user informations before putting them on your server. This ensures that no internal information (like IP addresses or usernames) will be accessible outside your closed network.
+
+
+
+RUN SUM FOR DEVELOPEMENT
+------------------------
 
  1. install [node.js][1]
  2. install node webkit: ```npm install nodewebkit -g```
@@ -60,9 +85,9 @@ You have three options for running unit tests:
 CONFIG
 ------
 
-You can configure SUM by adding config.ini in your base dir (same folder where package.json, and README.md is). 
-Per default all configuration values taken from app/default.ini. By setting single values in your config.ini you 
-can overwrite them. 
+You can configure SUM by adding config.ini in your base dir (same folder where package.json, and README.md is). Using compiled sum.exe you can place the config.ini in the same folder as your sum.exe is. You can also enter the path of the config.ini as command line argument for sum.exe.
+
+Per default all configuration values taken from app/default.ini. By setting single values in your config.ini you can overwrite them. 
 
 example config.ini in base folder:
 ```
@@ -74,7 +99,7 @@ lock_file = //myserver/simfolder/userfile.lock
 You can also set a config as parameter:
 
 ```
-nodewebkit . c:\tmp\otherconfig.ini
+nodewebkit c:\tmp\otherconfig.ini
 ```
 
 or 
@@ -85,7 +110,7 @@ SUM.exe c:\tmp\otherconfig.ini
 
 For only setting another username just use a username as parameter:
 ```
-nodewebkit . KarlMustermann
+nodewebkit KarlMustermann
 ```
 
 or

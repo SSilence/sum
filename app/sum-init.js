@@ -1,6 +1,7 @@
 if (typeof gui == 'undefined') gui = require('nw.gui');
 if (typeof ini == 'undefined') ini = require('ini');
 if (typeof fs == 'undefined') fs = require('fs');
+if (typeof path == 'undefined') path = require('path');
 
 /**
  * startup sim
@@ -16,19 +17,25 @@ $(document).ready(function() {
     config = ini.parse(fs.readFileSync('./app/default.ini', 'utf-8'));
 
     // overwrite values from second, optional config.ini
-    if (fs.existsSync('./config.ini')) {
-        var additionalConfig = ini.parse(fs.readFileSync('./config.ini', 'utf-8'));
-        $.extend(config, additionalConfig);
-    }
-
+    if (fs.existsSync('./config.ini'))
+        $.extend(config, ini.parse(fs.readFileSync('./config.ini', 'utf-8')));
+    
+    var additionalConfig = path.dirname(process.execPath) + '/config.ini';
+    if (fs.existsSync(additionalConfig))
+        $.extend(config, ini.parse(fs.readFileSync(additionalConfig, 'utf-8')));
+    
+    
     // load alternative config given by command line?
     if (gui.App.argv.length > 0) {
 
-        // argument is config file?
+        // argument is absolute config file?
         if (fs.existsSync(gui.App.argv[0])) {
-            var externalConfig = ini.parse(fs.readFileSync(gui.App.argv[0], 'utf-8'));
-            $.extend(config, externalConfig);
-
+            $.extend(config, ini.parse(fs.readFileSync(gui.App.argv[0], 'utf-8')));
+        
+        // argument is relative config file?
+        } else if (fs.existsSync(path.dirname(process.execPath) + '/' + gui.App.argv[0])) {
+            $.extend(config, ini.parse(fs.readFileSync(path.dirname(process.execPath) + '/' + gui.App.argv[0], 'utf-8')));
+            
         // otherwise use argument as username
         } else {
             config.username = gui.App.argv[0];
