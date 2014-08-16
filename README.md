@@ -6,6 +6,7 @@ http://www.aditu.de
 Licensed under the GPLv3 license  
 Version 0.8.0-SNAPSHOT
 
+![SUM Screenshot][1]
 
 SUM is a simple secure instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a file which will be stored at a shared network folder or optionally by an simple backend written in php. The communication between users is RSA encrypted. User can verify the identity of the other users by sharing their public keys. SUM is ideal for communication in company's because no messages will be stored anywhere. The integrated public/private key management allows a encrypted communication and ensures a tap-proof and tamper-proof messaging.
 
@@ -41,7 +42,7 @@ The AES key will be used for encrypting all user informations before putting the
 RUN SUM FOR DEVELOPEMENT
 ------------------------
 
- 1. install [node.js][1]
+ 1. install [node.js][2]
  2. install node webkit: ```npm install nodewebkit -g```
  3. now you can start sum with ```nodewebkit``` from command line
 
@@ -51,9 +52,9 @@ BUILD RELEASE (only Windows)
 ----------------------------
 
 this has to be done only once:
- 1. install [InnoSetup][2]
+ 1. install [InnoSetup][3]
  2. add InnoSetup program directory to path variable
- 3. install [node.js][1]
+ 3. install [node.js][4]
  4. install grunt: ```npm install -g grunt-cli```
  5. install all developments node_modules: ```npm install```
 
@@ -179,5 +180,8 @@ Special thanks to the great programmers of this libraries which will be used in 
 * CryptoJS: https://code.google.com/p/crypto-js/
 * Icon: http://premiumitsolutions.com.au/seo/free-seo-icon-set/
 
-  [1]: http://nodejs.org/
-  [2]: http://www.jrsoftware.org/isinfo.php
+
+  [1]: https://raw.githubusercontent.com/SSilence/sum/master/website/screenshot_medium.png
+  [2]: http://nodejs.org/
+  [3]: http://www.jrsoftware.org/isinfo.php
+  [4]: http://nodejs.org/
