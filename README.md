@@ -161,25 +161,26 @@ Special thanks to the great programmers of this libraries which will be used in 
 * node-rsa: https://github.com/rzcoder/node-rsa
 * ini: https://github.com/isaacs/ini
 * alertify: http://fabien-d.github.io/alertify.js/
-* ionicons: http://ionicons.com/
 * jquery custom content scroller: http://manos.malihu.gr/jquery-custom-content-scroller/
-* Font Oswald: http://www.fontsquirrel.com/fonts/oswald
 * jCrop: http://deepliquid.com/content/Jcrop.html
 * selectize.js: http://brianreavis.github.io/selectize.js/
 * highlight.js: http://highlightjs.org/
 * Simple Class Creation and Inheritance: http://ejohn.org/blog/simple-javascript-inheritance/
-* WebIconset.com Emoticons: http://www.webiconset.com/emoticons-smilies-icon-set/
-* Website Template: http://html5up.net/
 * grunt: http://gruntjs.com/
 * grunt node webkit builder: https://github.com/mllrsohn/grunt-node-webkit-builder
 * grunt shell: https://github.com/sindresorhus/grunt-shell
 * grunt contrib jasmine: https://github.com/gruntjs/grunt-contrib-jasmine
 * grunt coverage template: https://github.com/maenu/grunt-template-jasmine-istanbul
+* grunt contrib compress: https://github.com/gruntjs/grunt-contrib-compress
 * jasmine unit test: http://jasmine.github.io/
 * wait for images: https://github.com/alexanderdickson/waitForImages
 * request: https://github.com/mikeal/request
 * CryptoJS: https://code.google.com/p/crypto-js/
-* Icon: http://premiumitsolutions.com.au/seo/free-seo-icon-set/
+* ionicons: http://ionicons.com/
+* WebIconset.com Emoticons: http://www.webiconset.com/emoticons-smilies-icon-set/
+* Website Template: http://html5up.net/
+* Application Icon: http://premiumitsolutions.com.au/seo/free-seo-icon-set/
+* Font Oswald: http://www.fontsquirrel.com/fonts/oswald
 
 
   [1]: https://raw.githubusercontent.com/SSilence/sum/master/website/screenshot_medium.png
