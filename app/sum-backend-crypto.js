@@ -22,7 +22,7 @@ define('sum-backend-crypto', Class.extend({
     /**
      * returns sha256 hash
      * @return (string) sha256 hash
-     * @param (string) text to hash
+     * @param text (string) text to hash
      */
     sha256: function(text) {
         return require('crypto').createHash('sha256').update(config.sha256_salt + text).digest('hex');
@@ -32,7 +32,7 @@ define('sum-backend-crypto', Class.extend({
     /**
      * returns md5 hash
      * @return (string) md5 hash
-     * @param (string) text to hash
+     * @param text (string) text to hash
      */
     md5: function(text) {
         return require('crypto').createHash('md5').update(text).digest('hex');
@@ -42,8 +42,8 @@ define('sum-backend-crypto', Class.extend({
     /**
      * encrypt with AES
      * @return (string) clear text
-     * @param (string) encryptdata cleartext to encrypt
-     * @param (string) password password
+     * @param cleardata (string) encryptdata cleartext to encrypt
+     * @param password (string) password
      */
     aesencrypt: function(cleardata, password) {
         var CryptoJS = require('crypto-js');
@@ -56,8 +56,8 @@ define('sum-backend-crypto', Class.extend({
     /**
      * decrypt with AES
      * @return (string) decrypted text
-     * @param (string) encryptdata encrypted data to decrypt
-     * @param (string) password password
+     * @param encryptdata (string) encrypted data to decrypt
+     * @param password (string) password
      */
     aesdecrypt: function(encryptdata, password) {
         var CryptoJS = require('crypto-js');
@@ -81,8 +81,8 @@ define('sum-backend-crypto', Class.extend({
     /**
      * decrypt with RSA
      * @return (string) decrypted string
-     * @param (string) key public key for decryption
-     * @param (mixed) data for decryption
+     * @param key (string) public key for decryption
+     * @param data (mixed) data for decryption
      */
     rsadecrypt: function(key, data) {
         return key.decrypt(data).toString();
@@ -92,8 +92,8 @@ define('sum-backend-crypto', Class.extend({
     /**
      * sign given data with given key
      * @returns (string) signature
-     * @param (object) key private key
-     * @param (string) data for signing
+     * @param key (object) private key
+     * @param data (string) data for signing
      */
     sign: function(key, data) {
         var hash = this.sha256(data);
@@ -117,8 +117,8 @@ define('sum-backend-crypto', Class.extend({
     /**
      * sign given message
      * @return (object) signed message
-     * @param (object) message unsigned
-     * @param (object) key for signing
+     * @param message (object) unsigned message
+     * @param key (object) key for signing
      */
     signMessage: function(message, key) {
         var sign = this.sign(key, JSON.stringify(message));

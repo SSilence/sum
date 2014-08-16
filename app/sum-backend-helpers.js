@@ -11,7 +11,7 @@ define('sum-backend-helpers', Class.extend({
 
     /**
      * search user in userlist
-     * @return (object or boolean) user object or false if none was found
+     * @return (object|boolean) user object or false if none was found
      * @param userlist (array of object) list with all users (object with property username)
      * @param user (string) username which will be searched
      */
@@ -133,7 +133,7 @@ define('sum-backend-helpers', Class.extend({
     
     /**
      * returns current ip
-     * @return (string or boolean) the ip of the current user
+     * @return (string|boolean) the ip of the current user
      */
     getIp: function() {
         var ifaces=os.networkInterfaces();
@@ -172,8 +172,8 @@ define('sum-backend-helpers', Class.extend({
     /**
      * find message in given conversations array
      * @return (boolean|object) message or false
-     * @param (array) conversations array with all conversations
-     * @param (string) id of message
+     * @param conversations (array) array with all conversations
+     * @param id (string) id of message
      */
     findMessage: function(conversations, id) {
         for (var key in conversations) {
@@ -219,7 +219,7 @@ define('sum-backend-helpers', Class.extend({
         var givenVersion = regex.exec(given);
 
         // convert to int
-        var i=0;
+        var i;
         for(i=0; i<currentVersion.length; i++)
             currentVersion[i] = parseInt(currentVersion[i]);
         for(i=0; i<givenVersion.length; i++)

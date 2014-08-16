@@ -140,8 +140,8 @@ define('sum-backend-client', Class.extend({
     /**
      * cancels download
      * @return (boolean) true if canceled
-     * @param (object) response object
-     * @param (string) current file id
+     * @param response (object) object
+     * @param file (string) file id
      */
     checkCancelResponse: function(response, file) {
         var cancel = false;

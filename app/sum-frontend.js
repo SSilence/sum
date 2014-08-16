@@ -271,7 +271,7 @@ define('sum-frontend', Class.extend({
     
     /**
      * updates list of public keys
-     * @param (array) publicKeys
+     * @param publicKeys (array) public keys
      */
     updatePublicKeyList: function(publicKeys) {
         var el = $('#key-menue-keys');

@@ -118,7 +118,7 @@ define('sum-backend-filesystem', Class.extend({
 
     /**
      * get directories of given directory
-     * @return (array of strings) directories found
+     * @return (array) directories found
      * @param dir (string) the target directory
      */
     getDirectories: function(dir) {

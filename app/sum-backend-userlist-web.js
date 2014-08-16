@@ -252,9 +252,9 @@ define('sum-backend-userlist-web', Class.extend({
     
     /**
      * loads additional userinfos
-     * @param (string) user name
-     * @param (function) success callback
-     * @param (function) error callback
+     * @param user (string) user name
+     * @param success (function) success callback
+     * @param error (function) error callback
      */
     loadUserinfos: function(user, success, error) {
         var that = this;
@@ -274,7 +274,7 @@ define('sum-backend-userlist-web', Class.extend({
     
     /**
      * update currents user entry in web backend
-     * @param (object) user
+     * @param user (object) user
      */
     updateCurrentUser: function(user) {
         var that = this;
@@ -297,7 +297,7 @@ define('sum-backend-userlist-web', Class.extend({
     
     /**
      * delete inactive user form web backend
-     * @param (string) user name
+     * @param user (string) user name
      */
     deleteInactiveUser: function(user) {
         request.post(config.web_url, { 

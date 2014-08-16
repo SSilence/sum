@@ -200,7 +200,7 @@ define('sum-frontend-helpers', Class.extend({
     /**
      * format file size to human readable size
      * @return (string) size in readable format e.g. 10 MB
-     * @param (int) bytes filesize
+     * @param bytes (int) filesize
      */
     humanFileSize: function(bytes) {
         var thresh = 1024;
@@ -218,7 +218,7 @@ define('sum-frontend-helpers', Class.extend({
     /**
      * returns sum of all unread messages in all conversations
      * @return (int) amount of unread messages
-     * @param (array) conversations array
+     * @param conversations (array) conversations array
      */
     countAllUnreadMessages: function(conversations) {
         var sum = 0;

@@ -23,7 +23,7 @@ define('sum-backend-storage', Class.extend({
 
     /**
      * save avatar in local storage
-     * @param (string) avatar base64 encoded avatar
+     * @param avatar (string) base64 encoded avatar
      */
     saveAvatar: function(avatar) {
         localStorage.avatar = avatar;
@@ -40,7 +40,7 @@ define('sum-backend-storage', Class.extend({
     
     /**
      * save given roomlist
-     * @param (Array) roomlist current rooms user is in
+     * @param roomlist (Array) current rooms user is in
      */
     saveRoomlist: function(roomlist) {
         localStorage.roomlist = JSON.stringify(roomlist);
@@ -79,7 +79,7 @@ define('sum-backend-storage', Class.extend({
     /**
      * load stored key pair
      * @return (NodeRSA|boolean) loaded key pair or false on decryption/parse error
-     * @param (string) keys password
+     * @param password (string) keys password
      */
     loadKey: function(password) {
         if (typeof localStorage.keypair != 'undefined') {
@@ -101,16 +101,15 @@ define('sum-backend-storage', Class.extend({
     
     /**
      * save key pair in local storage
-     * @param (NodeRSA) key
-     * @param (string) password
+     * @param key (NodeRSA) key
+     * @param password (string) password
      */
     saveKey: function(key, password) {
         var keypair = {
             'publicKey': key.getPublicPEM(),
             'privateKey': key.getPrivatePEM()
         };
-        var encrypted = this.backendCrypto.aesencrypt(JSON.stringify(keypair), password);
-        localStorage.keypair = encrypted;
+        localStorage.keypair = this.backendCrypto.aesencrypt(JSON.stringify(keypair), password);
     },
     
     
@@ -148,7 +147,7 @@ define('sum-backend-storage', Class.extend({
     
     /**
      * save all public keys of other users
-     * @param (array) of username: key objects
+     * @param keys (array) of username: key objects
      */
     savePublicKeys: function(keys) {
         localStorage.publickeys = JSON.stringify(keys);

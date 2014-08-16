@@ -17,8 +17,8 @@ define('sum-frontend-command', Class.extend({
     
     /**
      * execute command.
-     * @param (string) command given by message input
-     * @param (string) current conversation
+     * @param command (string) given by message input
+     * @param conversation (string) current conversation
      */
     handle: function(command, conversation) {
         

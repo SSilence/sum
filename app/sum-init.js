@@ -108,9 +108,6 @@ $(document).ready(function() {
         
         // initial focus password field
         $('#login .password').focus();
-        
-        return;
-    
     
     // otherwise start application
     } else {

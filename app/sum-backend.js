@@ -406,7 +406,7 @@ define('sum-backend', Class.extend({
     /**
      * returns true if given user is current user.
      * @return (boolean) true or false
-     * @param (string) the name of the user
+     * @param user (string) the name of the user
      */
     isCurrentUser: function(user) {
         return this.backendHelpers.getUsername() === user;
@@ -595,7 +595,7 @@ define('sum-backend', Class.extend({
         if (typeof users == 'undefined' || users === null)
             users = [];
         var usersFromList = [];
-        var i = 0;
+        var i;
         for (i=0; i<users.length; i++)
             usersFromList[usersFromList.length] = this.getUser(users[i]);
         users = usersFromList;
@@ -672,7 +672,7 @@ define('sum-backend', Class.extend({
     
     /**
      * clear given conversation
-     * @param (string) conversation for purging
+     * @param conversation (string) conversation for purging
      */
     clearConversation: function(conversation) {
         this.conversations[conversation] = [];
@@ -766,20 +766,21 @@ define('sum-backend', Class.extend({
     /**
      * returns message from conversation
      * @return (boolean|object) message or false
-     * @param (string) id of message
+     * @param id (string) id of message
      */
     getMessage: function(id) {
         return this.backendHelpers.findMessage(this.conversations, id);
     },
 
-    
+
+
     // file send handling
     
     
     /**
      * sends file invitation
-     * @param (string) file path of file
-     * @param (string) user or room for sending the invitation
+     * @param file (string) path of file
+     * @param user (string) user or room for sending the invitation
      */
     sendFileInvite: function(file, user) {
         // file available?
@@ -803,7 +804,7 @@ define('sum-backend', Class.extend({
     
     /**
      * cancel file invitation
-     * @param (string) messageId for canceling
+     * @param messageId (string) messageId for canceling
      */
     cancelFileInvite: function(messageId) {
         var message = this.backendHelpers.findMessage(this.conversations, messageId);
@@ -853,7 +854,7 @@ define('sum-backend', Class.extend({
     
     /**
      * cancel running file download
-     * @param (string) messageId download id
+     * @param messageId (string) download id
      */
     cancelFileDownload: function(messageId) {
         this.backendClient.cancelList[this.backendClient.cancelList.length] = messageId;
@@ -862,8 +863,8 @@ define('sum-backend', Class.extend({
     
     /**
      * will be called by server after successfully sending a file to another user
-     * @param (string) messageId of file invite
-     * @param (string) sender who fetched this file
+     * @param messageId (string) id of file invite
+     * @param sender (string) sender who fetched this file
      */
     finishedFileRequest: function(messageId, sender) {
         var message = this.backendHelpers.findMessage(this.conversations, messageId);
@@ -877,7 +878,7 @@ define('sum-backend', Class.extend({
 
     /**
      * open downloaded file
-     * @param (string) messageId download id
+     * @param messageId (string) download id
      */
     openFile: function(messageId) {
         var message = this.backendHelpers.findMessage(this.conversations, messageId);
@@ -887,7 +888,7 @@ define('sum-backend', Class.extend({
     
     /**
      * open url
-     * @param (string) given url
+     * @param url (string) given url
      */
     openUrl: function(url) {
         gui.Shell.openExternal(url);
@@ -909,7 +910,7 @@ define('sum-backend', Class.extend({
     /**
      * returns public key of given user
      * @return (string|boolean) key or false
-     * @param (string) user name
+     * @param user (string) user name
      */
     getPublicKey: function(user) {
         var found = false;
@@ -934,7 +935,7 @@ define('sum-backend', Class.extend({
     
     /**
      * reset key
-     * @param (string) password for new key
+     * @param password (string) password for new key
      */
     resetKey: function(password) {
         this.backendStorage.resetKey();
@@ -955,7 +956,7 @@ define('sum-backend', Class.extend({
     
     /**
      * loads key from localstorage
-     * @param (string) password
+     * @param password (string) keys password
      */
     loadKey:function(password) {
         this.key = this.backendStorage.loadKey(password);
@@ -965,7 +966,7 @@ define('sum-backend', Class.extend({
     
     /**
      * save key in localstorage
-     * @param (string) password
+     * @param password (string) keys password
      */
     saveKey:function(password) {
         this.backendStorage.saveKey(this.key, password);
@@ -974,7 +975,8 @@ define('sum-backend', Class.extend({
     
     /**
      * checks whether key password is correct
-     * @return true if correct, false otherwise
+     * @return (boolean) true if correct, false otherwise
+     * @param password (string) keys password
      */
     checkKeyPassword: function(password) {
         var key = this.backendStorage.loadKey(password);
@@ -984,8 +986,8 @@ define('sum-backend', Class.extend({
     
     /**
      * adds a public key in localstorage and local public key list
-     * @param (string) path of the public key file for import
-     * @param (function) success callback
+     * @param path (string) path of the public key file for import
+     * @param success (function) success callback
      */
     addPublicKey: function(path, success) {
         var that = this;
@@ -1018,7 +1020,7 @@ define('sum-backend', Class.extend({
     
     /**
      * removes a public key in localstorage and local public key list
-     * @param (string) username of the public key
+     * @param username (string) username of the public key
      */
     removePublicKey: function(username) {
         var newPublicKeys = [];
@@ -1035,8 +1037,8 @@ define('sum-backend', Class.extend({
     
     /**
      * save public key in given file
-     * @param (string) path target file
-     * @param (function) success callback
+     * @param path (string) target file
+     * @param success (function) success callback
      */
     exportPublicKey: function(path, success) {
         var keyToSave = {
@@ -1049,8 +1051,8 @@ define('sum-backend', Class.extend({
     
     /**
      * save private and public key in given file
-     * @param (string) path target file
-     * @param (function) success callback
+     * @param path (string) target file
+     * @param success (function) success callback
      */
     exportKey: function(path, success) {
         var key = this.backendStorage.loadKeyEncrypted();
@@ -1060,9 +1062,9 @@ define('sum-backend', Class.extend({
     
     /**
      * import private and public key from file
-     * @param (string) path target file
-     * @param (string) password for key
-     * @param (function) success callback
+     * @param path (string) target file
+     * @param password (string) password for key
+     * @param success (function) success callback
      */
     importKey: function(path, password, success) {
         var that = this;
@@ -1098,7 +1100,7 @@ define('sum-backend', Class.extend({
 
     /**
      * starts a given game
-     * @param (string) game name
+     * @param game (string) game name
      */
     openGame: function(game) {
         var that = this;
@@ -1118,7 +1120,7 @@ define('sum-backend', Class.extend({
     
     /**
      * show unread items at icon
-     * @param (int) value to set (only numbers)
+     * @param value (int) value to set (only numbers)
      */
     setBadge: function(value) {
         require('nw.gui').Window.get().setBadgeLabel(""+value);
@@ -1157,7 +1159,7 @@ define('sum-backend', Class.extend({
     
     /**
      * show notification for users which are now online/offline/removed
-     * @param (array) newuserlist
+     * @param newuserlist (array) new userlist
      */
     showOnlineOfflineNotifications: function(newuserlist) {
         if (this.firstUpdate === false) {

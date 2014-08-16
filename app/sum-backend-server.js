@@ -272,8 +272,8 @@ define('sum-backend-server', Class.extend({
     
     /**
      * send error response
-     * @param (object) request
-     * @param (object) response
+     * @param request (object) current request
+     * @param response (object) current response
      */
     sendError: function(request, response) {
         this.backend.error(lang.backend_server_invalid_message_fields.replace(/\%s/, JSON.stringify(request).escape()));
