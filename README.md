@@ -177,6 +177,7 @@ Special thanks to the great programmers of this libraries which will be used in 
 * wait for images: https://github.com/alexanderdickson/waitForImages
 * request: https://github.com/mikeal/request
 * CryptoJS: https://code.google.com/p/crypto-js/
+* Icon: http://premiumitsolutions.com.au/seo/free-seo-icon-set/
 
   [1]: http://nodejs.org/
   [2]: http://www.jrsoftware.org/isinfo.php

@@ -90,24 +90,45 @@ module.exports = function(grunt) {
         
         /* build node webkit sum package */
         nodewebkit: {
-            options: {
-                build_dir: './bin',
-                mac: false,
-                win: true,
-                linux32: false,
-                linux64: false
+            withconfig: {
+                options: {
+                    build_dir: './bin',
+                    mac: false,
+                    win: true,
+                    linux32: false,
+                    linux64: false
+                },
+                src: ['./app/**', 
+                      './gamez/**', 
+                      './package.json', 
+                      './config.ini', 
+                      './node_modules/ini/**', 
+                      './node_modules/lockfile/**', 
+                      './node_modules/node-rsa/**', 
+                      './node_modules/base64-stream/**',
+                      './node_modules/request/**',
+                      './node_modules/crypto-js/**'
+                ]
             },
-            src: ['./app/**', 
-                  './gamez/**', 
-                  './package.json', 
-                  './config.ini', 
-                  './node_modules/ini/**', 
-                  './node_modules/lockfile/**', 
-                  './node_modules/node-rsa/**', 
-                  './node_modules/base64-stream/**',
-                  './node_modules/request/**',
-                  './node_modules/crypto-js/**'
-            ]
+            withoutconfig: {
+                options: {
+                    build_dir: './bin',
+                    mac: false,
+                    win: true,
+                    linux32: false,
+                    linux64: false
+                },
+                src: ['./app/**', 
+                      './gamez/**', 
+                      './package.json',
+                      './node_modules/ini/**', 
+                      './node_modules/lockfile/**', 
+                      './node_modules/node-rsa/**', 
+                      './node_modules/base64-stream/**',
+                      './node_modules/request/**',
+                      './node_modules/crypto-js/**'
+                ]
+            }
         },
 
         /* create setup file with inno setup */
@@ -166,11 +187,12 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', ['versionupdater', 'jshint', 'jasmine', 'nodewebkit', 'shell', 'compress']);
+    grunt.registerTask('default', ['versionupdater', 'jshint', 'jasmine', 'nodewebkit:withconfig', 'shell']);
     grunt.registerTask('check',   ['jshint', 'jasmine']);
     grunt.registerTask('version', ['versionupdater']);
-    grunt.registerTask('build',   ['nodewebkit']);
+    grunt.registerTask('build',   ['nodewebkit:withconfig']);
     grunt.registerTask('setup',   ['shell']);
     grunt.registerTask('zip',     ['compress']);
+    grunt.registerTask('public',  ['nodewebkit:withoutconfig', 'compress']);
 
 };

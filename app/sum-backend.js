@@ -174,7 +174,7 @@ define('sum-backend', Class.extend({
      */
     initTray: function() {
         // create a tray icon
-        var tray = new gui.Tray({ title: 'Tray', icon: 'app/favicon.png', tooltip: 'S Ultimate Messenger' });
+        var tray = new gui.Tray({ title: 'Tray', icon: 'app/trayicon.png', tooltip: 'S Ultimate Messenger' });
 
         // give it a menu
         var menu = new gui.Menu();
@@ -1121,8 +1121,7 @@ define('sum-backend', Class.extend({
      * @param (int) value to set (only numbers)
      */
     setBadge: function(value) {
-        if (typeof gui.Window.get().setBadgeLabel !== 'undefined')
-            gui.Window.get().setBadgeLabel(""+value);
+        require('nw.gui').Window.get().setBadgeLabel(""+value);
     },
     
     
