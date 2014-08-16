@@ -123,14 +123,14 @@ define('sum-frontend', Class.extend({
         this.backend.onUserOnlineNotice(function(avatar, text) {
             text = lang.frontend_online.replace(/\%s/, text.escape());
             alertify.log(text);
-            that.backend.notification(typeof avatar != "undefined" ? avatar : "avatar.png", "", text);
+            that.backend.notification(typeof avatar != "undefined" ? avatar : "avatar.png", text);
         });
 
         // register callback for a user goes offline
         this.backend.onUserOfflineNotice(function(avatar, text) {
             text = lang.frontend_offline.replace(/\%s/, text.escape());
             alertify.log(text);
-            that.backend.notification(typeof avatar != "undefined" ? avatar : "avatar.png", "", text);
+            that.backend.notification(typeof avatar != "undefined" ? avatar : "avatar.png", text);
         });
 
         // register callback for a user has been removed
