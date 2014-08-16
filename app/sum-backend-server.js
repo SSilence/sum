@@ -42,7 +42,7 @@ define('sum-backend-server', Class.extend({
 
             // error occured
             request.addListener('error', function(error){
-                that.backend.error(lang.backend_server_init_error.replace(/\%s/, error));
+                that.backend.error(lang.backend_server_init_error.replace(/\%s/, error.toString().escape()));
                 next(error);
             });
 
@@ -189,7 +189,7 @@ define('sum-backend-server', Class.extend({
         //     'signature': <signed by other user>
         // };
         } else if(request.type == 'room-invite-accept') {
-            this.backend.renderSystemMessage(lang.backend_server_invite_accepted.replace(/\%s/, request.sender), request.room);
+            this.backend.renderSystemMessage(lang.backend_server_invite_accepted.replace(/\%s/, request.sender.escape()), request.room);
             response.writeHeader(200, {"Content-Type": "text/plain"});
             response.end();
 
@@ -204,7 +204,7 @@ define('sum-backend-server', Class.extend({
             //    'signature': <signed by other user>
             // };
         } else if(request.type == 'room-invite-decline') {
-            this.backend.renderSystemMessage(lang.backend_server_invite_declined.replace(/\%s/, request.sender), request.room);
+            this.backend.renderSystemMessage(lang.backend_server_invite_declined.replace(/\%s/, request.sender.escape()), request.room);
             response.writeHeader(200, {"Content-Type": "text/plain"});
             response.end();
 
