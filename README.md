@@ -158,7 +158,6 @@ Special thanks to the great programmers of this libraries which will be used in 
 * lockfile: https://github.com/isaacs/lockfile
 * node-rsa: https://github.com/rzcoder/node-rsa
 * ini: https://github.com/isaacs/ini
-* nw-desktop-notifications: https://github.com/robrighter/nw-desktop-notifications
 * alertify: http://fabien-d.github.io/alertify.js/
 * ionicons: http://ionicons.com/
 * jquery custom content scroller: http://manos.malihu.gr/jquery-custom-content-scroller/

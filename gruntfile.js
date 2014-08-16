@@ -131,6 +131,20 @@ module.exports = function(grunt) {
                     to: ("" + grunt.option('newversion'))
                 }]
             }
+        },
+        
+        /* create zip */
+        compress: {
+            main: {
+                options: {
+                    archive: 'bin/sum-<%= pkg.version %>.zip'
+                },
+                files: [
+                    { expand: true, cwd: 'bin/SUM/win/', src: ['**'], dest: '/', filter: 'isFile'},
+                    { src: ['backend.php'], dest: '' },
+                    { src: ['README.md'], dest: '' }
+                ]
+            }
         }
     });
 
@@ -139,6 +153,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-text-replace');
+    grunt.loadNpmTasks('grunt-contrib-compress');
 
     /* task checks whether newversion is given and start replacement in files if correct format is given */
     grunt.registerTask('versionupdater', 'version update task', function() {
@@ -151,9 +166,11 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', ['versionupdater', 'jshint', 'jasmine', 'nodewebkit', 'shell']);
-    grunt.registerTask('check', ['jshint', 'jasmine']);
+    grunt.registerTask('default', ['versionupdater', 'jshint', 'jasmine', 'nodewebkit', 'shell', 'compress']);
+    grunt.registerTask('check',   ['jshint', 'jasmine']);
     grunt.registerTask('version', ['versionupdater']);
-    grunt.registerTask('build', ['nodewebkit']);
+    grunt.registerTask('build',   ['nodewebkit']);
+    grunt.registerTask('setup',   ['shell']);
+    grunt.registerTask('zip',     ['compress']);
 
 };

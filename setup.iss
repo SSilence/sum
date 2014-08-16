@@ -25,7 +25,7 @@ OutputBaseFilename=sum-setup-{#MyAppVersion}
 Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 
 [Files]
-Source: "bin/releases/SUM/win/SUM/*"; Excludes: "ffmpegsumo.dll,libEGL.dll,libGLESv2.dll" ; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "bin/SUM/win/*"; Excludes: "ffmpegsumo.dll,libEGL.dll,libGLESv2.dll" ; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 Source: "app/favicon.ico"; DestDir: "{app}"; DestName: "icon.ico"; Flags: ignoreversion
 
 [Tasks]
