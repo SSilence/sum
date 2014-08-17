@@ -151,7 +151,7 @@ body {
     height:32px;
 }
 
-.remove,
+input.remove,
 .save,
 .cancel {
     border-radius:3px;
@@ -165,7 +165,7 @@ body {
     border:1px solid #519339;
 }
 
-.remove,
+input.remove,
 .cancel {
     background:#e45857;
     border:1px solid #C94B4B;
