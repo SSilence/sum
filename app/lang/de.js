@@ -148,6 +148,7 @@ var lang = {
     frontend_invitation_accept: 'annehmen',
     frontend_invitation_decline: 'ablehnen',
     frontend_notifications_reminder: '%s ungelesene Nachrichten vorhanden',
+    frontend_invalid_key: 'ung&uuml;ltiger Schl&uuml;ssel',
     
     frontend_login_invalid_login: 'Schl&uuml;ssel konnte nicht geladen werden. Ung&uuml;ltiges Passwort?',
     frontend_login_confirm_reset_key: 'Soll der Schlüssel wirklich zurückgesetzt werden?'

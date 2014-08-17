@@ -164,7 +164,7 @@ define('sum-backend-userlist-file', Class.extend({
                 if (users[i].status == 'online' && users[i].timestamp + config.user_timeout < now) {
                     users[i].status = 'offline';
                 }
-
+                
                 userlist[userlist.length] = users[i];
             }
         }
@@ -226,7 +226,7 @@ define('sum-backend-userlist-file', Class.extend({
                         // merge user and userinfos
                         if (typeof userinfos.ip != 'undefined' && typeof userinfos.port != 'undefined' && typeof userinfos.key != 'undefined') {
                             users[currentIndex] = that.backendHelpers.mergeUserAndUserinfos(users[currentIndex], userinfos);
-
+                            
                             // save userinfos in cache
                             userinfos.timestamp = users[currentIndex].userfileTimestamp;
                             that.userinfos[users[currentIndex].username] = userinfos;
@@ -259,6 +259,9 @@ define('sum-backend-userlist-file', Class.extend({
         // fix corrupt userlist
         users = this.compensateCorruptUserlist(users);
 
+        // check public keys of users
+        users = this.checkPublickeys(users);
+        
         // sort userlist by username
         users = this.backendHelpers.sortUserlistByUsername(users);
 
@@ -280,6 +283,22 @@ define('sum-backend-userlist-file', Class.extend({
     },
 
 
+    /**
+     * check public keys
+     * @return (array) users with invalidkey value on wrong public key
+     * @param users (array) all users
+     */
+    checkPublickeys: function(users) {
+        // check public key
+        for (var i = 0; i < users.length; i++) {
+            var key = this.backend.getPublicKey(users[i].username);
+            if (key !== false && users[i].key !== key)
+                users[i].invalidkey = true;
+        }
+        return users;
+    },
+    
+    
     /**
      * Compensates corrupt or wrong userfile. If a user is in local userlist and not in userlist.json
      * and user is not timedout for removing from list, the user will be restored in the userlist.

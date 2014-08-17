@@ -326,11 +326,18 @@ define('sum-frontend', Class.extend({
             if(that.currentConversation==user.username)
                 active = 'class="active"';
 
+            // invalid key?
+            var invalidkey = '';
+            if (typeof user.invalidkey !== 'undefined' && user.invalidkey)
+                invalidkey = ' <div class="contacts-invalidkey ion-key"></div>';
+            
+                
             // add new entry
             html = html + '<li ' + active + '>' +
                 '<div class="' + user.status + ' contacts-state" ' +
                 'title="' + (typeof user.version != 'undefined' ? user.version : '') + '"></div>' +
                 '<img src="' + avatar + '" class="contacts-avatar avatar" />' +
+                invalidkey +
                 '<div class="contacts-name">' + user.username.escape() + '</div>' + unread + '</li>';
         });
         $('.contacts').html(html);
@@ -476,9 +483,13 @@ define('sum-frontend', Class.extend({
                 state = 'notavailable';
             }
         }
+        
+        var invalidkey = '';
+        if ($('.contacts .active .contacts-invalidkey').length > 0)
+            invalidkey = '<span class="invalidkey">' + lang.frontend_invalid_key + '</span>';
 
         // write metadata
-        $('#main-metadata').html(avatar + '<span>' + this.currentConversation + '</span><span id="conversationState" class="' + state + '"></span>');
+        $('#main-metadata').html(avatar + '<span>' + this.currentConversation.escape() + '</span><span id="conversationState" class="' + state + '"></span>' + invalidkey);
     },
 
 

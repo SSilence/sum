@@ -73,6 +73,7 @@ $(document).ready(function() {
         frontend.initialize();
         $('#main, #nav').show();
         $('#splash, #login').hide();
+        inject('sum-frontend-events').resize();
     };
     
     

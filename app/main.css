@@ -365,6 +365,11 @@ input.remove,
     .contacts-state {
         margin:0 5px 0 5px;
     }
+    
+    .contacts-invalidkey {
+        color:#ff0000;
+        width:14px;
+    }
 
     .contacts-avatar {
         margin-right:5px;
@@ -614,6 +619,10 @@ input.remove,
 
             #main-metadata > * {
                 margin-right:10px;
+            }
+            
+            #main-metadata .invalidkey {
+                color:#ff0000;
             }
 
         #key-menue,

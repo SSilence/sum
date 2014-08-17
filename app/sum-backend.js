@@ -1010,6 +1010,9 @@ define('sum-backend', Class.extend({
                 // save key
                 that.backendStorage.savePublicKeys(that.publicKeys);
                 
+                // update userlist
+                that.backendUserlist.userlistUpdateTimer();
+                
                 success();
             },
             function() { 
@@ -1032,6 +1035,9 @@ define('sum-backend', Class.extend({
         
         // save keys
         this.backendStorage.savePublicKeys(this.publicKeys);
+        
+        // update userlist
+        this.backendUserlist.userlistUpdateTimer();
     },
     
     
