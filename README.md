@@ -193,7 +193,7 @@ Special thanks to the great programmers of this libraries which will be used in 
 * ionicons: http://ionicons.com/
 * WebIconset.com Emoticons: http://www.webiconset.com/emoticons-smilies-icon-set/
 * Website Template: http://html5up.net/
-* Application Icon: http://premiumitsolutions.com.au/seo/free-seo-icon-set/
+* Application Icon: http://www.graphicsfuel.com/
 * Font Oswald: http://www.fontsquirrel.com/fonts/oswald
 
 

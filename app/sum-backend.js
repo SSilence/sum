@@ -174,7 +174,7 @@ define('sum-backend', Class.extend({
      */
     initTray: function() {
         // create a tray icon
-        var tray = new gui.Tray({ title: 'Tray', icon: 'app/trayicon.png', tooltip: 'S Ultimate Messenger' });
+        var tray = new gui.Tray({ title: 'Tray', icon: 'app/favicon.png', tooltip: 'S Ultimate Messenger' });
 
         // give it a menu
         var menu = new gui.Menu();
