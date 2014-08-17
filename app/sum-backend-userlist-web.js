@@ -265,8 +265,12 @@ define('sum-backend-userlist-web', Class.extend({
                     error(err);
                     return;
                 }
-                var decrypt = JSON.parse(that.backendCrypto.aesdecrypt(body, config.web_aes_key));
-                success(decrypt);
+                try {
+                    var decrypt = JSON.parse(that.backendCrypto.aesdecrypt(body, config.web_aes_key));
+                    success(decrypt);
+                } catch(e) {
+                    error();
+                }
             }
         );
     },
