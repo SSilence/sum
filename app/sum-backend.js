@@ -1123,7 +1123,11 @@ define('sum-backend', Class.extend({
      * @param value (int) value to set (only numbers)
      */
     setBadge: function(value) {
-        require('nw.gui').Window.get().setBadgeLabel(""+value);
+        try {
+            require('nw.gui').Window.get().setBadgeLabel(""+value);
+        } catch(e) {
+            // do nothing if no setBadgeLabel is on this system available
+        }
     },
     
     
