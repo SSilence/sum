@@ -14,7 +14,7 @@
 
 	body {
 		/* min-width: (containers) */
-		min-width: 1200px;
+		min-width: 51em;
 	}
 
 	.container {
@@ -22,24 +22,24 @@
 		margin-right: auto;
 		
 		/* width: (containers) */
-		width: 1200px;
+		width: 51em;
 	}
 
 	/* Modifiers */
 	
 		.container.small {
 			/* width: (containers) * 0.75; */
-			width: 900px;
+			width: 38.25em;
 		}
 
 		.container.big {
 			width: 100%;
 
 			/* max-width: (containers) * 1.25; */
-			max-width: 1500px;
+			max-width: 63.75em;
 
 			/* min-width: (containers); */
-			min-width: 1200px;
+			min-width: 51em;
 		}
 
 /* Grid */
@@ -89,17 +89,17 @@
 
 			.row > * {
 				/* padding-left: (gutters) */
-				padding-left: 40px;
+				padding-left: 30px;
 			}
 
 			.row + .row > * {
 				/* padding: (gutters) 0 0 (gutters) */
-				padding: 40px 0 0 40px;
+				padding: 30px 0 0 30px;
 			}
 
 			.row {
 				/* margin-left: -(gutters) */
-				margin-left: -40px;
+				margin-left: -30px;
 			}
 
 		/* Flush */
@@ -120,66 +120,66 @@
 
 			.row.quarter > * {
 				/* padding-left: (gutters * 0.25) */
-				padding-left: 10px;
+				padding-left: 7.5px;
 			}
 
 			.row + .row.quarter > * {
 				/* padding: (gutters * 0.25) 0 0 (gutters * 0.25) */
-				padding: 10px 0 0 10px;
+				padding: 7.5px 0 0 7.5px;
 			}
 
 			.row.quarter {
 				/* margin-left: -(gutters * 0.25) */
-				margin-left: -10px;
+				margin-left: -7.5px;
 			}
 
 		/* Half */
 
 			.row.half > * {
 				/* padding-left: (gutters * 0.5) */
-				padding-left: 20px;
+				padding-left: 15px;
 			}
 
 			.row + .row.half > * {
 				/* padding: (gutters * 0.5) 0 0 (gutters * 0.5) */
-				padding: 20px 0 0 20px;
+				padding: 15px 0 0 15px;
 			}
 
 			.row.half {
 				/* margin-left: -(gutters * 0.5) */
-				margin-left: -20px;
+				margin-left: -15px;
 			}
 
 		/* One and (a) Half */
 
 			.row.oneandhalf > * {
 				/* padding-left: (gutters * 1.5) */
-				padding-left: 60px;
+				padding-left: 45px;
 			}
 
 			.row + .row.oneandhalf > * {
 				/* padding: (gutters * 1.5) 0 0 (gutters * 1.5) */
-				padding: 60px 0 0 60px;
+				padding: 45px 0 0 45px;
 			}
 
 			.row.oneandhalf {
 				/* margin-left: -(gutters * 1.5) */
-				margin-left: -60px;
+				margin-left: -45px;
 			}
 
 		/* Double */
 
 			.row.double > * {
 				/* padding-left: (gutters * 2) */
-				padding-left: 80px;
+				padding-left: 60px;
 			}
 
 			.row + .row.double > * {
 				/* padding: (gutters * 2) 0 0 (gutters * 2) */
-				padding: 80px 0 0 80px;
+				padding: 60px 0 0 60px;
 			}
 
 			.row.double {
 				/* margin-left: -(gutters * 2) */
-				margin-left: -80px;
+				margin-left: -60px;
 			}

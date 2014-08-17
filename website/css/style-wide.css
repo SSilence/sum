@@ -1,5 +1,5 @@
 /*
-	Aerial 1.0 by HTML5 UP
+	Directive by HTML5 UP
 	html5up.net | @n33co
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
@@ -7,17 +7,34 @@
 /* Basic */
 
 	body, input, select, textarea {
-		font-size: 13pt;
+		font-size: 14pt;
 	}
 
-/* BG */
-	@-moz-keyframes bg { 0% { -moz-transform: translate3d(0,0,0); -webkit-transform: translate3d(0,0,0); -o-transform: translate3d(0,0,0); -ms-transform: translate3d(0,0,0); transform: translate3d(0,0,0); } 100% { -moz-transform: translate3d(-1300px,0,0); -webkit-transform: translate3d(-1300px,0,0); -o-transform: translate3d(-1300px,0,0); -ms-transform: translate3d(-1300px,0,0); transform: translate3d(-1300px,0,0); } }
-	@-webkit-keyframes bg { 0% { -moz-transform: translate3d(0,0,0); -webkit-transform: translate3d(0,0,0); -o-transform: translate3d(0,0,0); -ms-transform: translate3d(0,0,0); transform: translate3d(0,0,0); } 100% { -moz-transform: translate3d(-1300px,0,0); -webkit-transform: translate3d(-1300px,0,0); -o-transform: translate3d(-1300px,0,0); -ms-transform: translate3d(-1300px,0,0); transform: translate3d(-1300px,0,0); } }
-	@-o-keyframes bg { 0% { -moz-transform: translate3d(0,0,0); -webkit-transform: translate3d(0,0,0); -o-transform: translate3d(0,0,0); -ms-transform: translate3d(0,0,0); transform: translate3d(0,0,0); } 100% { -moz-transform: translate3d(-1300px,0,0); -webkit-transform: translate3d(-1300px,0,0); -o-transform: translate3d(-1300px,0,0); -ms-transform: translate3d(-1300px,0,0); transform: translate3d(-1300px,0,0); } }
-	@-ms-keyframes bg { 0% { -moz-transform: translate3d(0,0,0); -webkit-transform: translate3d(0,0,0); -o-transform: translate3d(0,0,0); -ms-transform: translate3d(0,0,0); transform: translate3d(0,0,0); } 100% { -moz-transform: translate3d(-1300px,0,0); -webkit-transform: translate3d(-1300px,0,0); -o-transform: translate3d(-1300px,0,0); -ms-transform: translate3d(-1300px,0,0); transform: translate3d(-1300px,0,0); } }
-	@keyframes bg { 0% { -moz-transform: translate3d(0,0,0); -webkit-transform: translate3d(0,0,0); -o-transform: translate3d(0,0,0); -ms-transform: translate3d(0,0,0); transform: translate3d(0,0,0); } 100% { -moz-transform: translate3d(-1300px,0,0); -webkit-transform: translate3d(-1300px,0,0); -o-transform: translate3d(-1300px,0,0); -ms-transform: translate3d(-1300px,0,0); transform: translate3d(-1300px,0,0); } }
-
-	#bg {
-		background-size: 1300px auto;
-		width: 3900px;
+	h2 {
+		font-size: 1.5em;
 	}
+
+	h3 {
+		font-size: 1.25em;
+	}
+
+/* Section/Article */
+
+	header.major p {
+		font-size: 1.25em;
+	}
+
+/* Header */
+
+	#header {
+		padding: 8em 0 16em 0;
+	}
+
+		#header h1 {
+			font-size: 2.25em;
+		}
+
+		#header p {
+			font-size: 1.25em;
+			line-height: 1.65em;
+		}

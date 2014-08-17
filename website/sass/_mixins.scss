@@ -1,9 +1,3 @@
-//
-//	Aerial 1.0 by HTML5 UP
-//	html5up.net | @n33co
-//	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-//
-
 @mixin vendor-property($property, $value) { 
     @each $vendor in ('-moz-', '-webkit-', '-o-', '-ms-', '') {
         #{$vendor}#{$property}: #{$value};
@@ -24,24 +18,18 @@
 	@keyframes #{$name} { @content; }
 }
 
-@mixin icon {
+@mixin icon($content: false) {
+	text-decoration: none;
+
 	&:before {
+		@if $content {
+			content: $content;
+		}
 		-moz-osx-font-smoothing: grayscale;
 		-webkit-font-smoothing: antialiased;
 		font-family: FontAwesome;
 		font-style: normal;
 		font-weight: normal;
-	}
-}
-
-@mixin bg($width) {
-	@include vendor-keyframes('bg') {
-		0%		{ @include vendor-property('transform', 'translate3d(0,0,0)'); }
-		100%	{ @include vendor-property('transform', 'translate3d(#{$width * -1},0,0)'); }
-	}
-
-	#bg {
-		background-size: $width auto;
-		width: ($width * 3);
+		text-transform: none !important;
 	}
 }

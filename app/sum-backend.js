@@ -1188,7 +1188,7 @@ define('sum-backend', Class.extend({
             
             if (typeof this.userOnlineNotice != 'undefined')
                 for (i = 0; i < online.length; i++) {
-                    message = online[i].username + ' ist jetzt online';
+                    message = lang.frontend_online.replace(/\%s/, online[i].username);
                     this.renderSystemMessage(message, online[i].username);
                     this.renderSystemMessage(message, config.room_all);
                     avatar = (typeof online[i].avatar !== 'undefined' && online[i].avatar.length > 0) ? online[i].avatar : 'avatar.png';
@@ -1197,7 +1197,7 @@ define('sum-backend', Class.extend({
 
             if (typeof this.userOfflineNotice != 'undefined')
                 for (i = 0; i < offline.length; i++) {
-                    message = offline[i].username + ' ist jetzt offline';
+                    message = lang.frontend_offline.replace(/\%s/, offline[i].username);
                     this.renderSystemMessage(message, offline[i].offline);
                     this.renderSystemMessage(message, config.room_all);
                     avatar = (typeof offline[i].avatar !== 'undefined' && offline[i].avatar.length > 0) ? offline[i].avatar : 'avatar.png';

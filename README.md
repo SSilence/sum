@@ -137,17 +137,17 @@ SUM.exe KarlMusermann
 
 
 Following configuration parameters are available in config.ini:
-* ``userlist``: use file or web for user management
-* ``web_url``: url for web backend
-* ``web_aes_key``: password for encrypting userdata
-* ``sha256_salt``: salt for sha256 hashing
-* ``user_file``: path of the file where all users register themself
-* ``user_file_extended``: file per user where avatar and key will be stored. ? will be replaced by the md5 hash of the username
-* ``lock_file``: path of the lock file for the user file. ensures that only one user access the user file
+* ``userlist``: use file or web for using file based or web based (backend.php) userlist management
+* ``web_url``: if you use web for parameter userlist this specifies the url where backend.php runs
+* ``web_aes_key``: if you use web for parameter userlist this specifies the AES password for encrypting any data the backend.php script will save on server
+* ``sha256_salt``: salt for password hashing
+* ``user_file``: if you use file for parameter userlist this specifies the path of the userlist file where all users register themself
+* ``user_file_extended``: if you use file for parameter userlist this specifies the path of the file where a user saves data as their avatar, key, ip and port which changes rarely
+* ``lock_file``: if you use file for parameter userlist this specifies the lock file for ensuring that only one user access the userfile at once
 * ``iv``: initialization vector for aes encryption
 * ``language``: language (de for German, en for English)
-* ``version_file``: path of version file
-* ``version_update``: link to version update file
+* ``version_file``: path of version file. There you can enter the newest SUM version and all user which has a lower version will get a note about an update
+* ``version_update``: url to the newest version for downloading
 * ``version_update_intervall``: how often sum checks for new version
 * ``user_timeout``: set user status to offline after ms inactivity
 * ``user_remove``: remove users from list after ms inactivity

@@ -1,27 +1,21 @@
-//
-//	Aerial 1.0 by HTML5 UP
-//	html5up.net | @n33co
-//	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-//
+$color-bg:					#ffffff;
+$color-fg:					#6e6e6e;
+$color-fg-light:			#888888;
+$color-fg-bold:				#5b5b5b;
 
-$color-bg:					#fff;
-$color-fg:					#fff;
-$color-nav-icon-hover-bg:	rgba(255,255,255,0.175);
-$color-nav-icon-hover-fg:	#fff;
-$color-nav-icon-active-bg:	rgba(255,255,255,0.35);
-$color-nav-icon-active-fg:	#fff;
+$color-accent-bg:			#4eb980;
+$color-accent-fg:			rgba(255,255,255,0.8);
+$color-accent-fg-light:		rgba(255,255,255,0.5);
+$color-accent-fg-bold:		#ffffff;
 
-$duration-bg:				60s;
-$duration-wrapper:			3s;
-$duration-overlay:			1.5s;
-$duration-header:			1s;
-$duration-nav-icons:		0.5s;
+$color-accent2-bg:			#544d55;
+$color-accent2-fg:			rgba(255,255,255,0.8);
+$color-accent2-fg-light:	rgba(255,255,255,0.35);
+$color-accent2-fg-bold:		#ffffff;
 
-$delay-wrapper:				$duration-wrapper - 1s;
-$delay-overlay:				$delay-wrapper - 0.5s;
-$delay-header:				$delay-overlay + $duration-overlay - 0.75s;
-$delay-nav-icons:			$delay-header + $duration-header - 1s;
-$delay-nav-icon:			0.25s;
+$color-border-ie:			#cccccc;
+$color-border:				rgba(224,224,224,0.75);
+$color-border-bg:			rgba(224,224,224,0.15);
+$color-border-bg2:			rgba(224,224,224,0.35);
 
-$size-nav-icon-wrapper:		5.35em;
-$size-nav-icon:				1.75em;
+$size-radius:				4px;
