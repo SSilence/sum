@@ -2,7 +2,7 @@ SUM - S Ultimate Messenger
 ==========================
 
 Copyright (c) 2014 Tobias Zeising, tobias.zeising@aditu.de  
-http://www.aditu.de  
+http://www.sum-messenger.org/ 
 Licensed under the GPLv3 license  
 Version 0.8.0
 
