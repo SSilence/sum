@@ -54,8 +54,8 @@ The AES key will be used for encrypting all user informations before putting the
 
 
 
-RUN SUM FOR DEVELOPEMENT
-------------------------
+RUN SUM FOR DEVELOPMENT
+-----------------------
 
  1. install [node.js][2]
  2. install node webkit: ```npm install nodewebkit -g```
