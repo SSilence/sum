@@ -123,6 +123,7 @@ var lang = {
     frontend_events_invite_cancel: 'abbrechen',
     frontend_events_invite_user_placeholder: 'Mitglieder...',
     frontend_events_avatar_removed: 'Avatar wurde entfernt',
+    frontend_events_key_reset_success: 'Schl&uuml;ssel erfolgreich zur&uuml;ckgesetzt',
     
     frontend_helpers_a_few_seconds_ago: 'vor wenigen Sekunden',
     frontend_helpers_a_minute_ago: 'vor einer Minute',

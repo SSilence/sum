@@ -423,10 +423,7 @@ define('sum-backend', Class.extend({
      */
     saveAvatar: function(avatar) {
         this.backendStorage.saveAvatar(avatar);
-        var that = this;
-        this.backendUserlist.userlistUpdateUsersOwnFile(this.ip, this.port, this.key, avatar, this.version, function() {
-            that.backendUserlist.userlistUpdateTimer(this);
-        });
+        this.rewriteUsersOwnFile();
     },
 
 
@@ -452,10 +449,7 @@ define('sum-backend', Class.extend({
      */
     removeAvatar: function() {
         this.backendStorage.removeAvatar();
-        var that = this;
-        this.backendUserlist.userlistUpdateUsersOwnFile(this.ip, this.port, this.key, undefined, this.version, function() {
-            that.backendUserlist.userlistUpdateTimer(this);
-        });
+        this.rewriteUsersOwnFile();
     },
     
     
@@ -940,7 +934,8 @@ define('sum-backend', Class.extend({
     resetKey: function(password) {
         this.backendStorage.resetKey();
         this.key = this.backendCrypto.generateKeypair();
-        this.backendStorage.saveKey(this.key, password);
+        this.saveKey(password);
+        this.rewriteUsersOwnFile();
     },
     
     
@@ -1081,8 +1076,9 @@ define('sum-backend', Class.extend({
                 var key = new NodeRSA();
                 key.loadFromPEM(keypair.publicKey);
                 key.loadFromPEM(keypair.privateKey);
-                this.key = key;
+                that.key = key;
                 that.saveKey(password);
+                that.rewriteUsersOwnFile();
                 success();
             } catch(err) {
                 that.error(lang.backend_import_key_error);
@@ -1211,6 +1207,16 @@ define('sum-backend', Class.extend({
                 }
         }
         this.firstUpdate = false;
-    }
+    },
     
+    
+    /**
+     * write users own file again (for avatar/key changes)
+     */
+    rewriteUsersOwnFile: function() {
+        var that = this;
+        this.backendUserlist.userlistUpdateUsersOwnFile(this.ip, this.port, this.key, this.backendStorage.loadAvatar(), this.version, function() {
+            that.backendUserlist.userlistUpdateTimer();
+        });
+    }
 }));

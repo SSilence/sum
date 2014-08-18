@@ -358,17 +358,18 @@ define('sum-frontend-events', Class.extend({
                 return;
                 
             // change password
+            $('#key-menue-password-container .old-password').val('');
+            $('#key-menue-password-container .new-password').val('');
+            $('#key-menue-password-container .new-password-again').val('');
             that.backend.saveKey(newPassword);
             
             showMenue();
             alertify.log(lang.frontend_events_password_changed);
+            $('#key-menue-dropdown').toggle();
         });
         
         // reset key
         $('#key-menue-reset-container .save').click(function() {
-            if(confirm(lang.frontend_events_confirm_app_restart) !== true)
-                return;
-                
             // validate new passwords
             var newPassword = $('#key-menue-reset-container .new-password').val();
             var newPasswordAgain = $('#key-menue-reset-container .new-password-again').val();
@@ -376,10 +377,13 @@ define('sum-frontend-events', Class.extend({
                 return;
                 
             // reset key
+            $('#key-menue-reset-container .new-password').val('');
+            $('#key-menue-reset-container .new-password-again').val('');
             that.backend.resetKey(newPassword);
             
-            // restart application
-            document.location.reload(true);
+            // show success
+            alertify.log(lang.frontend_events_key_reset_success);
+            $('#key-menue-dropdown').toggle();
         });
         
         // export public key
@@ -426,18 +430,14 @@ define('sum-frontend-events', Class.extend({
                 if ($(this).val() === '')
                     return;
 
-                if(confirm(lang.frontend_events_confirm_app_restart) !== true)
-                    return;    
-                    
                 // import key
                 that.backend.importKey(
                     $(this).val(), 
                     $('#key-menue-import-container .password').val(),
                     function() {
+                        $('#key-menue-import-container .password').val('');
                         alertify.log(lang.frontend_events_import_key_success);
-                        
-                        // restart application
-                        document.location.reload(true);
+                        $('#key-menue-dropdown').toggle();
                     });
             });
             fileInput.trigger('click');
