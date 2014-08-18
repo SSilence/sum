@@ -319,6 +319,9 @@ define('sum-backend', Class.extend({
             text = typeof text !== 'undefined' ? text.escape() : '';
             image = image.length === 0 ? 'favicon.png' : image;
             
+            title = title.length > 55 ? title.substring(0, 55) + '...' : title;
+            text = text.length > 240 ? text.substring(0, 240) + '...' : text;
+            
             var notification = new Notification(title, { body: text, icon: image });
             notification.onclick = function() {
                 gui.Window.get().show();
