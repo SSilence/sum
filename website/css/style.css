@@ -132,6 +132,10 @@
 		text-align: center;
 	}
 
+        header img {
+            width:100%;
+        }
+    
 		header p {
 			position: relative;
 			top: -1em;
