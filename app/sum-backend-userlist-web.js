@@ -50,7 +50,6 @@ define('sum-backend-userlist-web', Class.extend({
     userlistUpdateUsersOwnFile: function(ip, port, key, avatar, version, success) {
         var that = this;
         var request = require('request');
-        var sign = this.backendCrypto.sign(key, ip + port);
 
         // encrypt detail information
         var details = JSON.stringify({
@@ -58,8 +57,7 @@ define('sum-backend-userlist-web', Class.extend({
             port: port,
             key: key.getPublicPEM(),
             avatar: avatar,
-            version: version,
-            signature: sign
+            version: version
         });
         var detail = this.backendCrypto.aesencrypt(details, config.web_aes_key);
         
