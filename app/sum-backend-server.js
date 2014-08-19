@@ -160,7 +160,6 @@ define('sum-backend-server', Class.extend({
             // only accept one invitation per room
             if (invitations.length === 0) {
                 // insert invitation
-
                 this.backend.invited[this.backend.invited.length] = {
                     name: request.room,
                     invited: request.sender
@@ -189,7 +188,11 @@ define('sum-backend-server', Class.extend({
         //     'signature': <signed by other user>
         // };
         } else if(request.type == 'room-invite-accept') {
-            this.backend.renderSystemMessage(lang.backend_server_invite_accepted.replace(/\%s/, request.sender.escape()), request.room);
+            var notification = lang.backend_server_invite_accepted.replace(/\%s/, request.sender.escape());
+            this.backend.renderSystemMessage(notification, request.room);
+            var user = this.backend.getUser(request.sender);
+            var avatar = (typeof user !== 'undefined' && typeof user.avatar !== 'undefined' && user.avatar.length > 0) ? user.avatar : 'avatar.png';
+            this.backend.notification(avatar, notification, '');
             response.writeHeader(200, {"Content-Type": "text/plain"});
             response.end();
 
@@ -204,7 +207,11 @@ define('sum-backend-server', Class.extend({
             //    'signature': <signed by other user>
             // };
         } else if(request.type == 'room-invite-decline') {
-            this.backend.renderSystemMessage(lang.backend_server_invite_declined.replace(/\%s/, request.sender.escape()), request.room);
+            var notification = lang.backend_server_invite_declined.replace(/\%s/, request.sender.escape());
+            this.backend.renderSystemMessage(notification, request.room);
+            var user = this.backend.getUser(request.sender);
+            var avatar = (typeof user !== 'undefined' && typeof user.avatar !== 'undefined' && user.avatar.length > 0) ? user.avatar : 'avatar.png';
+            this.backend.notification(avatar, notification, '');
             response.writeHeader(200, {"Content-Type": "text/plain"});
             response.end();
 

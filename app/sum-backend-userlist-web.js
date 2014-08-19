@@ -262,7 +262,9 @@ define('sum-backend-userlist-web', Class.extend({
         // check public key
         for (var i = 0; i < users.length; i++) {
             var key = this.backend.getPublicKey(users[i].username);
-            if (key !== false && users[i].key !== key)
+            if (key !== false && users[i].key === key)
+                users[i].invalidkey = false;
+            else if (key !== false)
                 users[i].invalidkey = true;
         }
         return users;

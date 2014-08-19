@@ -366,9 +366,14 @@ input.remove,
         margin:0 5px 0 5px;
     }
     
+    .contacts-validkey,
     .contacts-invalidkey {
         color:#ff0000;
         width:14px;
+    }
+    
+    .contacts-validkey {
+        color:#9FC728;
     }
 
     .contacts-avatar {

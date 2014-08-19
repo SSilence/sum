@@ -116,7 +116,7 @@ define('sum-frontend', Class.extend({
         this.backend.onRoomInvite(function(room, user) {
             var text = lang.frontend_room_invite.replace(/\%s1/, user.escape()).replace(/\%s2/, room.escape());
             alertify.log(text);
-            that.backend.notification("group.png", "", text);
+            that.backend.notification("group.png", text, '');
         });
 
         // user is now online
@@ -330,7 +330,8 @@ define('sum-frontend', Class.extend({
             var invalidkey = '';
             if (typeof user.invalidkey !== 'undefined' && user.invalidkey)
                 invalidkey = ' <div class="contacts-invalidkey ion-key"></div>';
-            
+            else if (typeof user.invalidkey !== 'undefined' && user.invalidkey === false)
+                invalidkey = ' <div class="contacts-validkey ion-key"></div>';
                 
             // add new entry
             html = html + '<li ' + active + '>' +
