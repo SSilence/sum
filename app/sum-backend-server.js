@@ -99,6 +99,8 @@ define('sum-backend-server', Class.extend({
      * @param response object with the type
      */
     handle: function(request, response) {
+        var user, notification, avatar;
+        
         // new message
         // {
         //    'id' 'uuid',
@@ -188,10 +190,10 @@ define('sum-backend-server', Class.extend({
         //     'signature': <signed by other user>
         // };
         } else if(request.type == 'room-invite-accept') {
-            var notification = lang.backend_server_invite_accepted.replace(/\%s/, request.sender.escape());
+            notification = lang.backend_server_invite_accepted.replace(/\%s/, request.sender.escape());
             this.backend.renderSystemMessage(notification, request.room);
-            var user = this.backend.getUser(request.sender);
-            var avatar = (typeof user !== 'undefined' && typeof user.avatar !== 'undefined' && user.avatar.length > 0) ? user.avatar : 'avatar.png';
+            user = this.backend.getUser(request.sender);
+            avatar = (typeof user !== 'undefined' && typeof user.avatar !== 'undefined' && user.avatar.length > 0) ? user.avatar : 'avatar.png';
             this.backend.notification(avatar, notification, '');
             response.writeHeader(200, {"Content-Type": "text/plain"});
             response.end();
@@ -207,10 +209,10 @@ define('sum-backend-server', Class.extend({
             //    'signature': <signed by other user>
             // };
         } else if(request.type == 'room-invite-decline') {
-            var notification = lang.backend_server_invite_declined.replace(/\%s/, request.sender.escape());
+            notification = lang.backend_server_invite_declined.replace(/\%s/, request.sender.escape());
             this.backend.renderSystemMessage(notification, request.room);
-            var user = this.backend.getUser(request.sender);
-            var avatar = (typeof user !== 'undefined' && typeof user.avatar !== 'undefined' && user.avatar.length > 0) ? user.avatar : 'avatar.png';
+            user = this.backend.getUser(request.sender);
+            avatar = (typeof user !== 'undefined' && typeof user.avatar !== 'undefined' && user.avatar.length > 0) ? user.avatar : 'avatar.png';
             this.backend.notification(avatar, notification, '');
             response.writeHeader(200, {"Content-Type": "text/plain"});
             response.end();
