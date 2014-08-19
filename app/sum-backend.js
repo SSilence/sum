@@ -325,6 +325,7 @@ define('sum-backend', Class.extend({
             var notification = new Notification(title, { body: text, icon: image });
             notification.onclick = function() {
                 gui.Window.get().show();
+                gui.Window.get().focus();
                 if (typeof conversation !== 'undefined') {
                     that.switchConversation(conversation);
                 }
