@@ -369,7 +369,7 @@ input.remove,
     .contacts-validkey,
     .contacts-invalidkey {
         color:#ff0000;
-        width:14px;
+        width:10px;
     }
     
     .contacts-validkey {
