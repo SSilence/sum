@@ -4,7 +4,7 @@ SUM - S Ultimate Messenger
 Copyright (c) 2014 Tobias Zeising, tobias.zeising@aditu.de  
 http://www.sum-messenger.org/<br />
 Licensed under the GPLv3 license  
-Version 1.0.0-SNAPSHOT
+Version 0.10.0
 
 [![Build Status](https://travis-ci.org/SSilence/sum.svg?branch=master)](https://travis-ci.org/SSilence/sum) [![Dependency Status](https://david-dm.org/ssilence/sum.svg)](https://david-dm.org/ssilence/sum)
 
@@ -139,7 +139,7 @@ SUM.exe KarlMusermann
 Following configuration parameters are available in config.ini:
 * ``userlist``: use file or web for using file based or web based (backend.php) userlist management
 * ``web_url``: if you use web for parameter userlist this specifies the url where backend.php runs
-* ``web_aes_key``: if you use web for parameter userlist this specifies the AES password for encrypting any data the backend.php script will save on server
+* ``aes_key``: this specifies the AES password for encrypting the userfile and any data the backend.php script will save on server
 * ``sha256_salt``: salt for password hashing
 * ``user_file``: if you use file for parameter userlist this specifies the path of the userlist file where all users register themself
 * ``user_file_extended``: if you use file for parameter userlist this specifies the path of the file where a user saves data as their avatar, key, ip and port which changes rarely

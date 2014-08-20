@@ -10,6 +10,50 @@ if (typeof lockFile == 'undefined') lockFile = require('lockfile');
 define('sum-backend-filesystem', Class.extend({
 
     /**
+     * backends crypto functions
+     */
+    backendCrypto: injected('sum-backend-crypto'),
+
+    
+    /**
+     * write object as json in file
+     * @param file (string) filename for writing the content
+     * @param content (object) will be json encoded written into file
+     * @param success (callback) will be called on success
+     * @param error (function) will be executed on error
+     * @param password (string) password for encryption
+     */
+    writeEncryptedFile: function(file, content, success, error, password) {
+        try {
+            var encrypted = this.backendCrypto.aesencrypt(JSON.stringify(content), password);
+            this.writeFile(file, encrypted, success, error);
+        } catch(err) {
+            error(lang.backend_filesystem_write_error.replace(/\%s/, typeof err !== 'undefined' && typeof err.ToString !== 'undefined' ? err.toString().escape() : ''));
+        }
+    },
+    
+    
+    /**
+     * read json encoded file and return as object
+     * @param file (string) path and filename
+     * @param success (function) after successfully reading and json parsing content of file
+     * @param error (function) after error on reading and json parsing content of file
+     * @param password (string) password for decryption
+     */
+    readEncryptedFile: function(file, success, error, password) {
+        var that = this;
+        this.readFile(file, function(data) {
+            try {
+                var decrypt = JSON.parse(that.backendCrypto.aesdecrypt(data.toString(), password));
+                success(decrypt);
+            } catch(e) {
+                error();
+            }
+        }, error);
+    },
+    
+
+    /**
      * write object as json in file
      * @param file (string) filename for writing the content
      * @param content (object) will be json encoded written into file
