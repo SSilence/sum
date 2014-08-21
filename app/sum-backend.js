@@ -322,14 +322,16 @@ define('sum-backend', Class.extend({
             title = title.length > 55 ? title.substring(0, 55) + '...' : title;
             text = text.length > 240 ? text.substring(0, 240) + '...' : text;
             
-            var notification = new Notification(title, { body: text, icon: image });
-            notification.onclick = function() {
+            if (image.indexOf('data:') === -1)
+                image = '../../' + image;
+            
+            window.LOCAL_NW.desktopNotifications.notify(image, title, text, function() {
                 gui.Window.get().show();
                 gui.Window.get().focus();
-                if (typeof conversation !== 'undefined') {
+                if (typeof conversation != 'undefined') {
                     that.switchConversation(conversation);
                 }
-            };
+            });
         }
     },
     

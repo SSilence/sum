@@ -167,6 +167,8 @@ You can access the debugger by setting ``"toolbar": true`` in ``package.json``
 CREDITS
 -------
 
+Thanks a lot to [Andi](https://github.com/DaAndi82) for implementing code message type.
+
 Special thanks to the great programmers of this libraries which will be used in SUM:
 
 * node-webkit: https://github.com/rogerwang/node-webkit
@@ -174,6 +176,7 @@ Special thanks to the great programmers of this libraries which will be used in 
 * lockfile: https://github.com/isaacs/lockfile
 * node-rsa: https://github.com/rzcoder/node-rsa
 * ini: https://github.com/isaacs/ini
+* nw-desktop-notifications: https://github.com/robrighter/nw-desktop-notifications
 * alertify: http://fabien-d.github.io/alertify.js/
 * jquery custom content scroller: http://manos.malihu.gr/jquery-custom-content-scroller/
 * jCrop: http://deepliquid.com/content/Jcrop.html
