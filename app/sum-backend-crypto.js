@@ -121,7 +121,7 @@ define('sum-backend-crypto', Class.extend({
      * @param key (object) key for signing
      */
     signMessage: function(message, key) {
-        var sign = this.sign(key, JSON.stringify(message));
+        var sign = this.sign(key, this.messageToString(message));
         return $.extend(message, { signature: sign });
     },
 
@@ -132,11 +132,21 @@ define('sum-backend-crypto', Class.extend({
      * @param key given public key
      */
     verifyMessage: function(message, key) {
-        if (typeof message.signature !== 'string')
-            return false;
-
-        var messageWithoutSign = $.extend({}, message);
-        delete messageWithoutSign.signature;
-        return this.verify(key, JSON.stringify(messageWithoutSign), message.signature);
+        return this.verify(key, this.messageToString(message), message.signature);
+    },
+    
+    
+    /**
+     * converts a message object into one string
+     * @return (string) message key values concated as string
+     * @param (object) message
+     */
+    messageToString: function(message) {
+        var messagestring = "";
+        $.each(Object.keys(message).sort(), function(index, key) {
+            if (key !== 'signature')
+                messagestring = messagestring + key + message[key];
+        });
+        return messagestring;
     }
 }));
