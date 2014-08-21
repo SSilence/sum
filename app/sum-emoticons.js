@@ -39,7 +39,7 @@ var emoticons = {
     ':geist:': 'emoticons/ghost.png',
     ':geschenk:': 'emoticons/gift.png',
     ':maedchen:': 'emoticons/girl.png',
-    ':bye:': 'emoticons/goodbye.png',
+    ':wink:': 'emoticons/goodbye.png',
     ':herz:': 'emoticons/heart.png',
     ':umarm:': 'emoticons/hug.png',
     ':kiss:': 'emoticons/kiss.png',
