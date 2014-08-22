@@ -152,9 +152,12 @@ define('sum-frontend', Class.extend({
             // show system tray notification
             that.backend.notification(that.backend.getAvatar(message.sender), lang.frontend_new_message + message.sender.escape(), message.text, conversationId);
 
+            // update stream
             if(that.currentConversation == conversationId)
                 that.backend.getConversation(that.currentConversation);
-            else {
+            
+            // update unread messages counter
+            if(that.backend.isFocused() === false) {
                 if (typeof that.unreadMessagesCounter[conversationId] == "undefined") {
                     that.unreadMessagesCounter[conversationId] = 0;
                 }
@@ -216,6 +219,13 @@ define('sum-frontend', Class.extend({
             
             // rerender single message
             ele.replaceWith(that.frontendMessages.renderMessage(message));
+        });
+        
+        // window will be focused: reset unread counter for current stream
+        this.backend.onFocus(function() {
+            delete that.unreadMessagesCounter[that.currentConversation];
+            that.backend.updateUserlist(that.currentConversation);
+            that.backend.updateRoomlist();
         });
     },
 
@@ -303,6 +313,10 @@ define('sum-frontend', Class.extend({
      * @param users (array) list of users for updating
      */
     updateUserlist: function(users) {
+        // update badge
+        var unread = this.frontendHelpers.countAllUnreadMessages(this.unreadMessagesCounter);
+        this.backend.setBadge(unread > 0 ? unread : "");
+        
         // save scroll state
         var contactsWrapper = $("#contacts-wrapper");
         var scrollPosition = typeof contactsWrapper.data('scrollTop') != 'undefined' ? contactsWrapper.data('scrollTop') : 0;
@@ -353,6 +367,10 @@ define('sum-frontend', Class.extend({
      * @param rooms (array) list of rooms for updating
      */
     updateRoomlist: function(rooms) {
+        // update badge
+        var unread = this.frontendHelpers.countAllUnreadMessages(this.unreadMessagesCounter);
+        this.backend.setBadge(unread > 0 ? unread : "");
+        
         // save scroll state
         var roomsWrapper = $("#rooms-wrapper");
         var scrollPosition = typeof roomsWrapper.data('scrollTop') != 'undefined' ? roomsWrapper.data('scrollTop') : 0;
@@ -412,15 +430,7 @@ define('sum-frontend', Class.extend({
      * @param messages (array) list of all messages
      */
     updateConversation: function(messages) {
-        // set unreadcounter to 0
-        delete this.unreadMessagesCounter[this.currentConversation];
-        this.backend.updateUserlist(this.currentConversation);
-        this.backend.updateRoomlist();
         this.updateConversationHeader();
-        
-        // update badge
-        var unread = this.frontendHelpers.countAllUnreadMessages(this.unreadMessagesCounter);
-        this.backend.setBadge(unread > 0 ? unread : "");
         
         // show messages
         var that = this;
