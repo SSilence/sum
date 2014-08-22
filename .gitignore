@@ -4,7 +4,7 @@ bin
 node_modules/grunt*
 node_modules/nodewebkit*
 node_modules/.bin*
-config.ini
+config*.ini
 gamez
 userlist.db
 cache
