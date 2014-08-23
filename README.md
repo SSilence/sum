@@ -106,7 +106,7 @@ Following configuration parameters are available in config.ini:
 DEVELOPING & CONTRIBUTING
 -------------------------
 
-See [developer guide](https://github.com/SSilence/sum/DeveloperGuide.md) for more information about SUMs architecture, how you install the development environment, test, build and debug SUM.
+See [developer guide](https://github.com/SSilence/sum/blob/master/DeveloperGuide.md) for more information about SUMs architecture, how you install the development environment, test, build and debug SUM.
 Feel free to send a pull request.
 
 
