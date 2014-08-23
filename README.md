@@ -11,7 +11,7 @@ Version 1.1.0-SNAPSHOT
 
 SUM is a simple secure desktop instant messenger for local networks. No server infrastructure is needed. User find each other by registering in a file which will be stored at a shared network folder or optionally by an simple backend written in php. The communication between users is RSA encrypted. User can verify the identity of the other users by sharing their public keys. SUM is ideal for communication in company's because no messages will be stored anywhere. The integrated public/private key management allows a encrypted communication and ensures a tap-proof and tamper-proof messaging.
 
-![SUM Screenshot][1]
+![SUM Screenshot](https://raw.githubusercontent.com/SSilence/sum/master/website/screenshot_medium.png)
 
 
 
@@ -29,12 +29,24 @@ Features
 
 
 
-RUN SUM
--------
+INSTALLATION & CONFIGURATION
+----------------------------
 
-You can start sum by executing sum.exe. You have to configure at least your backend for using SUM in your own network. Create a config.ini in the folder of your sum.exe.
+Download and unzip ``sum.zip``. You can start sum by executing ``sum.exe``. 
 
-If you use a shared folder as backend then insert following values in your config.ini:
+You can configure SUM by adding ``config.ini`` in the same folder as your ``sum.exe``. You can also enter the path of the ``config.ini`` as command line argument for ``sum.exe``. 
+
+```
+SUM.exe c:\tmp\otherconfig.ini
+```
+
+Before you can use SUM you have to configure first how your chat clients will find each other. You can choose between using a network drive (shared directory) or using a php based backend script on a webserver.
+
+
+**Using a network drive or shared directory**
+
+If you use a shared folder as backend then insert following values in your config.ini. You have to specify myserver/simfolder:
+
 ```
 userlist = file
 user_file = //myserver/simfolder/userfile.json
@@ -42,99 +54,28 @@ user_file_extended = //myserver/simfolder/?
 lock_file = //myserver/simfolder/userfile.lock
 ```
 
-If you use the php based backend, then upload backend.php on your server and configure:
+
+**Using the backend script on a webserver**
+
+You can also use the ``backend.php`` on your webserver. This little script saves the userlist in a sqlite database (you don't have to configure anything, just give the script write permissions to the folder backend.php is in). Before the SUM client saves the data in the backend.php script it encrypts it. You can specify the AES password. Only your clients can decrypt the data stored on the webserver.
+
 ```
 userlist = web
 web_url = http://myserver/sum/backend.php
-web_aes_key = mysecretpassword
+aes_key = mysecretpassword
 sha256_salt = anysaltstring
 ```
 
-The AES key will be used for encrypting all user informations before putting them on your server. This ensures that no internal information (like IP addresses or usernames) will be accessible outside your closed network.
+The AES key will be used for encrypting all user informations before putting them on your share or server. This ensures that no internal information (like IP addresses or usernames) will be accessible outside your closed network.
 
 
 
-RUN SUM FOR DEVELOPMENT
------------------------
 
- 1. install [node.js][2]
- 2. install node webkit: ```npm install nodewebkit -g```
- 3. now you can start sum with ```nodewebkit``` from command line
+CONFIGURATION
+-------------
 
 
-
-BUILD RELEASE (only Windows)
-----------------------------
-
-this has to be done only once:
- 1. install [InnoSetup][3]
- 2. add InnoSetup program directory to path variable
- 3. install [node.js][4]
- 4. install grunt: ```npm install -g grunt-cli```
- 5. install all developments node_modules: ```npm install```
-
-for creating a new build you have to do following:
- 1. you can set a new version by adding the optional parameter ```--newversion=1.2.3``` to grunt
- 2. build sum and setup: ```grunt``` (with current version) or ```grunt --newversion=1.0.0``` (for setting new version)
- 3. you can find the sum setup in the ```bin``` folder
-
-If you are behind a proxy you have to set your proxy server for npm and nodewebkit in c:\Users\username\.npmrc
-```
-proxy = http://username:secret@yourproxy.de:8080/
-https-proxy = https://username:secret@yourproxy.de:8080/
-```
-
-You need also proxy settings for installing nodewebkit and using grunt. You have to set ```http_proxy``` as environment variable.
-
-
-
-TEST SUM
---------
-
-You have three options for running unit tests:
- * unit tests will be executed on running ```grunt``` which builds also a sum.exe and setup (see build release chapter) from command line
- * only execute jshint and jasmine with ```grunt check``` from command line
- * open ```run.html``` in folder ```test``` in your browser
-
-
-
-CONFIG
-------
-
-You can configure SUM by adding config.ini in your base dir (same folder where package.json, and README.md is). Using compiled sum.exe you can place the config.ini in the same folder as your sum.exe is. You can also enter the path of the config.ini as command line argument for sum.exe.
-
-Per default all configuration values taken from app/default.ini. By setting single values in your config.ini you can overwrite them. 
-
-example config.ini in base folder:
-```
-user_file = //myserver/simfolder/userfile.json
-user_file_extended = //myserver/simfolder/?
-lock_file = //myserver/simfolder/userfile.lock
-```
-
-You can also set a config as parameter:
-
-```
-nodewebkit c:\tmp\otherconfig.ini
-```
-
-or 
-
-```
-SUM.exe c:\tmp\otherconfig.ini
-```
-
-For only setting another username just use a username as parameter:
-```
-nodewebkit KarlMustermann
-```
-
-or
-
-```
-SUM.exe KarlMusermann
-```
-
+You can configure following values in your config.ini. See default.ini for default settings.
 
 Following configuration parameters are available in config.ini:
 * ``userlist``: use file or web for using file based or web based (backend.php) userlist management
@@ -160,7 +101,13 @@ Following configuration parameters are available in config.ini:
 * ``about_url``: url for menue entry 'about sum'
 * ``highlight_languages_value``: supported highlight.js languages in code input selection (replace value by language key)
 
-You can access the debugger by setting ``"toolbar": true`` in ``package.json``
+
+
+DEVELOPING & CONTRIBUTING
+-------------------------
+
+See [developer guide](https://github.com/SSilence/sum/DeveloperGuide.md) for more information about SUMs architecture, how you install the development environment, test, build and debug SUM.
+Feel free to send a pull request.
 
 
 
@@ -198,9 +145,3 @@ Special thanks to the great programmers of this libraries which will be used in 
 * Website Template: http://html5up.net/
 * Application Icon: http://www.graphicsfuel.com/
 * Font Oswald: http://www.fontsquirrel.com/fonts/oswald
-
-
-  [1]: https://raw.githubusercontent.com/SSilence/sum/master/website/screenshot_medium.png
-  [2]: http://nodejs.org/
-  [3]: http://www.jrsoftware.org/isinfo.php
-  [4]: http://nodejs.org/
