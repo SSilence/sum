@@ -32,7 +32,7 @@ Features
 INSTALLATION & CONFIGURATION
 ----------------------------
 
-Download and unzip ``sum.zip``. You can start sum by executing ``sum.exe``. 
+[Download](https://github.com/SSilence/sum/releases) and unzip ``sum.zip``. You can start sum by executing ``sum.exe``. 
 
 You can configure SUM by adding ``config.ini`` in the same folder as your ``sum.exe``. You can also enter the path of the ``config.ini`` as command line argument for ``sum.exe``. 
 
