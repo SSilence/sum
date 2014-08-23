@@ -128,6 +128,7 @@ The Backend has a few helper classes:
  - ``sum-backend-storage`` saves and loads from local storage
 
 **List of all users**
+
 For finding other users SUM supports two userfile types: on filesystem (``sum-backend-userlist-file``) or using a little backend.php script (``sum-backend-userlist-web``):
 
 ![sums frontend](http://yuml.me/diagram/scruffy;dir:TB/class/%5Bsum-backend-userlist-file%7Csum-backend-userlist-web%5D-updates%20userlist%3E%5Bsum-backend%5D%2C%5Bsum-backend%5D-init%20timer%3E%5Bsum-backend-userlist-file%7Csum-backend-userlist-web%5D)
@@ -135,9 +136,11 @@ For finding other users SUM supports two userfile types: on filesystem (``sum-ba
 SUM updates the current user periodicaly with an updated timestamp and removes timedout users from list. A second file per user holds rarely updated informations as avatar, ip and the public key.
 
 **Server**
+
 For receiving messages from other users and sending files  SUM starts an server (```sum-backend-server```).
 
 ![sums frontend](http://yuml.me/diagram/scruffy;dir:TB/class/%5Bsum-backend-server%5D-execute%20frontends%20callbacks%3E%5Bsum-backend%5D%2C%5Bsum-backend%5D-start%20server%3E%5Bsum-backend-server%5D)
 
 **login, config, language**
+
 In ``sum-init.js`` the application shows the login screen (if key management is activated), parses the config.ini and reads the current language file.
