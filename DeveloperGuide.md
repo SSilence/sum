@@ -13,7 +13,7 @@ For running SUM in development mode, building SUM executable or building setup, 
 
  1. install [node.js](http://nodejs.org/)
  2. ```npm install nodewebkit -g``` installs node webkit which is a webkit browser with build in node
- 3. ```npm install -g grunt-cli``` installs the build tool grunt
+ 3. ```npm install grunt-cli -g``` installs the build tool grunt
  4. ```npm install``` in SUM folder install all development dependencies
  5. if you plan to build a setup then install [InnoSetup](http://www.jrsoftware.org/isinfo.php) and add it to your path environment variable
 
@@ -39,7 +39,7 @@ CLASSES
 For defining classes I use [John Resigs](http://ejohn.org/blog/simple-javascript-inheritance/) little classes script. Currently there is no inheritance in SUM but its nice to have this option and I like how classes are defined. You can this in ``libs/class.js``
 
 This shows, how Johns class definition will be used:
-``` js
+```javascript
 var Person = Class.extend({
   init: function(isDancing){
     this.dancing = isDancing;
@@ -68,7 +68,7 @@ I use a simple self made dependency injection script for creating instances of c
 
 Following example shows how you can use di:
 
-``` js
+```javascript
 define('oneclass', function() {
     this.foo = 'bar';
 });
@@ -137,10 +137,10 @@ SUM updates the current user periodicaly with an updated timestamp and removes t
 
 **Server**
 
-For receiving messages from other users and sending files  SUM starts an server (```sum-backend-server```).
+For receiving messages from other users and sending files  SUM starts an server (```sum-backend-server```). This server receives the messages of other users, validates them, and updates the backend and informs the frontend (using the callbacks which was registered at the backend on application startup).
 
 ![sums frontend](http://yuml.me/diagram/scruffy;dir:TB/class/%5Bsum-backend-server%5D-execute%20frontends%20callbacks%3E%5Bsum-backend%5D%2C%5Bsum-backend%5D-start%20server%3E%5Bsum-backend-server%5D)
 
 **login, config, language**
 
-In ``sum-init.js`` the application shows the login screen (if key management is activated), parses the config.ini and reads the current language file.
+In ``sum-init.js`` the application shows the login screen (if key management is activated), parses the ``config.ini`` and reads the current language file.
