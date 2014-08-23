@@ -36,7 +36,7 @@ After doing basic setup you can run, build and test SUM. Open your command line 
 CLASSES
 -------
 
-For defining classes I use [John Resigs](http://ejohn.org/blog/simple-javascript-inheritance/) little classes script. Currently there is no inheritance in SUM but its nice to have this option and I like how classes are defined. You can this in ``libs/class.js``
+For defining classes I use [John Resigs](http://ejohn.org/blog/simple-javascript-inheritance/) little classes script. Currently there is no inheritance in SUM but its nice to have this option and I like how classes are defined. You can find this in ``libs/class.js``
 
 This shows, how Johns class definition will be used:
 ```javascript
