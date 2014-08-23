@@ -279,7 +279,7 @@ define('sum-backend-userlist-file', Class.extend({
         // check public key
         for (var i = 0; i < users.length; i++) {
             var key = this.backend.getPublicKey(users[i].username);
-            if (key !== false && users[i].key === key)
+            if (key !== false && this.backendHelpers.extractBase64Key(users[i].key) === this.backendHelpers.extractBase64Key(key))
                 users[i].invalidkey = false;
             else if (key !== false)
                 users[i].invalidkey = true;

@@ -265,5 +265,15 @@ define('sum-backend-helpers', Class.extend({
             toolbar: false,
             frame: true
         });
+    },
+    
+    
+    /**
+     * removes newlines and ---- BEGIN PUBLIC KEY -----...
+     * @return (string) only base64 key
+     * @param (string) key
+     */
+    extractBase64Key: function(key) {
+        return key.replace(/(\-)+[^\-]+(\-)+/g, '').replace(/[^a-z0-9+/=]/gi,'');
     }
 }));
