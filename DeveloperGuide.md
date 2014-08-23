@@ -39,7 +39,7 @@ CLASSES
 For defining classes I use [John Resigs](http://ejohn.org/blog/simple-javascript-inheritance/) little classes script. Currently there is no inheritance in SUM but its nice to have this option and I like how classes are defined. You can this in ``libs/class.js``
 
 This shows, how Johns class definition will be used:
-```
+``` js
 var Person = Class.extend({
   init: function(isDancing){
     this.dancing = isDancing;
@@ -68,7 +68,7 @@ I use a simple self made dependency injection script for creating instances of c
 
 Following example shows how you can use di:
 
-```
+``` js
 define('oneclass', function() {
     this.foo = 'bar';
 });
@@ -88,12 +88,13 @@ STRUCTURE OF SUM
 
 SUM consists of two parts:
 
+![frontend knows backend, but backend doesn't know frontend](http://yuml.me/diagram/scruffy;dir:TB/class/%252F%252F%20Cool%20Class%20Diagram,%20%5Bsum-frontend%5D-%3E%5Bsum-backend%5D.png)
+
+
  - **frontend**: this handels all UI events, and showing any new messages and data coming from backend
  - **backend**: this handels chat communication, updating the userlist and encryption
 
 The frontend knows the backend and uses the backend (only the ``sum-backend`` class). Backend doesn't know and call the frontend. The frontend registers a few callbacks at backend, which will be called for backend events as receiving new messages or informing the frontend about a new user which is now online.
-
-![frontend knows backend, but backend doesn't know frontend](http://yuml.me/diagram/scruffy;dir:TB/class/%252F%252F%20Cool%20Class%20Diagram,%20%5Bsum-frontend%5D-%3E%5Bsum-backend%5D.png)
 
 
 
