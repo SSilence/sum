@@ -691,6 +691,7 @@ define('sum-frontend-events', Class.extend({
             that.backend.updateUserlist(that.frontend.currentConversation);
             that.backend.getConversation(user);
             $('#main-metadata').css('visibility', 'visible');
+            $('#message-input-textfield').focus();
         });
 
         // select room
@@ -707,6 +708,7 @@ define('sum-frontend-events', Class.extend({
             that.backend.updateUserlist(that.frontend.currentConversation);
             that.backend.getConversation(that.frontend.currentConversation);
             $('#main-metadata').css('visibility', 'visible');
+            $('#message-input-textfield').focus();
         });
 
         // rooms add: show dialog
