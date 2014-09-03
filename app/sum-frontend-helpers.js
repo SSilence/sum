@@ -44,7 +44,7 @@ define('sum-frontend-helpers', Class.extend({
             return;
 
         // update element
-        $(element).html(this.dateAgo(dateInSeconds));
+        $(element).html(this.dateAgo(date));
 
         // trigger next update
         var that = this;
@@ -61,8 +61,9 @@ define('sum-frontend-helpers', Class.extend({
      */
     dateAgo: function(date) {
         var now = new Date().getTime() / 1000;
+        var dateInSeconds = date / 1000;
 
-        var ageInSeconds = now - date;
+        var ageInSeconds = now - dateInSeconds;
         var ageInMinutes = ageInSeconds / 60;
         var ageInHours = ageInMinutes / 60;
         var ageInDays = ageInHours / 24;
@@ -73,9 +74,8 @@ define('sum-frontend-helpers', Class.extend({
             return ageInMinutes < 2 ? lang.frontend_helpers_a_minute_ago : lang.frontend_helpers_n_minutes_ago.replace(/\%s/, Math.floor(ageInMinutes));
         if(ageInDays<1)
             return ageInHours < 2 ? lang.frontend_helpers_a_hour_ago : lang.frontend_helpers_n_hours_ago.replace(/\%s/, Math.floor(ageInHours));
-
-        var dateObj = new Date(date*1000);
-        return dateObj.getHours() + ':' + dateObj.getMinutes() + ':' + dateObj.getSeconds();
+        
+        return new Date(date).toLocaleString();
     },
 
 
