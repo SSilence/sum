@@ -1,5 +1,5 @@
-SUM - S Ultimate Messenger
-==========================
+SUM - Secure Ultimate Messenger
+===============================
 
 Copyright (c) 2014 Tobias Zeising, tobias.zeising@aditu.de  
 http://www.sum-messenger.org/<br />
