@@ -73,7 +73,7 @@ define('sum-frontend-messages', Class.extend({
         <div class="entry-contentarea" lang="de">\
             <span class="entry-sender">' + message.sender.escape() + '</span>\
             <span class="entry-datetime" title="' + new Date(message.datetime).toLocaleString() + '">\
-                ' + this.frontendHelpers.dateAgo(message.datetime) + '\
+                ' + this.frontendHelpers.formatDate(message.datetime) + '\
             </span>\
                 ' + signed + '\
             <div class="entry-content">\

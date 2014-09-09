@@ -451,18 +451,9 @@ define('sum-frontend', Class.extend({
         // remove old messages if complete messages stream was changed
         if (onlyAppendNewMessages === false)
             $('#content').html('');
-        var startTimeAgoUpdaterIndex = $('#content .entry').length;
 
         // add (new) messages
         $('#content').append(html);
-
-        // start time ago updater (only for new messages)
-        $.each(messages, function(index, message) {
-            if (index >= startTimeAgoUpdaterIndex) {
-                var dateTimeElement = $('#content .entry:nth-child(' + (index+1) + ') .entry-datetime');
-                that.frontendHelpers.startDateAgoUpdater(message.datetime, dateTimeElement);
-            }
-        });
 
         // scroll 2 bottom
         $("#content").waitForImages(function() {

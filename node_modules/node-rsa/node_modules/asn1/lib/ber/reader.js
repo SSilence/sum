@@ -171,7 +171,7 @@ Reader.prototype.readString = function(tag, retbuf) {
   this._offset = o;
 
   if (this.length === 0)
-    return '';
+    return retbuf ? new Buffer(0) : '';
 
   var str = this._buf.slice(this._offset, this._offset + this.length);
   this._offset += this.length;

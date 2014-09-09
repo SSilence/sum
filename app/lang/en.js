@@ -124,13 +124,7 @@ var lang = {
     frontend_events_invite_user_placeholder: 'users...',
     frontend_events_avatar_removed: 'avatar removed',
     frontend_events_key_reset_success: 'key successfully resetted',
-    
-    frontend_helpers_a_few_seconds_ago: 'a few seconds ago',
-    frontend_helpers_a_minute_ago: 'a minute ago',
-    frontend_helpers_a_hour_ago: 'one hour ago',
-    frontend_helpers_n_minutes_ago: '%s minutes ago',
-    frontend_helpers_n_hours_ago: '%s hours ago',
-    
+
     frontend_messages_new_download: 'New Download:',
     frontend_messages_downloaded_by: 'Downloaded from: ',
     frontend_messages_download_canceled: 'File was withdrawn',

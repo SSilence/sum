@@ -7,80 +7,26 @@
 define('sum-frontend-helpers', Class.extend({
 
     /**
-     * updates ago during element is visible
-     * @param date (date) given date
-     * @param element (DOMNode) HTML Element which should holds the time
-     */
-    startDateAgoUpdater: function(date, element) {
-
-        // no longer update removed elements
-        var found = false;
-        $('#content .entry-datetime').each(function(index, item) {
-            if($(item).html()==$(element).html()) {
-                found = true;
-                return false;
-            }
-        });
-
-        if(found===false)
-            return;
-
-        // calculate update interval
-        var dateInSeconds = date / 1000;
-        var now = new Date().getTime() / 1000;
-        var ageInSeconds = now - dateInSeconds;
-        var ageInMinutes = ageInSeconds / 60;
-        var ageInHours = ageInMinutes / 60;
-        var ageInDays = ageInHours / 24;
-
-        var timeout = 1000;
-        if(ageInMinutes<1)
-            timeout = 60000;
-        else if(ageInHours<1)
-            timeout = 1000 * 60;
-        else if(ageInDays<1)
-            timeout = 1000 * 60 * 60;
-        else
-            return;
-
-        // update element
-        $(element).html(this.dateAgo(date));
-
-        // trigger next update
-        var that = this;
-        window.setTimeout(function() {
-            that.startDateAgoUpdater(date, element);
-        }, timeout);
-    },
-
-
-    /**
-     * convert date in vor n Minuten
+     * formats date
      * @return (string) formatted date
      * @param date (date) given date
      */
-    dateAgo: function(date) {
-        var now = new Date().getTime() / 1000;
-        var dateInSeconds = date / 1000;
-
-        var ageInSeconds = now - dateInSeconds;
-        var ageInMinutes = ageInSeconds / 60;
-        var ageInHours = ageInMinutes / 60;
-        var ageInDays = ageInHours / 24;
-
-        if(ageInMinutes<1)
-            return ' ' + lang.frontend_helpers_a_few_seconds_ago;
-        if(ageInHours<1)
-            return ageInMinutes < 2 ? lang.frontend_helpers_a_minute_ago : lang.frontend_helpers_n_minutes_ago.replace(/\%s/, Math.floor(ageInMinutes));
-        if(ageInDays<1)
-            return ageInHours < 2 ? lang.frontend_helpers_a_hour_ago : lang.frontend_helpers_n_hours_ago.replace(/\%s/, Math.floor(ageInHours));
-        
-        return new Date(date).toLocaleString();
+    formatDate: function(date) {
+        date = new Date(date);
+        var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var month = date.getMonth() + 1;
+        var month = month < 10 ? "0" + month : month;
+        var year = date.getFullYear();
+        var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        return hours + ":" + minutes + ":" + seconds + " " +  day + "." + month + "." + year;
     },
 
 
     /**
      * insert emoticons
+     *
      * @return (string) text with emoticons images
      * @param text (string) text with emoticons shortcuts
      */
