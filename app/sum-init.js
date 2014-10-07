@@ -2,6 +2,7 @@ if (typeof gui == 'undefined') gui = require('nw.gui');
 if (typeof ini == 'undefined') ini = require('ini');
 if (typeof fs == 'undefined') fs = require('fs');
 if (typeof path == 'undefined') path = require('path');
+if (typeof os == 'undefined') os = require('os');
 
 /**
  * startup sim
@@ -16,6 +17,11 @@ $(document).ready(function() {
     // get default config
     config = ini.parse(fs.readFileSync('./app/default.ini', 'utf-8'));
 
+    // for linux or osx overwrite values from ~/.sum.ini configuration file
+    if (os.platform() == 'linux' || os.platform() == 'darwin')
+        if (fs.existsSync(process.env.HOME + '/.sum.ini'))
+            $.extend(config, ini.parse(fs.readFileSync(process.env.HOME + '/.sum.ini', 'utf-8')));
+        
     // overwrite values from second, optional config.ini
     if (fs.existsSync('./config.ini'))
         $.extend(config, ini.parse(fs.readFileSync('./config.ini', 'utf-8')));
