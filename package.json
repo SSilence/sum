@@ -28,8 +28,8 @@
   },
   "devDependencies": {
     "grunt": "~0.4",
-    "grunt-contrib-compress": "~0.11",
-    "grunt-contrib-jasmine": "~0.7",
+    "grunt-contrib-compress": "~0.12",
+    "grunt-contrib-jasmine": "~0.8",
     "grunt-contrib-jshint": "~0.10",
     "grunt-node-webkit-builder": "~0.2",
     "grunt-shell": "~1.1",
