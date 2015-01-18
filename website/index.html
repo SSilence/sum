@@ -29,12 +29,12 @@
                 <h1>SUM - Secure Ultimate Messenger</h1>
                 <p>SUM is a simple secure desktop instant messenger for local networks. <br />No server infrastructure is needed. All communication is encrypted and nothing saved on any server.</p>
                 <br />
-                <a class="button" href="sum-setup-0.8.0.zip">download</a>
+                <a class="button" href="sum-1.2.0.zip">download</a>
             </div>
 
         <!-- Main -->
             <div id="main">
-            
+             
                 <header class="major container small">
                     <img src="screenshot_medium.png" />
                     <p>no server needed &bullet; full encrypted &bullet; public / private key management &bullet; send files encrypted &bullet; rooms &bullet; send formatted source code &bullet; avatars for users &bullet; emoticons &bullet; opensource &bullet; free</p>
@@ -85,7 +85,7 @@ user_file = //myserver/simfolder/userfile.json
 user_file_extended = //myserver/simfolder/?
 lock_file = //myserver/simfolder/userfile.lock
                         </pre>
-                        
+
                         <h4>Using the little backend script on a webserver</h4>
                         <p>You can also use the backend.php on your webserver. This little script saves the userlist in a sqlite database (you don't have to configure anything, just give the script write permissions to the folder backend.php is in).
                         Before the SUM client saves the data in the backend.php script it encrypts it. You can specify the AES password. Only your clients can decrypt the data stored on the webserver.</p>
@@ -228,11 +228,27 @@ sha256_salt = anysaltstring
                     <ul class="copyright">
                         <li>&copy; Tobias Zeising &bullet; <a href="http://www.aditu.de">aditu.de</a> &bullet; <a href="mailto:tobias.zeising@aditu.de">tobias.zeising@aditu.de</a></li>
                         <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-                                            
+                        <li>Icon: <a href="http://www.graphicsfuel.com/2011/10/megaphone-icon-vector-psd/">Graphicsfuel.com</a></li>
                     </ul>
             
                 </div>
             </div>
 
+            
+    <!-- Piwik -->
+    <script type="text/javascript">
+      var _paq = _paq || [];
+      _paq.push(["trackPageView"]);
+      _paq.push(["enableLinkTracking"]);
+
+      (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://piwik.aditu.de/";
+        _paq.push(["setTrackerUrl", u+"piwik.php"]);
+        _paq.push(["setSiteId", "16"]);
+        var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
+        g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
+      })();
+    </script>
+    <!-- End Piwik Code -->
     </body>
 </html>
