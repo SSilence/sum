@@ -25,7 +25,7 @@ $(document).ready(function() {
             return false;
         }
         return true;
-    }
+    };
     
     // for linux or osx overwrite values from ~/.sum.ini configuration file
     if (os.platform() == 'linux' || os.platform() == 'darwin')
