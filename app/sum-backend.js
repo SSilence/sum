@@ -1081,7 +1081,7 @@ define('sum-backend', Class.extend({
     exportPublicKey: function(path, success) {
         var keyToSave = {
             'username': this.backendHelpers.getUsername(),
-            'key': this.key.exportKey('pkcs8-public-pem')
+            'key': this.key.getPublicPEM()
         };
         this.backendFilesystem.writeJsonFile(path, keyToSave, success, this.error);
     },
@@ -1111,8 +1111,8 @@ define('sum-backend', Class.extend({
                 var decrypted = that.backendCrypto.aesdecrypt(encrypted.toString('utf8'), password);
                 var keypair = JSON.parse(decrypted);
                 var key = new NodeRSA();
-                key.importKey(keypair.publicKey, 'pkcs8-public-pem');
-                key.importKey(keypair.privateKey, 'pkcs8-private-pem');
+                key.loadFromPEM(keypair.publicKey);
+                key.loadFromPEM(keypair.privateKey);
                 that.key = key;
                 that.saveKey(password);
                 that.rewriteUsersOwnFile();

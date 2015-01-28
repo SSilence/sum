@@ -88,8 +88,8 @@ define('sum-backend-storage', Class.extend({
                 var decrypted = this.backendCrypto.aesdecrypt(encrypted, password);
                 var keypair = JSON.parse(decrypted);
                 var key = new NodeRSA();
-                key.importKey(keypair.publicKey, 'pkcs8-public-pem');
-                key.importKey(keypair.privateKey, 'pkcs8-private-pem');
+                key.loadFromPEM(keypair.publicKey);
+                key.loadFromPEM(keypair.privateKey);
                 return key;
             } catch (err) {
                 return false;
@@ -106,8 +106,8 @@ define('sum-backend-storage', Class.extend({
      */
     saveKey: function(key, password) {
         var keypair = {
-            'publicKey': key.exportKey('pkcs8-public-pem'),
-            'privateKey': key.exportKey('pkcs8-private-pem')
+            'publicKey': key.getPublicPEM(),
+            'privateKey': key.getPrivatePEM()
         };
         localStorage.keypair = this.backendCrypto.aesencrypt(JSON.stringify(keypair), password);
     },
