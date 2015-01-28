@@ -181,7 +181,7 @@ define('sum-frontend-events', Class.extend({
             $('#main-menue-dropdown').hide();
         });
 
-        // menue: about
+        // menue: quit
         $('#main-menue-quit').click(function() {
             that.backend.quit();
         });
@@ -192,7 +192,7 @@ define('sum-frontend-events', Class.extend({
             $('#main-menue-dropdown').hide();
         });
 
-        // menue: quit
+        // menue: clos window
         $('#main-close').click(function() {
             that.backend.close();
         });

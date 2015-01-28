@@ -105,8 +105,11 @@ define('sum-backend-client', Class.extend({
                     }
                     
                     // target not created: continue
-                    if (fs.existsSync(params.target) === false)
+                    try {
+                        fs.accessSync(params.target);
+                    } catch(e) {
                         return;
+                    }
                     
                     var fileSize = fs.statSync(params.target).size;
                     var percent = Math.floor((fileSize / params.size) * 100);

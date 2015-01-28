@@ -256,7 +256,13 @@ define('sum-backend-server', Class.extend({
             
             // file is still available?
             var msg = this.backend.getMessage(request.file);
-            if (msg === false || msg.canceled === true || fs.existsSync(msg.path) === false) {
+            var isAvailable = true;
+            try {
+                fs.accessSync(msg.path);
+            } catch(e) {
+                isAvailable = false;
+            }
+            if (msg === false || msg.canceled === true || isAvailable === false) {
                 response.writeHeader(404, {"Content-Type": "text/plain"});
                 response.end();
                 return;

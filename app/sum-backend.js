@@ -155,7 +155,7 @@ define('sum-backend', Class.extend({
         
         // init node webkit tray icon
         this.initTray();
-
+        
         // load rooms where user was in on last logout
         this.roomlist = this.backendStorage.loadRoomlist();
 
@@ -210,6 +210,11 @@ define('sum-backend', Class.extend({
             that.focus = true;
             if (typeof that.focusCallback !== 'undefined')
                 that.focusCallback();
+        });
+        
+        // window close is not quit it just minimize to tray
+        gui.Window.get().on('close', function() {
+            that.close();
         });
     },
     
@@ -807,8 +812,11 @@ define('sum-backend', Class.extend({
      */
     sendFileInvite: function(file, user) {
         // file available?
-        if (fs.existsSync(file) === false)
+        try {
+            fs.accessSync(file);
+        } catch(e) {
             this.error(lang.backend_file_invite_access_error);
+        }
                 
         // file size?
         var fileSize = fs.statSync(file).size;
@@ -1073,7 +1081,7 @@ define('sum-backend', Class.extend({
     exportPublicKey: function(path, success) {
         var keyToSave = {
             'username': this.backendHelpers.getUsername(),
-            'key': this.key.getPublicPEM()
+            'key': this.key.exportKey('pkcs8-public-pem')
         };
         this.backendFilesystem.writeJsonFile(path, keyToSave, success, this.error);
     },
@@ -1103,8 +1111,8 @@ define('sum-backend', Class.extend({
                 var decrypted = that.backendCrypto.aesdecrypt(encrypted.toString('utf8'), password);
                 var keypair = JSON.parse(decrypted);
                 var key = new NodeRSA();
-                key.loadFromPEM(keypair.publicKey);
-                key.loadFromPEM(keypair.privateKey);
+                key.importKey(keypair.publicKey, 'pkcs8-public-pem');
+                key.importKey(keypair.privateKey, 'pkcs8-private-pem');
                 that.key = key;
                 that.saveKey(password);
                 that.rewriteUsersOwnFile();

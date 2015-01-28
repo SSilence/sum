@@ -17,17 +17,27 @@ $(document).ready(function() {
     // get default config
     config = ini.parse(fs.readFileSync('./app/default.ini', 'utf-8'));
 
+    // helper returns true if file exists, false otherwise
+    var fileExists = function(filename) {
+        try {
+            fs.accessSync(filename);
+        } catch(e) {
+            return false;
+        }
+        return true;
+    }
+    
     // for linux or osx overwrite values from ~/.sum.ini configuration file
     if (os.platform() == 'linux' || os.platform() == 'darwin')
-        if (fs.existsSync(process.env.HOME + '/.sum.ini'))
+        if (fileExists(process.env.HOME + '/.sum.ini'))
             $.extend(config, ini.parse(fs.readFileSync(process.env.HOME + '/.sum.ini', 'utf-8')));
         
     // overwrite values from second, optional config.ini
-    if (fs.existsSync('./config.ini'))
+    if (fileExists('./config.ini'))
         $.extend(config, ini.parse(fs.readFileSync('./config.ini', 'utf-8')));
     
     var additionalConfig = path.dirname(process.execPath) + '/config.ini';
-    if (fs.existsSync(additionalConfig))
+    if (fileExists(additionalConfig))
         $.extend(config, ini.parse(fs.readFileSync(additionalConfig, 'utf-8')));
     
     
@@ -35,11 +45,11 @@ $(document).ready(function() {
     if (gui.App.argv.length > 0) {
 
         // argument is absolute config file?
-        if (fs.existsSync(gui.App.argv[0])) {
+        if (fileExists(gui.App.argv[0])) {
             $.extend(config, ini.parse(fs.readFileSync(gui.App.argv[0], 'utf-8')));
         
         // argument is relative config file?
-        } else if (fs.existsSync(path.dirname(process.execPath) + '/' + gui.App.argv[0])) {
+        } else if (fileExists(path.dirname(process.execPath) + '/' + gui.App.argv[0])) {
             $.extend(config, ini.parse(fs.readFileSync(path.dirname(process.execPath) + '/' + gui.App.argv[0], 'utf-8')));
             
         // otherwise use argument as username

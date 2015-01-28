@@ -166,7 +166,9 @@ define('sum-backend-filesystem', Class.extend({
      * @param dir (string) the target directory
      */
     getDirectories: function(dir) {
-        if (fs.existsSync(dir) === false) {
+        try {
+            fs.accessSync(dir);
+        } catch(e) {
             return [];
         }
         return fs.readdirSync(dir).filter(function (file) {

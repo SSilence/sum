@@ -55,7 +55,7 @@ define('sum-backend-userlist-web', Class.extend({
         var details = JSON.stringify({
             ip: ip,
             port: port,
-            key: key.getPublicPEM(),
+            key: key.exportKey('pkcs8-public-pem'),
             avatar: avatar,
             version: version
         });

@@ -65,7 +65,7 @@ define('sum-backend-userlist-file', Class.extend({
             {
                 ip: ip,
                 port: port,
-                key: key.getPublicPEM(),
+                key: key.exportKey('pkcs8-public-pem'),
                 avatar: avatar,
                 version: version
             },
