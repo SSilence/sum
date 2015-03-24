@@ -226,6 +226,7 @@ define('sum-frontend', Class.extend({
             delete that.unreadMessagesCounter[that.currentConversation];
             that.backend.updateUserlist(that.currentConversation);
             that.backend.updateRoomlist();
+            that.backend.getConversation(that.currentConversation);
         });
     },
 
