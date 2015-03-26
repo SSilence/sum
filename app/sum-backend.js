@@ -159,6 +159,9 @@ define('sum-backend', Class.extend({
         // init window and window event handler
         this.initWindow();
 
+        // set welcome message
+        this.renderSystemMessage(config.welcome_text.replace(/\\n/g, '<br />'), config.room_all);
+
         // load rooms where user was in on last logout
         this.roomlist = this.backendStorage.loadRoomlist();
 
@@ -435,15 +438,18 @@ define('sum-backend', Class.extend({
             var allUsers = this.userlist.slice();
             var i=0;
             for(i=0; i<allUsers.length; i++) {
-
                 // ignore current user
                 if (allUsers[i].username == currentuser) {
                     continue;
                 }
 
                 var conv = this.conversations[allUsers[i].username];
-                if (typeof conv != "undefined" && conv.length > 0) {
-                    allUsers[i].lastMessage = conv[conv.length - 1].datetime;
+                if (typeof conv == "undefined")
+                    continue;
+
+                var lastUserMessage = this.backendHelpers.getLastNoneSystemMessage(conv);
+                if (lastMessage !== false) {
+                    allUsers[i].lastMessage = lastMessage.datetime;
                     all[all.length] = allUsers[i];
                 }
             }
@@ -452,8 +458,12 @@ define('sum-backend', Class.extend({
             var allRooms = [ { name: config.room_all} ].concat(this.roomlist);
             for(i=0; i<allRooms.length; i++) {
                 var convRoom = this.conversations[allRooms[i].name];
-                if (typeof convRoom != "undefined" && convRoom.length > 0) {
-                    allRooms[i].lastMessage = convRoom[convRoom.length - 1].datetime;
+                if (typeof convRoom == "undefined")
+                    continue;
+
+                var lastMessage = this.backendHelpers.getLastNoneSystemMessage(convRoom);
+                if (lastMessage !== false) {
+                    allRooms[i].lastMessage = lastMessage.datetime;
                     all[all.length] = allRooms[i];
                 }
             }

@@ -100,6 +100,7 @@ Following configuration parameters are available in config.ini:
 * ``excluded_ips``: ips which will be ignored on creating server
 * ``about_url``: url for menue entry 'about sum'
 * ``highlight_languages_value``: supported highlight.js languages in code input selection (replace value by language key)
+* ``welcome_text``: welcome text which will be shown on startup
 
 
 

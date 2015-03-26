@@ -188,6 +188,23 @@ define('sum-backend-helpers', Class.extend({
 
 
     /**
+     * Returns last message which is not a system message
+     *
+     * @return (boolean|object) message or false
+     * @param conversation (array) array with all conversations
+     */
+    getLastNoneSystemMessage: function(conversation) {
+        for(var i=conversation.length-1; i>=0; i--) {
+            if (typeof conversation[i].type != 'undefined' && conversation[i].type != 'system') {
+                return conversation[i];
+            }
+
+        }
+        return false;
+    },
+
+
+    /**
      * generates new guid for messages
      * @returns {string} unique id as string
      */

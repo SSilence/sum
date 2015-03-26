@@ -88,6 +88,7 @@ define('sum-frontend', Class.extend({
         // update userlist and rooms
         this.backend.updateUserlist(this.currentConversation);
         this.backend.updateRoomlist();
+        this.backend.updateOpenConversationList();
         this.backend.getConversation(this.currentConversation);
         
         // update public keys
