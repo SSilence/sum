@@ -155,7 +155,10 @@ define('sum-backend', Class.extend({
         
         // init node webkit tray icon
         this.initTray();
-        
+
+        // init window and window event handler
+        this.initWindow();
+
         // load rooms where user was in on last logout
         this.roomlist = this.backendStorage.loadRoomlist();
 
@@ -200,24 +203,36 @@ define('sum-backend', Class.extend({
             gui.Window.get().show();
             gui.Window.get().focus();
         });
-        
+    },
+
+    /**
+     * Init window and window event handler
+     */
+    initWindow: function() {
         var that = this;
         window.addEventListener('blur', function(e) {
             that.focus = false;
         });
-        
+
         window.addEventListener('focus', function(e) {
             that.focus = true;
             if (typeof that.focusCallback !== 'undefined')
                 that.focusCallback();
         });
-        
+
         // window close is not quit it just minimize to tray
         gui.Window.get().on('close', function() {
             that.close();
         });
+
+        gui.Window.get().on('resize', function(width, height) {
+            that.backendStorage.saveWindowSize(width, height);
+        });
+
+        gui.Window.get().on('move', function(x, y) {
+            that.backendStorage.saveWindowPosition(x, y);
+        });
     },
-    
 
 
     ////////////////////////////////////////////

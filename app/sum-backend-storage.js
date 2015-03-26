@@ -37,7 +37,53 @@ define('sum-backend-storage', Class.extend({
         localStorage.removeItem('avatar');
     },
 
-    
+
+    /**
+     * save given window size
+     * @param width (int) current width
+     * @param height (int) current height
+     */
+    saveWindowSize: function(width, height) {
+        localStorage.width = width;
+        localStorage.height = height;
+    },
+
+
+    /**
+     * load window size
+     * @return (object) {width: 123, height: 456}
+     */
+    loadWindowSize: function() {
+        if (typeof localStorage.width != 'undefined' && localStorage.width !== null
+            && typeof localStorage.height != 'undefined' && localStorage.height !== null)
+            return { width: localStorage.width, height: localStorage.height};
+        return false;
+    },
+
+
+    /**
+     * save given window position
+     * @param x (int) left
+     * @param y (int) top
+     */
+    saveWindowPosition: function(x, y) {
+        localStorage.x = x;
+        localStorage.y = y;
+    },
+
+
+    /**
+     * load window position
+     * @return (object) {x: 123, y: 456}
+     */
+    loadWindowPosition: function() {
+        if (typeof localStorage.x != 'undefined' && localStorage.x !== null
+            && typeof localStorage.y != 'undefined' && localStorage.y !== null)
+            return { x: localStorage.x, y: localStorage.y};
+        return false;
+    },
+
+
     /**
      * save given roomlist
      * @param roomlist (Array) current rooms user is in
