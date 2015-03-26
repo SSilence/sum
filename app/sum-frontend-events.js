@@ -61,6 +61,7 @@ define('sum-frontend-events', Class.extend({
         this.initGeneral();
         this.initMenue();
         this.initKeyMenue();
+        this.initMessagesMenue();
         this.initMessages();
         this.initMessageMenue();
         this.initMessageInput();
@@ -99,6 +100,11 @@ define('sum-frontend-events', Class.extend({
             if ($(event.target).parents('#key-menue-dropdown').length===0 && event.target.id != 'key-menue') {
                 $('#key-menue-dropdown').hide();
             }
+            
+            // no click inside messages menue: close it
+            if ($(event.target).parents('#open-conversations-menue-dropdown').length===0 && event.target.id != 'open-conversations-menue' && $(event.target).parent('#open-conversations-menue').length===0) {
+                $('#open-conversations-menue-dropdown').hide();
+            }
 
             // no click inside add menue: close it
             if ($(event.target).parents('#message-add-menue-dropdown').length===0 && event.target.id != 'message-add-menue')
@@ -114,6 +120,12 @@ define('sum-frontend-events', Class.extend({
         // update version
         $('#newversion').click(function() {
             gui.Shell.openExternal($(this).data('url'));
+        });
+        
+        // F12 = devtools
+        $(window).keydown(function(e) {
+            if(e.which == 123)
+                gui.Window.get().showDevTools();
         });
     },
     
@@ -456,6 +468,21 @@ define('sum-frontend-events', Class.extend({
     
     
     /**
+     * initialize top messages menue events
+     */
+    initMessagesMenue: function() {
+        var that = this;
+    
+        // menue: toggle
+        $('#open-conversations-menue').click(function() {
+            $('#open-conversations-menue-dropdown').toggle();
+        });
+        
+    },
+    
+    
+    
+    /**
      * initialize events inside messages
      */
     initMessages: function() {
@@ -683,19 +710,20 @@ define('sum-frontend-events', Class.extend({
         var that = this;
         
         // select user
-        $('.contacts').delegate("li", "click", function() {
+        $('.contacts, .openconversations').delegate(".contact", "click", function() {
             var user = $(this).find('.contacts-name').html();
             $('.rooms li, .contacts li').removeClass('active');
             that.frontend.currentConversation = user;
             delete that.frontend.unreadMessagesCounter[that.frontend.currentConversation];
             that.backend.updateUserlist(that.frontend.currentConversation);
+            that.backend.updateOpenConversationList();
             that.backend.getConversation(user);
             $('#main-metadata').css('visibility', 'visible');
             $('#message-input-textfield').focus();
         });
 
         // select room
-        $('.rooms').delegate("li", "click", function() {
+        $('.rooms, .openconversations').delegate(".room", "click", function() {
             if ( $(this).find('.rooms-outside').length>0 ) {
                 alertify.error(lang.frontend_events_select_room_not_in);
                 return;
@@ -705,6 +733,7 @@ define('sum-frontend-events', Class.extend({
             that.frontend.currentConversation = room;
             delete that.frontend.unreadMessagesCounter[that.frontend.currentConversation];
             that.backend.updateRoomlist();
+            that.backend.updateOpenConversationList();
             that.backend.updateUserlist(that.frontend.currentConversation);
             that.backend.getConversation(that.frontend.currentConversation);
             $('#main-metadata').css('visibility', 'visible');

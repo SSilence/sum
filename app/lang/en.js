@@ -44,7 +44,9 @@ var lang = {
     menue_key_entry_export: 'backup key',
     menue_key_entry_import: 'restore key',
     menue_key_entry_disable: 'disable key management',
-    
+
+    menue_usermessages: 'no open communication found',
+
     message_input_placeholder: 'write a message...',
     message_codebox_placeholder: 'Syntax-Highlighting',
     message_codebox_send: 'send',

@@ -44,7 +44,9 @@ var lang = {
     menue_key_entry_export: 'Schl&uuml;ssel sichern',
     menue_key_entry_import: 'Schl&uuml;ssel wiederherstellen',
     menue_key_entry_disable: 'Schl&uuml;ssel deaktivieren',
-    
+
+    menue_usermessages: 'noch keine Kommunikation vorhanden',
+
     message_input_placeholder: 'schreibe eine Nachricht...',
     message_codebox_placeholder: 'Syntax-Highlighting',
     message_codebox_send: 'senden',

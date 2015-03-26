@@ -58,13 +58,13 @@ define('sum-frontend', Class.extend({
         this.currentConversation = config.room_all;
 
         // initialize div inline scroller
-        $("#contacts-wrapper, #rooms-wrapper, #content-wrapper").mCustomScrollbar({
+        $("#contacts-wrapper, #rooms-wrapper, #content-wrapper, #open-conversations-menue-dropdown").mCustomScrollbar({
             advanced:{
                 updateOnContentResize: true
             },
             scrollInertia: 0,
             mouseWheel: {
-                scrollAmount: 350
+                scrollAmount: 200
             },
             callbacks: {
                 whileScrolling: function() {
@@ -148,16 +148,16 @@ define('sum-frontend', Class.extend({
             // conversation = receiver if it is a room
             if (that.backend.doesRoomExists(message.receiver))
                 conversationId = message.receiver;
-        
+
             // show system tray notification
             that.backend.notification(that.backend.getAvatar(message.sender), lang.frontend_new_message + message.sender.escape(), message.text, conversationId);
 
             // update stream
-            if(that.currentConversation == conversationId)
+            if (that.currentConversation == conversationId && that.backend.isFocused() === true) {
                 that.backend.getConversation(that.currentConversation);
-            
+
             // update unread messages counter
-            if(that.backend.isFocused() === false) {
+            } else {
                 if (typeof that.unreadMessagesCounter[conversationId] == "undefined") {
                     that.unreadMessagesCounter[conversationId] = 0;
                 }
@@ -166,7 +166,11 @@ define('sum-frontend', Class.extend({
                 that.backend.setBadge(unread);
                 that.backend.updateUserlist(that.currentConversation);
                 that.backend.updateRoomlist();
+                that.backend.getConversation(that.currentConversation);
             }
+
+            // allways update users messages
+            that.backend.updateOpenConversationList();
         });
 
         // register callback for room list update
@@ -177,6 +181,11 @@ define('sum-frontend', Class.extend({
         // register callback for user list update
         this.backend.onGetUserlistResponse(function(users) {
             that.updateUserlist(users);
+        });
+
+        // register callback for user list update
+        this.backend.onGetOpenConversationList(function(all) {
+            that.updateOpenConversationList(all);
         });
 
         // register callback for getting conversation
@@ -226,7 +235,13 @@ define('sum-frontend', Class.extend({
             delete that.unreadMessagesCounter[that.currentConversation];
             that.backend.updateUserlist(that.currentConversation);
             that.backend.updateRoomlist();
+            that.backend.updateOpenConversationList();
             that.backend.getConversation(that.currentConversation);
+
+            // show open conversations on unread messages
+            if (that.frontendHelpers.countAllUnreadMessages(that.unreadMessagesCounter) > 0) {
+                $('#open-conversations-menue-dropdown').show();
+            }
         });
     },
 
@@ -326,40 +341,78 @@ define('sum-frontend', Class.extend({
         var html = '';
         var that = this;
         $.each(users, function(index, user) {
-            // unread
-            var unread = "";
-            if (typeof that.unreadMessagesCounter[user.username] != "undefined")
-                unread = '<div class="contacts-unread">' + that.unreadMessagesCounter[user.username] + '</div>';
-
-            // avatar url
-            var avatar = "avatar.png";
-            if (typeof user.avatar != "undefined")
-                avatar = user.avatar;
-
-            // active
-            var active = '';
-            if(that.currentConversation==user.username)
-                active = 'class="active"';
-
-            // invalid key?
-            var invalidkey = '';
-            if (typeof user.invalidkey !== 'undefined' && user.invalidkey)
-                invalidkey = ' <div class="contacts-invalidkey ion-key"></div>';
-            else if (typeof user.invalidkey !== 'undefined' && user.invalidkey === false)
-                invalidkey = ' <div class="contacts-validkey ion-key"></div>';
-                
-            // add new entry
-            html = html + '<li ' + active + '>' +
-                '<div class="' + user.status + ' contacts-state" ' +
-                'title="' + (typeof user.version != 'undefined' ? user.version : '') + '"></div>' +
-                '<img src="' + avatar + '" class="contacts-avatar avatar" />' +
-                invalidkey +
-                '<div class="contacts-name">' + user.username.escape() + '</div>' + unread + '</li>';
+            html = html + that.renderUser(user);
         });
         $('.contacts').html(html);
 
         // restore scroll state
         contactsWrapper.mCustomScrollbar("scrollTo", scrollPosition);
+    },
+
+
+    /**
+     * update open messages list
+     */
+    updateOpenConversationList: function(all) {
+        // update small badge
+        var unread = this.frontendHelpers.countAllUnreadMessages(this.unreadMessagesCounter);
+        var unreadElement = $('#open-conversations-menue .unread');
+        if (unread === 0) {
+            unreadElement.hide();
+        } else {
+            unreadElement.html(unread);
+            unreadElement.show();
+        }
+
+        var html = '';
+        var that = this;
+        $.each(all, function(index, entry) {
+            if (typeof entry.username != 'undefined') {
+                html = html + that.renderUser(entry);
+            } else {
+                html = html + that.renderRoom(entry);
+            }
+        });
+
+        if (all.length === 0) {
+            html = '<li class="empty">' + lang.menue_usermessages + '</li>';
+        }
+
+        $('#open-conversations-menue-dropdown .openconversations').html(html);
+    },
+    
+    
+    /**
+     * renders a single user entry in contact list
+     * @param user (object) single user
+     * @return html user in contact list
+     */
+    renderUser: function(user) {
+        // unread
+        var unread = "";
+        if (typeof this.unreadMessagesCounter[user.username] != "undefined")
+            unread = '<div class="contacts-unread">' + this.unreadMessagesCounter[user.username] + '</div>';
+
+        // avatar url
+        var avatar = (typeof user.avatar != "undefined") ? user.avatar : "avatar.png";
+
+        // active
+        var active = (this.currentConversation==user.username) ? 'active' : '';
+
+        // invalid key?
+        var invalidkey = '';
+        if (typeof user.invalidkey !== 'undefined' && user.invalidkey)
+            invalidkey = ' <div class="contacts-invalidkey ion-key"></div>';
+        else if (typeof user.invalidkey !== 'undefined' && user.invalidkey === false)
+            invalidkey = ' <div class="contacts-validkey ion-key"></div>';
+            
+        // add new entry
+        return '<li class="contact ' + active + '">' +
+            '<div class="' + user.status + ' contacts-state" ' +
+            'title="' + (typeof user.version != 'undefined' ? user.version : '') + '"></div>' +
+            '<img src="' + avatar + '" class="contacts-avatar avatar" />' +
+            invalidkey +
+            '<div class="contacts-name">' + user.username.escape() + '</div>' + unread + '</li>';
     },
 
 
@@ -381,33 +434,7 @@ define('sum-frontend', Class.extend({
         var invited = [];
         var that = this;
         $.each(rooms, function(index, room) {
-            // state
-            var state = 'rooms-outside';
-            var edit = '';
-            if(typeof room.invited == 'undefined' && room.name != config.room_all) {
-                state = 'rooms-inside';
-                edit = '<span class="rooms-invite ion-plus-round"></span> <span class="rooms-leave ion-log-out"></span>';
-            } else if(room.name == config.room_all) {
-                state = 'rooms-inside';
-            } else {
-                invited[invited.length] = room;
-            }
-
-            // unread
-            var unread = "";
-            if (typeof that.unreadMessagesCounter[room.name] != "undefined")
-                unread = '<div class="contacts-unread">' + that.unreadMessagesCounter[room.name] + '</div>';
-
-            // active
-            var active = '';
-            if(that.currentConversation == room.name)
-                active = 'class="active"';
-
-            $('.rooms').append('<li ' + active + '>\
-                <div class="' + state + '"></div> \
-                <div class="rooms-name"><span class="name">' + room.name.escape() + '</span> ' + edit + ' </div>\
-                ' + unread + '\
-            </li>');
+            $('.rooms').append(that.renderRoom(room));
         });
 
         // remove all room invite popups on redraw
@@ -423,6 +450,41 @@ define('sum-frontend', Class.extend({
 
         // restore scroll state
         roomsWrapper.mCustomScrollbar("scrollTo", scrollPosition);
+    },
+
+
+    /**
+     * Renders a given room as html.
+     * @param room object
+     */
+    renderRoom: function(room) {
+        // state
+        var state = 'rooms-outside';
+        var edit = '';
+        if(typeof room.invited == 'undefined' && room.name != config.room_all) {
+            state = 'rooms-inside';
+            edit = '<span class="rooms-invite ion-plus-round"></span> <span class="rooms-leave ion-log-out"></span>';
+        } else if(room.name == config.room_all) {
+            state = 'rooms-inside';
+        } else {
+            invited[invited.length] = room;
+        }
+
+        // unread
+        var unread = "";
+        if (typeof this.unreadMessagesCounter[room.name] != "undefined")
+            unread = '<div class="contacts-unread">' + this.unreadMessagesCounter[room.name] + '</div>';
+
+        // active
+        var active = '';
+        if(this.currentConversation == room.name)
+            active = 'active';
+
+        return '<li class="room ' + active + '">\
+                <div class="' + state + '"></div> \
+                <div class="rooms-name"><span class="name">' + room.name.escape() + '</span> ' + edit + ' </div>\
+                ' + unread + '\
+            </li>';
     },
 
 

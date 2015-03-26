@@ -330,13 +330,13 @@ input.remove,
     }
 
 .contacts,
-.contacts li {
+.contact {
     margin:0;
     padding:0;
     list-style:none;
 }
 
-.contacts li {
+.contact {
     position:relative;
     height:50px;
     cursor:pointer;
@@ -353,7 +353,7 @@ input.remove,
     z-index:10;
 }
 
-    .contacts li.active {
+    .contact.active {
         background:#f9f9f9;
         border-right:0;
         border-bottom:1px solid #dadada;
@@ -432,12 +432,12 @@ input.remove,
     }
 
     .rooms,
-    .rooms li {
+    .room {
         margin:0;
         padding:0;
     }
 
-    .rooms li {
+    .room {
         font-size:0.9em;
         padding:10px;
         position:relative;
@@ -453,7 +453,7 @@ input.remove,
         z-index:10;
     }
 
-        .rooms li.active {
+        .room.active {
             background:#f9f9f9;
             border-right:0;
             border-bottom:1px solid #dadada;
@@ -462,8 +462,8 @@ input.remove,
             z-index:11;
         }
 
-        .rooms .rooms-outside,
-        .rooms .rooms-inside {
+        .room .rooms-outside,
+        .room .rooms-inside {
             border-radius:5px;
             width:10px;
             height:10px;
@@ -471,15 +471,15 @@ input.remove,
             margin-right:5px;
         }
 
-            .rooms .rooms-inside {
+            .room .rooms-inside {
                 background:#68b54d;
             }
 
-            .rooms .rooms-outside {
+            .room .rooms-outside {
                 background:#e45857;
             }
 
-        .rooms .rooms-name {
+        .room .rooms-name {
             position:relative;
             -webkit-box-flex: 1;
             box-flex: 1;
@@ -492,7 +492,7 @@ input.remove,
             white-space: nowrap;
         }
 
-        .rooms .rooms-unread {
+        .room .rooms-unread {
             display:block;
             background:#e45857;
             color:#ffffff;
@@ -505,8 +505,8 @@ input.remove,
             margin-right:5px;
         }
 
-        .rooms .rooms-invite,
-        .rooms .rooms-leave {
+        .room .rooms-invite,
+        .room .rooms-leave {
             position:absolute;
             font-size:1.4em;
             margin-left:10px;
@@ -514,12 +514,12 @@ input.remove,
             display:none;
         }
 
-            .rooms .rooms-leave {
+            .room .rooms-leave {
                 margin-left:35px;
             }
 
-            .rooms .rooms-leave:hover,
-            .rooms .rooms-invitet:hover {
+            .room .rooms-leave:hover,
+            .room .rooms-invitet:hover {
                 color:#000;
             }
 
@@ -630,6 +630,7 @@ input.remove,
                 color:#ff0000;
             }
 
+        #open-conversations-menue,
         #key-menue,
         #main-menue,
         #main-close {
@@ -642,15 +643,35 @@ input.remove,
             -webkit-app-region: no-drag;
         }
 
+        #open-conversations-menue {
+            margin-left:-160px;
+        }
+
+        #open-conversations-menue .unread {
+            display:none;
+            position:absolute;
+            background-color: #E74C3C;
+            border-radius: 30px;
+            color: white;
+            font-size: 0.6em;
+            font-weight: normal;
+            min-width: 8px;
+            padding: 0 5px 0 5px;
+            margin-left: 5px;
+            margin-top:13px;
+            vertical-align: baseline;
+            z-index:1000;
+        }
+        
         #key-menue {
             margin-left:-120px;
-            
         }
         
         #main-menue {
             margin-left:-80px;
         }
 
+        #open-conversations-menue-dropdown,
         #key-menue-dropdown,
         #main-menue-dropdown {
             display:none;
@@ -668,6 +689,7 @@ input.remove,
             -webkit-app-region: no-drag;
         }
 
+            #open-conversations-menue-dropdown:after, #open-conversations-menue-dropdown:before,
             #key-menue-dropdown:after, #key-menue-dropdown:before,
             #main-menue-dropdown:after, #main-menue-dropdown:before {
                 bottom: 100%;
@@ -680,6 +702,7 @@ input.remove,
                 pointer-events: none;
             }
 
+            #open-conversations-menue-dropdown:after,
             #key-menue-dropdown:after,
             #main-menue-dropdown:after {
                 border-color: rgba(241, 241, 241, 0);
@@ -688,6 +711,7 @@ input.remove,
                 margin-left: -15px;
             }
 
+            #open-conversations-menue-dropdown:before,
             #key-menue-dropdown:before,
             #main-menue-dropdown:before {
                 border-color: rgba(218, 218, 218, 0);
@@ -696,6 +720,7 @@ input.remove,
                 margin-left: -16px;
             }
 
+            #open-conversations-menue-dropdown li,
             #key-menue-dropdown li,
             #main-menue-dropdown li {
                 list-style:none;
@@ -705,11 +730,13 @@ input.remove,
                 cursor:pointer;
             }
 
+                #open-conversations-menue-dropdown li:hover,
                 #key-menue-dropdown li:hover,
                 #main-menue-dropdown li:hover {
                     background:#f9f9f9;
                 }
 
+                #open-conversations-menue-dropdown li.inactive,
                 #main-menue-dropdown li.inactive {
                     color:#A0A0A0;
                 }
@@ -776,6 +803,53 @@ input.remove,
                 box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
                 margin-bottom:5px;
                 width:90%;
+            }
+
+            
+        #open-conversations-menue-dropdown {
+            margin-left:-314px;
+            margin-top:16px;
+            height:150px;
+        }
+
+            #open-conversations-menue-dropdown ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            #open-conversations-menue-dropdown li.empty {
+                font-size:0.8em;
+                text-align:center;
+                margin-top:60px;
+            }
+
+            #open-conversations-menue-dropdown li
+            #open-conversations-menue-dropdown .room {
+                padding: 5px;
+            }
+
+            #open-conversations-menue-dropdown .contacts-state {
+                margin: 0 5px 0 0;
+            }
+
+            #open-conversations-menue-dropdown .contacts-avatar {
+                width: 16px;
+                height: 16px;
+            }
+
+            #open-conversations-menue-dropdown .contact {
+                height:auto;
+            }
+
+            #open-conversations-menue-dropdown .rooms-outside,
+            #open-conversations-menue-dropdown .rooms-inside {
+                width: 6px;
+                height: 6px;
+            }
+
+            #open-conversations-menue-dropdown li.active {
+                box-shadow: none;
+                border-top:0;
             }
 
 

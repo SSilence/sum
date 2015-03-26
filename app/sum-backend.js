@@ -274,6 +274,13 @@ define('sum-backend', Class.extend({
     },
 
     /**
+     * register callback for user list by messages update
+     */
+    onGetOpenConversationList: function(callback) {
+        this.getOpenConversationList = callback;
+    },
+
+    /**
      * register callback for getting converstion
      */
     onGetContentResponse: function(callback) {
@@ -397,6 +404,55 @@ define('sum-backend', Class.extend({
 
             // send userlist to frontend
             this.getUserlistResponse(users);
+        }
+    },
+
+
+    /**
+     * update frontend with userlist sorted by last message timestamp
+     */
+    updateOpenConversationList: function() {
+        if(typeof this.onGetOpenConversationList != "undefined") {
+            var all = [];
+
+            // get all users with last message timestamp
+            var currentuser = this.backendHelpers.getUsername();
+            var allUsers = this.userlist.slice();
+            var i=0;
+            for(i=0; i<allUsers.length; i++) {
+
+                // ignore current user
+                if (allUsers[i].username == currentuser) {
+                    continue;
+                }
+
+                var conv = this.conversations[allUsers[i].username];
+                if (typeof conv != "undefined" && conv.length > 0) {
+                    allUsers[i].lastMessage = conv[conv.length - 1].datetime;
+                    all[all.length] = allUsers[i];
+                }
+            }
+
+            // get all rooms with last message timestamp
+            var allRooms = [ { name: config.room_all} ].concat(this.roomlist);
+            for(i=0; i<allRooms.length; i++) {
+                var convRoom = this.conversations[allRooms[i].name];
+                if (typeof convRoom != "undefined" && convRoom.length > 0) {
+                    allRooms[i].lastMessage = convRoom[convRoom.length - 1].datetime;
+                    all[all.length] = allRooms[i];
+                }
+            }
+
+            // sort by timestamp
+            all = all.sort(function(a, b) {
+                if (a.lastMessage < b.lastMessage)
+                    return 1;
+                if (a.lastMessage > b.lastMessage)
+                    return -1;
+                return 0;
+            });
+
+            this.getOpenConversationList(all);
         }
     },
 
