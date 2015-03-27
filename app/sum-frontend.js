@@ -432,7 +432,6 @@ define('sum-frontend', Class.extend({
 
         // update roomlist
         $('.rooms').html('');
-        var invited = [];
         var that = this;
         $.each(rooms, function(index, room) {
             $('.rooms').append(that.renderRoom(room));
@@ -442,11 +441,13 @@ define('sum-frontend', Class.extend({
         $('.rooms-popup.invite').remove();
 
         // show invite dialog
-        $.each(invited, function(index, room) {
-            var div = $(that.frontendHelpers.createRoomsPopup($('#rooms-add'), "invite"));
-            div.append('<p>' + lang.frontend_invitation.replace(/\%s1/, room.name.escape()).replace(/\%s2/, room.invited.escape()) + '</p>');
-            div.append('<input class="name" type="hidden" value="' + room.name.escape() + '" />');
-            div.append('<input class="save" type="button" value="' + lang.frontend_invitation_accept + '" /> <input class="cancel" type="button" value="' + lang.frontend_invitation_decline + '" />');
+        $.each(rooms, function(index, room) {
+            if(typeof room.invited !== 'undefined') {
+                var div = $(that.frontendHelpers.createRoomsPopup($('#rooms-add'), "invite"));
+                div.append('<p>' + lang.frontend_invitation.replace(/\%s1/, room.name.escape()).replace(/\%s2/, room.invited.escape()) + '</p>');
+                div.append('<input class="name" type="hidden" value="' + room.name.escape() + '" />');
+                div.append('<input class="save" type="button" value="' + lang.frontend_invitation_accept + '" /> <input class="cancel" type="button" value="' + lang.frontend_invitation_decline + '" />');
+            }
         });
 
         // restore scroll state
@@ -467,8 +468,6 @@ define('sum-frontend', Class.extend({
             edit = '<span class="rooms-invite ion-plus-round"></span> <span class="rooms-leave ion-log-out"></span>';
         } else if(room.name == config.room_all) {
             state = 'rooms-inside';
-        } else {
-            invited[invited.length] = room;
         }
 
         // unread

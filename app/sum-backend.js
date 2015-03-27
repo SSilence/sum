@@ -761,6 +761,16 @@ define('sum-backend', Class.extend({
         }
         return false;
     },
+
+
+    /**
+     * checks whether this user is in Room or not
+     * @param room for search
+     * @returns {boolean} true if user is in room, false otherwise
+     */
+    isUserInRoom: function(room) {
+        return this.backendHelpers.isUserInRoomList(this.roomlist, room);
+    },
     
     
     

@@ -125,16 +125,23 @@ define('sum-backend-server', Class.extend({
             if (this.backend.doesRoomExists(request.receiver))
                 conversationId = request.receiver;
 
-            if (typeof this.backend.conversations[conversationId] == 'undefined')
-                this.backend.conversations[conversationId] = [];
+            // only accept message if user is still in this room
+            if (this.backend.isUserInRoom(conversationId) === true || this.backend.getUser(conversationId) === true ) {
 
-            var message = $.extend(request, { datetime: new Date().getTime()});
+                if (typeof this.backend.conversations[conversationId] == 'undefined') {
+                    this.backend.conversations[conversationId] = [];
+                }
 
-            var conversation = this.backend.conversations[conversationId];
-            this.backend.conversations[conversationId][conversation.length] = message;
+                var message = $.extend(request, { datetime: new Date().getTime()});
 
-            if(typeof this.backend.newMessage != "undefined")
-                this.backend.newMessage(this.backend.conversations[conversationId][conversation.length-1]);
+                var conversation = this.backend.conversations[conversationId];
+                this.backend.conversations[conversationId][conversation.length] = message;
+
+                if(typeof this.backend.newMessage != "undefined") {
+                    this.backend.newMessage(this.backend.conversations[conversationId][conversation.length-1]);
+                }
+
+            }
 
             // send ok
             response.writeHeader(200, {"Content-Type": "text/plain"});
