@@ -102,7 +102,7 @@ define('sum-frontend-events', Class.extend({
             }
             
             // no click inside messages menue: close it
-            if ($(event.target).parents('#open-conversations-menue-dropdown').length===0 && event.target.id != 'open-conversations-menue' && $(event.target).parent('#open-conversations-menue').length===0 && $('#open-conversations-menue .unread').html().trim().length() > 0) {
+            if ($(event.target).parents('#open-conversations-menue-dropdown').length===0 && event.target.id != 'open-conversations-menue' && $(event.target).parent('#open-conversations-menue').length===0 && $('#open-conversations-menue .unread').html().trim().length == 0) {
                 $('#open-conversations-menue-dropdown').hide();
             }
 
