@@ -195,7 +195,7 @@ define('sum-backend-helpers', Class.extend({
      */
     getLastNoneSystemMessage: function(conversation) {
         for(var i=conversation.length-1; i>=0; i--) {
-            if (typeof conversation[i].type != 'undefined' && conversation[i].type != 'system') {
+            if (typeof conversation[i].type != 'undefined' && conversation[i].type != 'system' && typeof conversation[i].datetime != 'undefined') {
                 return conversation[i];
             }
 

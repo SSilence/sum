@@ -448,8 +448,8 @@ define('sum-backend', Class.extend({
                     continue;
 
                 var lastUserMessage = this.backendHelpers.getLastNoneSystemMessage(conv);
-                if (lastMessage !== false) {
-                    allUsers[i].lastMessage = lastMessage.datetime;
+                if (lastUserMessage !== false) {
+                    allUsers[i].lastMessage = lastUserMessage.datetime;
                     all[all.length] = allUsers[i];
                 }
             }
