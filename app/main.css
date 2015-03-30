@@ -578,6 +578,10 @@ input.remove,
             font-size:0.8em;
         }
 
+        .rooms-popup input {
+            margin-bottom:3px;
+        }
+
 
 /**************************/
 /* main chat message list */
@@ -725,7 +729,7 @@ input.remove,
             #main-menue-dropdown li {
                 list-style:none;
                 padding:10px;
-                font-size:0.9em;
+                font-size:0.85em;
                 border-bottom:1px solid #f1f1f1;
                 cursor:pointer;
             }
@@ -741,6 +745,14 @@ input.remove,
                     color:#A0A0A0;
                 }
 
+            #open-conversations-menue-dropdown li span,
+            #key-menue-dropdown li > span,
+            #main-menue-dropdown li span {
+                font-size:1.1em;
+                width:18px;
+                display:inline-block;
+            }
+
             #main-menue-avatar-croper {
                 display:none;
             }
@@ -755,18 +767,19 @@ input.remove,
         
         #key-menue-dropdown {
             margin-left:-276px;
-            font-size:0.8em;
         }
+
+            #key-menue-dropdown p,
+            #key-menue-dropdown label {
+                font-size:0.9em;
+            }
         
             #message-add-menue-dropdown li > span,
             #key-menue-dropdown li > span {
                 width:14px;
+                margin-right:4px;
                 text-align:center;
-            }
-            
-            #key-menue-dropdown li > span {
-                font-size:1.3em;
-                margin-right:5px;
+                display:inline-block;
             }
         
             #key-menue-dropdown select,
@@ -820,7 +833,7 @@ input.remove,
             #open-conversations-menue-dropdown li.empty {
                 font-size:0.8em;
                 text-align:center;
-                margin-top:60px;
+                margin-top:55px;
             }
 
             #open-conversations-menue-dropdown li
@@ -1005,10 +1018,9 @@ input.remove,
         margin:0;
         margin-top:2px;
         margin-bottom:2px;
-        padding-top:7px;
-        padding-left:10px;
+        padding-left: 17px;
         padding-right:14px;
-        font-size:1.5em;
+        font-size:1.9em;
         color:#fff;
         border-bottom-left-radius: 4px;
         border-top-left-radius: 4px;
@@ -1022,9 +1034,9 @@ input.remove,
         color:#5d5d5d;
         padding:0;
         right:100%;
-        top:-415px;
+        top:-400px;
         width:525px;
-        margin-right:-532px;
+        margin-right:-536px;
         border-radius: 3px;
         z-index:30;
         -webkit-app-region: no-drag;
@@ -1037,7 +1049,7 @@ input.remove,
 
         #message-add-code-box:after, #message-add-code-box:before {
             top: 100%;
-            left: 5.9%;
+            left: 4%;
             border: solid transparent;
             content: " ";
             height: 0;
@@ -1049,15 +1061,15 @@ input.remove,
         #message-add-code-box:after {
             border-color: rgba(241, 241, 241, 0);
             border-top-color: #f7f7f7;
-            border-width: 30px;
-            margin-left: -30px;
+            border-width: 20px;
+            margin-left: -20px;
         }
 
         #message-add-code-box:before {
             border-color: rgba(218, 218, 218, 0);
             border-top-color: #dadada;
-            border-width: 31px;
-            margin-left: -31px;
+            border-width: 21px;
+            margin-left: -21px;
         }
 
             #message-add-code-box-area {
@@ -1131,7 +1143,7 @@ input.remove,
                 }
 
         #message-add-menue-file span {
-            font-size:1.4em;
+            font-size:1.1em;
         }
 
 
@@ -1163,20 +1175,13 @@ input.remove,
             box-flex: 1;
             flex:1;
             padding:5px;
-            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-            -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
             border: 1px solid #ccc;
             margin-right:0;
             margin-left: 0;
+            margin-top:2px;
+            height:30px;
             border-left: 0;
-        }
-
-        #message-input-textfield:focus {
-            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
-            box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
-            border-color: #66afe9;
+            outline: none;
         }
 
         #message-toggleemots {
@@ -1196,7 +1201,6 @@ input.remove,
 
             #message-toggleemots.active {
                 background-color:#e45857;
-                border-color:#14142;
             }
 
         #message-send {
@@ -1206,7 +1210,7 @@ input.remove,
             margin:0;
             margin-top:2px;
             margin-bottom:2px;
-            padding-top:7px;
+            padding-top:4px;
             padding-left:20px;
             padding-right:20px;
             font-size:1.5em;
