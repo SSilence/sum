@@ -102,7 +102,7 @@ define('sum-frontend-events', Class.extend({
             }
             
             // no click inside messages menue: close it
-            if ($(event.target).parents('#open-conversations-menue-dropdown').length===0 && event.target.id != 'open-conversations-menue' && $(event.target).parent('#open-conversations-menue').length===0 && $('#open-conversations-menue .unread').html().trim().length == 0) {
+            if ($(event.target).parents('#open-conversations-menue-dropdown').length===0 && event.target.id != 'open-conversations-menue' && $(event.target).parent('#open-conversations-menue').length===0 && $('#open-conversations-menue .unread').html().trim().length === 0) {
                 $('#open-conversations-menue-dropdown').hide();
             }
 
@@ -111,9 +111,18 @@ define('sum-frontend-events', Class.extend({
                 $('#message-add-menue-dropdown').hide();
 
             // no click inside add code box: close it
-            if ($(event.target).parents('#message-add-code-box, #message-add-menue-dropdown').length===0 && event.target.id != 'message-add-menue') {
+            if ($(event.target).parents('#message-add-code-box, #message-add-menue-dropdown').length===0) {
                 $('#message-add-code-box').hide();
                 $('#message-add-code-box-area').val('');
+            }
+
+            // no click inside add poll box: close it
+            if ($(event.target).parents('#message-add-poll-box, #message-add-menue-dropdown').length===0 && event.target.id != 'message-add-poll-box' && $('#message-add-poll-box').is(':visible')) {
+                var hasInput = $('#message-add-poll-box-question').val().length > 0;
+                if (hasInput === false || window.confirm(lang.message_poll_close_confirm)) {
+                    $('#message-add-poll-box-question').val('');
+                    $('#message-add-poll-box').hide();
+                }
             }
         });
 
@@ -550,31 +559,122 @@ define('sum-frontend-events', Class.extend({
      */
     initMessageMenue: function() {
         var that = this;
-        
-        // message menue: toggle
+
+        // add new answer in poll dialog
+        var addPollAnswer = function(text) {
+            if (typeof text === 'undefined')
+                text = '';
+
+            $('#message-add-poll-box-answers li.add').before('<li><input type="text" class="selectize-input" value="' + text + '" /> <span class="remove ion-close-round"></span></li>');
+
+            if ($('#message-add-poll-box-answers li:not(.add)').length >= 10) {
+                $('#message-add-poll-box-answers li.add').hide();
+            }
+        };
+
+        // toggle
         $('#message-add-menue').click(function() {
-            $('#message-add-menue-dropdown').toggle();
+            if ($('#message-add-poll-box-question').val().length === 0)
+                $('#message-add-menue-dropdown').toggle();
         });
 
-        // message menue: add code
+        // add code
         $('#message-add-menue-code').click(function() {
-            that.showCodeBox();
+            $('#message-add-menue-dropdown').hide();
+            $('#message-add-code-box').show();
         });
 
-        // message menue: send file
+        // create poll
+        $('#message-add-menue-poll').click(function() {
+            // reset poll fields
+            $('#message-add-poll-box-answers li:not(.add)').remove();
+            addPollAnswer(lang.message_poll_default_answer_1);
+            addPollAnswer(lang.message_poll_default_answer_2);
+            addPollAnswer(lang.message_poll_default_answer_3);
+
+            // show input
+            $('#message-add-menue-dropdown').hide();
+            $('#message-add-poll-box').show();
+        });
+
+        // add poll answer
+        $('#message-add-poll-box-answers .add').click(function() {
+            addPollAnswer("");
+        });
+
+        // remove poll answer
+        $('body').delegate("#message-add-poll-box .remove", "click", function(e) {
+            $(this).parent('li').remove();
+            if ($('#message-add-poll-box-answers li:not(.add)').length < 10) {
+                $('#message-add-poll-box-answers li.add').show();
+            }
+            e.preventDefault();
+            return false;
+        });
+
+        // cancel poll
+        $('#message-add-poll-box-cancel').click(function() {
+            $('#message-add-poll-box').hide();
+            $('#message-add-poll-box-question').val('');
+        });
+
+
+        // send poll
+        $('#message-add-poll-box-send').click(function() {
+            // parse question
+            var question = $.trim($('#message-add-poll-box-question').val());
+            if (question.length === 0) {
+                alertify.error(lang.message_poll_error_no_question);
+                return;
+            }
+
+            // parse answers
+            var answers = [];
+            $('#message-add-poll-box-answers li:not(.add) input').each(function(index, item) {
+                var value = $.trim($(item).val());
+                if (value.length !== 0)
+                    answers[answers.length] = value;
+            });
+
+            // answers given?
+            if (answers.length < 2) {
+                alertify.error(lang.message_poll_error_no_answers);
+                return;
+            }
+
+            // chat channel selected?
+            if (that.frontend.currentConversation===false) {
+                alertify.error(lang.frontend_events_no_chat_channel_selected);
+                return;
+            }
+
+            // send message
+            $('#message-add-poll-box-cancel').click();
+
+            that.backend.sendMessage({
+                receiver: that.frontend.currentConversation,
+                type: 'poll-message',
+                question: question,
+                answers: answers,
+                multioptions: $('#message-add-poll-box-multioptions').is(':checked')
+            });
+        });
+
+
+        // send file
         $('#message-add-menue-file').click(function() {
             that.selectFile();
             $('#message-add-menue-dropdown').hide();
         });
 
-        // message menue: clear conversation
+        // clear conversation
         $('#message-add-menue-clear').click(function() {
             that.backend.clearConversation(that.frontend.currentConversation);
             that.backend.getConversation(that.frontend.currentConversation);
             $('#message-add-menue-dropdown').hide();
         });
 
-        // message menue: send code block
+        // send code block
         $('#message-add-code-box-send').click(function() {
             // code given?
             if ($('#message-add-code-box-area').val().trim().length===0) {
@@ -602,7 +702,7 @@ define('sum-frontend-events', Class.extend({
             });
         });
 
-        // message menue: cancel code block
+        // cancel code block
         $('#message-add-code-box-cancel').click(function() {
             $('#message-add-code-box').hide();
             $('#message-add-code-box-area').val('');
@@ -971,15 +1071,6 @@ define('sum-frontend-events', Class.extend({
         }
 
         return select;
-    },
-
-
-    /**
-     * show codeBox with textarea for code
-     */
-    showCodeBox: function() {
-        $('#message-add-menue-dropdown').hide();
-        $('#message-add-code-box').show();
     },
 
 

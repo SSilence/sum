@@ -51,9 +51,21 @@ var lang = {
     message_codebox_placeholder: 'Syntax-Highlighting',
     message_codebox_send: 'senden',
     message_codebox_cancel: 'abbrechen',
-    
+
+    message_poll_multioptions: 'Mehrfachauswahl zulassen',
+    message_poll_question: 'deine Frage',
+    message_poll_answers: 'Antwortm&ouml;glichkeiten',
+    message_poll_close_confirm: 'Das Erstellen der Umfrage wirklich abbrechen?',
+    message_poll_add_answer: 'Antwort hinzuf&uuml;gen',
+    message_poll_default_answer_1: 'Antwort 1',
+    message_poll_default_answer_2: 'Antwort 2',
+    message_poll_default_answer_3: 'Antwort 3',
+    message_poll_error_no_answers: 'Mindestens zwei Antworten m&uuml;ssen eingegeben werden',
+    message_poll_error_no_question: 'Es muss eine Frage eingegeben werden',
+
     menue_message_code: 'Code senden',
     menue_message_file: 'Datei senden',
+    menue_message_poll: 'Umfrage erstellen',
     menue_message_clear: 'Konversation l&ouml;schen',
     
     backend_client_send_error: 'Bei der Kommunikation mit %s ist ein Fehler aufgetreten',

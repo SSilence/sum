@@ -15,7 +15,7 @@
     "height": 600,
     "frame": false,
     "min_width": 800,
-    "min_height": 560
+    "min_height": 580
   },
   "dependencies": {
     "nw": "~0.12",

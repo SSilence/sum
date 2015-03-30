@@ -54,8 +54,7 @@ define('sum-backend-storage', Class.extend({
      * @return (object) {width: 123, height: 456}
      */
     loadWindowSize: function() {
-        if (typeof localStorage.width != 'undefined' && localStorage.width !== null
-            && typeof localStorage.height != 'undefined' && localStorage.height !== null)
+        if (typeof localStorage.width != 'undefined' && localStorage.width !== null && typeof localStorage.height != 'undefined' && localStorage.height !== null)
             return { width: localStorage.width, height: localStorage.height};
         return false;
     },
@@ -77,8 +76,7 @@ define('sum-backend-storage', Class.extend({
      * @return (object) {x: 123, y: 456}
      */
     loadWindowPosition: function() {
-        if (typeof localStorage.x != 'undefined' && localStorage.x !== null
-            && typeof localStorage.y != 'undefined' && localStorage.y !== null)
+        if (typeof localStorage.x != 'undefined' && localStorage.x !== null && typeof localStorage.y != 'undefined' && localStorage.y !== null)
             return { x: localStorage.x, y: localStorage.y};
         return false;
     },

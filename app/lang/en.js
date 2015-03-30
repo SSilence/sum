@@ -51,9 +51,21 @@ var lang = {
     message_codebox_placeholder: 'Syntax-Highlighting',
     message_codebox_send: 'send',
     message_codebox_cancel: 'cancel',
-    
+
+    message_poll_multioptions: 'multiple answers possible',
+    message_poll_question: 'your question',
+    message_poll_answers: 'Answers',
+    message_poll_close_confirm: 'Really cancel poll creation?',
+    message_poll_add_answer: 'add answer',
+    message_poll_default_answer_1: 'answer 1',
+    message_poll_default_answer_2: 'answer 2',
+    message_poll_default_answer_3: 'answer 3',
+    message_poll_error_no_answers: 'please insert at least two answers',
+    message_poll_error_no_question: 'please enter a question',
+
     menue_message_code: 'send code',
     menue_message_file: 'send file',
+    menue_message_poll: 'create poll',
     menue_message_clear: 'delete conversation',
     
     backend_client_send_error: 'There occured an error during communicating with %s',

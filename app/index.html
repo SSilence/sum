@@ -203,21 +203,39 @@
                     <!-- send message -->
                     <div id="message-send" class="ion-paper-airplane"></div>
 
+                    <!-- popup for inserting poll -->
+                    <div id="message-add-poll-box">
+                        <div>
+                            <input id="message-add-poll-box-question" type="text" class="selectize-input" placeholder="{lang.message_poll_question}" />
+
+                            <input id="message-add-poll-box-multioptions" type="checkbox" /> {lang.message_poll_multioptions}
+
+                            <label>{lang.message_poll_answers}</label>
+                            <ul id="message-add-poll-box-answers">
+                                <li><input type="text" class="selectize-input" value="Antwort 1" /> <span class="remove ion-close-round"></span></li>
+                                <li><input type="text" class="selectize-input" value="Antwort 2" /> <span class="ion-close-round"></span></li>
+                                <li><input type="text" class="selectize-input" value="Antwort 3" /> <span class="ion-close-round"></span></li>
+                                <li class="add"><span class="ion-plus-round"></span> {lang.message_poll_add_answer}</li>
+                            </ul>
+
+                            <input id="message-add-poll-box-send" class="save" type="button" value="{lang.message_codebox_send}" /> <input id="message-add-poll-box-cancel" class="cancel" type="button" value="{lang.message_codebox_cancel}" />
+                        </div>
+                    </div>
+
                     <!-- popup for inserting code -->
                     <div id="message-add-code-box">
-                        <div id="message-add-code-box-inner">
-                            <div id="message-add-code-box-select"><select id="message-add-code-box-language" placeholder="{lang.message_codebox_placeholder}"></select></div>
+                        <div id="message-add-code-box-select"><select id="message-add-code-box-language" placeholder="{lang.message_codebox_placeholder}"></select></div>
 
-                            <textarea id="message-add-code-box-area"></textarea>
+                        <textarea id="message-add-code-box-area"></textarea>
 
-                            <input id="message-add-code-box-send" class="save" type="button" value="{lang.message_codebox_send}" /> <input id="message-add-code-box-cancel" class="cancel" type="button" value="{lang.message_codebox_cancel}" />
-                        </div>
+                        <input id="message-add-code-box-send" class="save" type="button" value="{lang.message_codebox_send}" /> <input id="message-add-code-box-cancel" class="cancel" type="button" value="{lang.message_codebox_cancel}" />
                     </div>
 
                     <!-- menue for inserting code, files, ... -->
                     <ul id="message-add-menue-dropdown">
                         <li id="message-add-menue-code"><span class="ion-code-working"></span> {lang.menue_message_code}</li>
                         <li id="message-add-menue-file"><span class="ion-document"></span> {lang.menue_message_file}</li>
+                        <li id="message-add-menue-poll"><span class="ion-stats-bars"></span> {lang.menue_message_poll}</li>
                         <li id="message-add-menue-clear"><span class="ion-trash-b"></span> {lang.menue_message_clear}</li>
                     </ul>
                 </div>
