@@ -146,7 +146,10 @@ var lang = {
     frontend_messages_download_again: 'erneut herunterladen',
     frontend_messages_cancel: 'abbrechen',
     frontend_messages_open: '&ouml;ffnen',
-    
+    frontend_messages_vote: 'abstimmen',
+    frontend_messages_votes: 'Stimmen',
+    frontend_messages_new_vote: 'ein Benutzer hat bei der Umfrage "%s" abgestimmt',
+
     frontend_room_invite: '%s1 hat dich in den Raum %s2 eingeladen',
     frontend_online: '%s ist jetzt online',
     frontend_offline: '%s ist jetzt offline',

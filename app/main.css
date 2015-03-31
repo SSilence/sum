@@ -508,9 +508,10 @@ input.remove,
         .room .rooms-invite,
         .room .rooms-leave {
             position:absolute;
-            font-size:1.4em;
+            font-size:1.2em;
             margin-left:10px;
             color:#999;
+            margin-top: -1px;
             display:none;
         }
 
@@ -998,6 +999,55 @@ input.remove,
         .entry-file-open {
             float:left;
         }
+
+        .entry-poll-answers,
+        .entry-poll-answers li,
+        .entry-poll-result,
+        .entry-poll-result li {
+            margin:0;
+            padding:0;
+            list-style:none;
+        }
+
+        .entry-poll-result {
+            width:400px
+        }
+
+        .entry-poll-result li {
+            margin-bottom:10px;
+        }
+
+        .entry-poll-result li div {
+            height: 20px;
+            background: #adc797;
+        }
+
+        .entry-poll-result li span {
+            font-size:0.8em;
+            font-weight:bold;
+        }
+
+        .entry-poll-result li div div {
+            height:20px;
+            background: #68b54d;
+        }
+
+        .entry-poll-answers li {
+            clear:both;
+            margin-bottom:10px;
+        }
+
+        .entry-poll-answers li input {
+            float:left;
+            margin-right: 10px;
+        }
+
+        .entry-poll-question {
+            margin-top:10px;
+            margin-bottom:10px;
+            font-weight:bold;
+        }
+
 
 
 

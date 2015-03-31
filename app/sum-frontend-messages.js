@@ -26,7 +26,7 @@ define('sum-frontend-messages', Class.extend({
      */
     renderMessage: function (message) {
         // don't render file invite cancel
-        if (message.type === 'file-invite-cancel')
+        if (message.type === 'file-invite-cancel' || message.type === 'vote')
             return '';
 
         var markup = '<li id="' + message.id + '" class="entry">';
@@ -40,7 +40,9 @@ define('sum-frontend-messages', Class.extend({
             markup += this.renderSystemMessage(message);
         else if(message.type === 'file-invite')
             markup += this.renderFileInvite(message);
-        
+        else if(message.type === 'poll-message')
+            markup += this.renderPollMessage(message);
+
         markup += '</li>';
         return markup;
     },
@@ -113,7 +115,7 @@ define('sum-frontend-messages', Class.extend({
     renderFileInvite: function (message) {
         // show filename
         message.text = lang.frontend_messages_new_download;
-        message.text = message.text + '<div class="entry-file-label">' + message.path + ' (' + this.frontendHelpers.humanFileSize(message.size) + ')</div>';
+        message.text = message.text + '<div class="entry-file-label">' + message.path.escape() + ' (' + this.frontendHelpers.humanFileSize(message.size) + ')</div>';
         
         // render sent invite
         if(this.backend.isCurrentUser(message.sender)) {
@@ -151,7 +153,52 @@ define('sum-frontend-messages', Class.extend({
 
         return this.renderTextMessage(message, false);
     },
-    
+
+
+    /**
+     * renders a poll message
+     * @param message given message
+     * @param escape (boolean) true for escaping text, false for not
+     * @returns {string} text message markup
+     */
+    renderPollMessage: function (message) {
+        message.text = '<div class="entry-poll-question">' + message.question.escape() + '</div>';
+
+        // show vote form
+        var input = message.multioptions === true ? '<input type="checkbox" ' : '<input type="radio"';
+        if (typeof message.voted === 'undefined') {
+            message.text = message.text + '<ul class="entry-poll-answers">';
+            var counter = 0;
+            $.each(message.answers, function(index, item) {
+                message.text = message.text + '<li>' + input + ' value="' + (counter++)  + '" name="vote" />' + item.escape() + '</li>';
+            });
+            message.text = message.text + '</ul>';
+            message.text = message.text + '<input class="save entry-poll-vote" type="button" value="' + lang.frontend_messages_vote + '" /> ';
+
+        // show result
+        } else {
+            var votes = typeof message.votes != 'undefined' ? message.votes : [];
+            var sum = votes.reduce(function(pv, cv) { return pv + cv; }, 0);
+
+            message.text = message.text + '<ul class="entry-poll-result">';
+
+            for (var i=0; i<message.answers.length; i++) {
+                var answersVotes = votes.length > i ? votes[i] : 0;
+                var percent = (sum === 0) ? 0 : Math.round( (answersVotes / sum) * 100 );
+
+                message.text = message.text + '<li>';
+                message.text = message.text + message.answers[i].escape();
+                message.text = message.text + '<div><div style="width:' + percent + '%"></div></div>';
+                message.text = message.text + '<span>' + percent + '% (' + answersVotes + ' ' + lang.frontend_messages_votes + ')</span>';
+                message.text = message.text + '</li>';
+            }
+
+            message.text = message.text + '</ul>';
+        }
+
+        return this.renderTextMessage(message, false);
+    },
+
     
     /**
      * renders command result

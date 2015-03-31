@@ -551,6 +551,17 @@ define('sum-frontend-events', Class.extend({
             var messageId = $(this).parents('.entry').attr('id');
             that.backend.openFile(messageId);
         });
+
+        // vote
+        $('body').delegate(".entry-poll-vote", "click", function(e) {
+            var parent = $(this).parents('.entry');
+            var messageId = parent.attr('id');
+            var selected = [];
+            parent.find('.entry-poll-answers input:checked').each(function(index, item) {
+                selected[selected.length] = $(item).val();
+            });
+            that.backend.vote(messageId, selected, that.frontend.currentConversation);
+        });
     },
     
     

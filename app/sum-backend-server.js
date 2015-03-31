@@ -100,21 +100,64 @@ define('sum-backend-server', Class.extend({
      */
     handle: function(request, response) {
         var user, notification, avatar;
-        
-        // new message
-        // {
-        //    'id' 'uuid',
-        //    'type': 'text-message' or 'codeblock-message' or 'file-invite'
-        //    'text': 'text',
-        //    'sender': 'sender',
-        //    'receiver': 'receiver',
-        //    'language': 'auto' (for codeblock-message)
-        //    'size': <size in bytes> (for file -invite)
-        //    'signature': <signed by other user>
-        //};
-        if (request.type == 'text-message' || request.type == 'codeblock-message' || request.type == 'file-invite') {
-            if (typeof request.sender == 'undefined' || typeof request.receiver == 'undefined' || 
-                (typeof request.text == 'undefined' && request.type != 'file-invite')) {
+
+        /*
+            new message: text message, codeblock, file invite or poll message
+
+            text-message:
+            {
+            'id' 'uuid',
+            'type': 'text-message'
+            'text': 'text',
+            'sender': 'sender',
+            'receiver': 'receiver',
+            'signature': <signed by other user>
+            }
+
+            codeblock-message:
+            {
+            'id' 'uuid',
+            'type': 'text-message'
+            'text': 'text',
+            'language': 'auto'
+            'sender': 'sender',
+            'receiver': 'receiver',
+            'signature': <signed by other user>
+            }
+
+            file-invite
+            {
+            'id' 'uuid',
+            'type': 'text-message'
+            'path': 'filepath',
+            'size': <size in bytes>
+            'sender': 'sender',
+            'receiver': 'receiver',
+            'signature': <signed by other user>
+            }
+
+            poll-message
+            {
+            'id' 'uuid',
+            'type': 'text-message'
+            'text': 'text',
+            'question': 'question text',
+            'answers': ['answer1','answer2',...],
+            'multioptions': true,
+            'sender': 'sender',
+            'receiver': 'receiver',
+            'signature': <signed by other user>
+            }
+        */
+        if (request.type == 'text-message' || request.type == 'codeblock-message' || request.type == 'file-invite' || request.type == 'poll-message') {
+            // validate given request
+            var isWrongTextMessage = request.type == 'text-message' &&  typeof request.text == 'undefined';
+            var isWrongCodeblockMessage = request.type == 'codeblock-message' &&  typeof request.text == 'undefined';
+            var isWrongFileInvite = request.type == 'file-invite' && (typeof request.path == 'undefined' || typeof request.size == 'undefined');
+            var isWrongPollMessage = request.type == 'poll-message' && (typeof request.question == 'undefined' || typeof request.answers == 'undefined');
+
+            if (typeof request.sender == 'undefined' || typeof request.receiver == 'undefined' || isWrongTextMessage ||
+                isWrongCodeblockMessage || isWrongFileInvite || isWrongPollMessage) {
                 return this.sendError(request, response);
             }
 
@@ -127,16 +170,17 @@ define('sum-backend-server', Class.extend({
 
             // only accept message if user is still in this room
             if (this.backend.isUserInRoom(conversationId) === true || this.backend.getUser(conversationId) === true ) {
+                // add current timestamp
+                var message = $.extend(request, { datetime: new Date().getTime()});
 
+                // insert conversation
                 if (typeof this.backend.conversations[conversationId] == 'undefined') {
                     this.backend.conversations[conversationId] = [];
                 }
-
-                var message = $.extend(request, { datetime: new Date().getTime()});
-
                 var conversation = this.backend.conversations[conversationId];
                 this.backend.conversations[conversationId][conversation.length] = message;
 
+                // call frontend
                 if(typeof this.backend.newMessage != "undefined") {
                     this.backend.newMessage(this.backend.conversations[conversationId][conversation.length-1]);
                 }
@@ -284,6 +328,28 @@ define('sum-backend-server', Class.extend({
             // handler on file was send successfully
             this.backend.finishedFileRequest(request.file, request.sender);
 
+        // vote for a given poll
+        // {
+        //     'id' 'uuid',
+        //     'type': 'vote',
+        //     'receiver': 'receiver',
+        //     'selected': [1, 2, 3, ...],
+        //     'poll': 'uuid',
+        //     'sender': 'sender'
+        // };
+        } else if(request.type == 'vote') {
+
+            if (typeof request.poll == 'undefined' || typeof request.sender == 'undefined' || typeof request.selected == 'undefined') {
+                return this.sendError(request, response);
+            }
+
+            this.backend.acceptVote(request.poll, request.selected, request.sender);
+
+            response.writeHeader(200, {"Content-Type": "text/plain"});
+            response.end();
+
+
+        // invalid message type
         } else {
             this.backend.error(lang.backend_server_invalid_message_type.replace(/\%s/, JSON.stringify(request).escape()));
             response.writeHeader(400, {"Content-Type": "text/plain"});

@@ -153,11 +153,11 @@ define('sum-frontend', Class.extend({
             // show system tray notification
             that.backend.notification(that.backend.getAvatar(message.sender), lang.frontend_new_message + message.sender.escape(), message.text, conversationId);
 
-            // update stream
+            // update stream if conversation is currently visible and window is focused
             if (that.currentConversation == conversationId && that.backend.isFocused() === true) {
                 that.backend.getConversation(that.currentConversation);
 
-            // update unread messages counter
+            // otherwise update unread messages counter
             } else {
                 if (typeof that.unreadMessagesCounter[conversationId] == "undefined") {
                     that.unreadMessagesCounter[conversationId] = 0;
@@ -170,7 +170,7 @@ define('sum-frontend', Class.extend({
                 that.backend.getConversation(that.currentConversation);
             }
 
-            // allways update users messages
+            // always update users messages
             that.backend.updateOpenConversationList();
         });
 

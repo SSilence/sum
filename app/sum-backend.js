@@ -208,6 +208,7 @@ define('sum-backend', Class.extend({
         });
     },
 
+
     /**
      * Init window and window event handler
      */
@@ -769,7 +770,7 @@ define('sum-backend', Class.extend({
      * @returns {boolean} true if user is in room, false otherwise
      */
     isUserInRoom: function(room) {
-        return this.backendHelpers.isUserInRoomList(this.roomlist, room);
+        return this.backendHelpers.isUserInRoomList([ { name: config.room_all} ].concat(this.roomlist), room);
     },
     
     
@@ -1016,7 +1017,91 @@ define('sum-backend', Class.extend({
         gui.Shell.openExternal(url);
     },
     
-    
+
+    // poll handling
+
+    /**
+     * vote for a given option
+     * @param messageId (string) messageId for voting
+     * @param selected (array) of selected vote values
+     * @param conversation (string) the current room or user
+     */
+    vote: function(messageId, selected, conversation) {
+        var message = this.backendHelpers.findMessage(this.conversations, messageId);
+        if (message === false)
+            return;
+
+        // add vote to poll message
+        this.addVoteToPollMessage(message, selected, this.backendHelpers.getUsername());
+
+        // mark message as voted
+        message.voted = true;
+
+        // rerender message for showing result
+        this.rerenderMessage(message);
+
+        // send vote to all other users
+        this.sendMessage({
+            'type': 'vote',
+            'receiver': conversation,
+            'selected': selected,
+            'poll': messageId,
+            'sender': this.backendHelpers.getUsername()
+        });
+    },
+
+
+    /**
+     * accept vote from other user and update local poll
+     * @param poll uuid of poll message
+     * @param selected selected values
+     * @param voter name of the voter
+     */
+    acceptVote: function(poll, selected, voter) {
+        var message = this.backendHelpers.findMessage(this.conversations, poll);
+        if (message === false)
+            return;
+
+        // don't allow multioptions on single options polls
+        if (message.multioptions === false && selected.length > 1)
+            return;
+
+        // ignore double votes
+        if ($.inArray(voter, message.users) !== -1)
+            return;
+
+        this.addVoteToPollMessage(message, selected, voter);
+
+        // rerender message for showing result
+        this.rerenderMessage(message);
+
+        // send system message for new vote received
+        this.renderSystemMessage(lang.frontend_messages_new_vote.replace(/\%s/, message.question), message.receiver);
+    },
+
+
+    /**
+     * adds a vote to poll message
+     * @param message the message
+     * @param selected the selected answers
+     * @param voter the voter
+     */
+    addVoteToPollMessage: function(message, selected, voter) {
+        // insert vote in message.votes
+        if (typeof message.votes === 'undefined')
+            message.votes = Array.apply(null, Array(message.answers.length)).map(function() { return 0; });
+
+        // set counter
+        $.each(selected, function(index, item) {
+            message.votes[item] = message.votes[item] + 1;
+        });
+
+        // insert user in messages.user
+        if (typeof message.users === 'undefined')
+            message.users = [];
+        message.users[message.users.length] = voter;
+    },
+
 
     // key management handling
     
