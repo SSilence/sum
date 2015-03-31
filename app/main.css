@@ -195,7 +195,11 @@ input.remove,
     .logo span {
         margin-right:10px;
     }
-    
+
+.emoticons {
+    width:24px;
+}
+
 
 /**********/
 /* splash */
@@ -908,7 +912,6 @@ input.remove,
         }
 
         .entry-content img.emoticons {
-            width: 20px;
             margin-top: -3px;
             margin-bottom: -2px;
         }
