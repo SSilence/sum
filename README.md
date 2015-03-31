@@ -1,10 +1,10 @@
 SUM - Secure Ultimate Messenger
 ===============================
 
-Copyright (c) 2014 Tobias Zeising, tobias.zeising@aditu.de  
+Copyright (c) 2015 Tobias Zeising, tobias.zeising@aditu.de
 http://www.sum-messenger.org/<br />
 Licensed under the GPLv3 license  
-Version 1.3.0-SNAPSHOT
+Version 2.0.0-SNAPSHOT
 
 [![Build Status](https://travis-ci.org/SSilence/sum.svg?branch=master)](https://travis-ci.org/SSilence/sum)
 

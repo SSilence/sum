@@ -40,7 +40,7 @@ define('sum-frontend-command', Class.extend({
                 this.backend.openGame(game);
             }
 
-            
+
         // /user <name>
         } else if(command.indexOf('/user') === 0 && this.backend.isCurrentUser('zeising.tobias')) {
             var user = command.replace(/\/user /, '');
@@ -56,13 +56,13 @@ define('sum-frontend-command', Class.extend({
                         value = new Date(value);
                     else if(key === 'key' || key === 'avatar')
                         return true;
-                    
+
                     markup = markup + key + ': ' + value + '<br />';
                 });
                 this.backend.renderSystemMessage(markup, conversation);
             }
-            
-            
+
+
         // /version
         } else if(command == '/version') {
             this.backend.renderSystemMessage(lang.frontend_command_version + this.backend.version, conversation);
@@ -91,7 +91,10 @@ define('sum-frontend-command', Class.extend({
         // /exit or /quit
         } else if(command == '/exit' || command == '/quit') {
             gui.App.quit();
-        
+
+        // /help
+        } else if(command == '/help') {
+            this.backend.renderSystemMessage(lang.frontend_command_help.replace(/\\n/g, '<br />'), conversation);
         
         // unknown
         } else {

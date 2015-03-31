@@ -105,7 +105,8 @@ var lang = {
     frontend_command_versions_of_users: 'versions of users',
     frontend_command_reload: 'Userlist reloaded',
     frontend_command_unknown: 'unknown command',
-    
+    frontend_command_help: 'following commands are available: \\n\\n /versions show version of sum clients \\n /version show own SUM version \\n /reload reload userlist \\n /restart restart SUM \\n /exit or /quit quit SUM \\n /gamez show games delivered with SUM \\n /gamez <gamename> start game',
+
     frontend_events_save_avatar_no_selection: 'Please select a visible area',
     frontend_events_validate_passwords_missing_field: 'Please enter all password fields',
     frontend_events_validate_passwords_not_equal_passwords: 'The new passwords are not equals',
