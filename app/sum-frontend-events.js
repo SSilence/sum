@@ -747,6 +747,17 @@ define('sum-frontend-events', Class.extend({
             $('#message-toggleemots').click();
             $('#message-input-textfield').focus();
         });
+
+        // emoticon tab click
+        $('#message-emoticons').delegate(".emoticons-tab", "click", function() {
+            $('.emoticons-content').hide();
+            $('.emoticons-tab').removeClass('active');
+            $('#emoticons-' + $(this).attr('id')).show();
+            $(this).addClass('active');
+            var emoticonsPopup = $('#message-emoticons');
+            emoticonsPopup.css('marginTop', -1 * emoticonsPopup.height() - parseInt(emoticonsPopup.css('padding')));
+
+        });
         
         // send message
         $('#message-send').click(function() {

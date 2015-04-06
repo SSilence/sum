@@ -151,6 +151,13 @@ var lang = {
     frontend_messages_votes: 'Stimmen',
     frontend_messages_new_vote: 'ein Benutzer hat bei der Umfrage "%s" abgestimmt',
 
+    frontend_emoticons_basic: 'Basis',
+    frontend_emoticons_people: 'Menschen',
+    frontend_emoticons_nature: 'Natur',
+    frontend_emoticons_objects: 'Objekte',
+    frontend_emoticons_places: 'Orte',
+    frontend_emoticons_symbols: 'Symbole',
+
     frontend_room_invite: '%s1 hat dich in den Raum %s2 eingeladen',
     frontend_online: '%s ist jetzt online',
     frontend_offline: '%s ist jetzt offline',

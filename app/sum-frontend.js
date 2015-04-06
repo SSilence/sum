@@ -253,11 +253,35 @@ define('sum-frontend', Class.extend({
     initEmoticons: function() {
         var emotbox = $('#message-emoticons');
         var lastEmot = "";
-        $.each(emoticons, function(shortcut, emoticon) {
-            if(lastEmot != emoticon)
-                emotbox.append('<img class="emoticons" src="'+ emoticon +'" title="' + shortcut + '"/>');
-            lastEmot = emoticon;
+
+        var groups = Object.keys(emoticons);
+        var html = "";
+
+        // render emoticons
+        $.each(groups, function(index, group) {
+            html = html + '<div id="emoticons-' + group + '" class="emoticons-content">';
+
+            $.each(emoticons[group], function(shortcut, emoticon) {
+                if(lastEmot != emoticon)
+                    html = html + '<img class="emoticons" src="'+ emoticon +'" title="' + shortcut + '"/>';
+                lastEmot = emoticon;
+            });
+
+            html = html + '</div>';
         });
+
+        // render tabs
+        html = html + '<ul class="emoticons-tabs">';
+        $.each(groups, function(index, group) {
+            html = html + '<li id="' + group + '" class="emoticons-tab">' + lang['frontend_emoticons_' + group] + '</li>';
+        });
+        html = html + '</ul>';
+
+        emotbox.html(html);
+
+        // initial show basic emoticons
+        $('#basic').addClass('active');
+        $('#emoticons-basic').show();
     },
 
 

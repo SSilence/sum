@@ -174,5 +174,20 @@ define('sum-backend-filesystem', Class.extend({
         return fs.readdirSync(dir).filter(function (file) {
             return fs.statSync(dir + file).isDirectory();
         });
+    },
+
+
+    /**
+     * returns true if given file exists
+     * @param filename (string) given path and filename
+     * @returns {boolean} true for existing files
+     */
+    fileExists: function(filename) {
+        try {
+            fs.accessSync(filename);
+        } catch(e) {
+            return false;
+        }
+        return true;
     }
 }));

@@ -159,6 +159,9 @@ define('sum-backend', Class.extend({
         // init window and window event handler
         this.initWindow();
 
+        // emojis
+        this.initEmojis();
+
         // set welcome message
         this.renderSystemMessage(config.welcome_text.replace(/\\n/g, '<br />'), config.room_all);
 
@@ -237,6 +240,31 @@ define('sum-backend', Class.extend({
             that.backendStorage.saveWindowPosition(x, y);
         });
     },
+
+
+    /**
+     * initialize additional emojis
+     */
+    initEmojis: function() {
+        var path = "node_modules/emojify.js/dist/images/basic/";
+        var that = this;
+        var groups = Object.keys(emojiGroups);
+        $.each(groups, function(index, group) {
+            var emojis = {};
+
+            $.each(emojiGroups[group], function(index, emoji) {
+                var file = path + emoji + '.png';
+                if (that.backendFilesystem.fileExists(file) === false)
+                    return true;
+
+                emojis[":" + emoji + ":"] = '../' + file;
+            });
+            emoticons[group] = emojis;
+        });
+
+        emoticons = $.extend({ basic: basicEmoticons}, emoticons);
+    },
+
 
 
     ////////////////////////////////////////////

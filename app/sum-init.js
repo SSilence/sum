@@ -74,9 +74,8 @@ $(document).ready(function() {
         }));
     });
     config.room_all = lang.room_all;
-    
-    
-    
+
+
     // start application
     
     // start application

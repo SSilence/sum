@@ -187,14 +187,12 @@ input.remove,
 }
 
 .logo {
-    font-size:1.4em;
-    font-size:1.3em;
+    font-size:1.1em;
     font-family: 'oswaldbook';
+    background:url(favicon.png) no-repeat left center;
+    padding-left:45px;
+    background-size: 32px;
 }
-
-    .logo span {
-        margin-right:10px;
-    }
 
 .emoticons {
     width:24px;
@@ -226,13 +224,13 @@ input.remove,
 }
 
     #login > div {
-        width:300px;
+        width:200px;
         height:150px;
         position:absolute;
         left:50%;
         top:50%;
         margin-top:-75px;
-        margin-left:-150px;
+        margin-left:-100px;
     }
     
     #login > div > div > span {
@@ -241,10 +239,10 @@ input.remove,
     
     #login > div > div {
         margin-bottom:20px;
+        font-size: 1.5em;
     }
     
     #login .save {
-        margin-left:89px;
         margin-top:10px;
     }
     
@@ -284,10 +282,6 @@ input.remove,
     padding-left:15px;
     padding-top:12px;
 }
-
-    #nav .heading span {
-        padding-right:10px;
-    }
 
     #nav .version {
         position: absolute;
@@ -839,6 +833,7 @@ input.remove,
                 font-size:0.8em;
                 text-align:center;
                 margin-top:55px;
+                border-bottom:0;
             }
 
             #open-conversations-menue-dropdown li
@@ -1022,7 +1017,7 @@ input.remove,
 
         .entry-poll-result li div {
             height: 20px;
-            background: #adc797;
+            background: rgba(102, 130, 154, 0.37);
         }
 
         .entry-poll-result li span {
@@ -1032,7 +1027,7 @@ input.remove,
 
         .entry-poll-result li div div {
             height:20px;
-            background: #68b54d;
+            background: rgba(102, 130, 154, 1);
         }
 
         .entry-poll-answers li {
@@ -1253,15 +1248,44 @@ input.remove,
         border: 1px solid #dadada;
         position:absolute;
         background:#f7f7f7;
-        width:200px;
+        width:650px;
         left:100%;
-        margin-left:-230px;
-        padding:5px;
+        margin-left:-730px;
         z-index:29;
     }
 
         #message-emoticons img {
             cursor:pointer;
+            margin-right:2px;
+            margin-bottom:2px;
+        }
+
+        #message-emoticons .emoticons-content {
+            clear:both;
+            display:none;
+            padding:5px;
+        }
+
+        #message-emoticons .emoticons-tabs {
+            padding:0;
+            margin:0;
+            width:100%;
+            background: #f4f4f4;
+            border-top: 1px solid #f1f1f1;
+            list-style:none;
+            height:40px;
+        }
+
+        #message-emoticons .emoticons-tab {
+            float:left;
+            padding:9px;
+            cursor:pointer;
+            border-right: 1px solid #f1f1f1;
+        }
+
+        #message-emoticons .emoticons-tab.active {
+            border-top:0;
+            background:#f9f9f9
         }
 
     #message-input {

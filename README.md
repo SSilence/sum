@@ -119,8 +119,8 @@ Thanks a lot to [Andi](https://github.com/DaAndi82) for implementing code messag
 
 Special thanks to the great programmers of this libraries which will be used in SUM:
 
-* node-webkit: https://github.com/rogerwang/node-webkit
-* jquery: http://jquery.com/
+* nw.js: https://github.com/nwjs/nw.js
+* jquery: http://jquery.com
 * lockfile: https://github.com/isaacs/lockfile
 * node-rsa: https://github.com/rzcoder/node-rsa
 * ini: https://github.com/isaacs/ini
@@ -143,9 +143,9 @@ Special thanks to the great programmers of this libraries which will be used in 
 * CryptoJS: https://code.google.com/p/crypto-js/
 * ionicons: http://ionicons.com/
 * WebIconset.com Emoticons: http://www.webiconset.com/emoticons-smilies-icon-set/
+* Emojify.js Emoticons: https://github.com/hassankhan/emojify.js/
 * Website Template: http://html5up.net/
 * Application Icon: http://www.graphicsfuel.com/
 * Font Oswald: http://www.fontsquirrel.com/fonts/oswald
-
 
 Dependencies Status: https://david-dm.org/ssilence/sum

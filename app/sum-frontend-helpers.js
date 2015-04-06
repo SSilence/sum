@@ -31,13 +31,28 @@ define('sum-frontend-helpers', Class.extend({
      * @param text (string) text with emoticons shortcuts
      */
     emoticons: function(text) {
-        $.each(emoticons, function(shortcut, emoticon) {
+        // replace basic emoticons
+        $.each(emoticons.basic, function(shortcut, emoticon) {
             // escape shortcut
             shortcut = shortcut.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 
             // replace shortcut
             var re = new RegExp(shortcut, 'g');
             text = text.replace(re, '<img class="emoticons" src="'+ emoticon +'" title="' + shortcut + '"/>');
+        });
+
+        // replace emojis
+        text = text.replace(/:([^:\s]+):/g, function(all, shortcut) {
+            var emoji = false;
+            $.each(Object.keys(emoticons), function(index, group) {
+                if (typeof emoticons[group][all] !== 'undefined') {
+                    emoji = emoticons[group][all];
+                    return false;
+                }
+            });
+            if (emoji === false)
+                return all;
+            return '<img class="emoticons" src="'+ emoji +'" title="' + shortcut + '"/>'
         });
 
         return text;

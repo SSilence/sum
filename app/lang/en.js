@@ -151,6 +151,13 @@ var lang = {
     frontend_messages_votes: 'votes',
     frontend_messages_new_vote: 'a user voted on the poll: %s',
 
+    frontend_emoticons_basic: 'basic',
+    frontend_emoticons_people: 'people',
+    frontend_emoticons_nature: 'nature',
+    frontend_emoticons_objects: 'objects',
+    frontend_emoticons_places: 'places',
+    frontend_emoticons_symbols: 'symbols',
+
     frontend_room_invite: '%s1 invited you in the room %s2',
     frontend_online: '%s is now online',
     frontend_offline: '%s is now offline',

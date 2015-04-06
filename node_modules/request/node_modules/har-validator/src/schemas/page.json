@@ -1,0 +1,29 @@
+{
+  "type": "object",
+  "optional": true,
+  "required": [
+    "startedDateTime",
+    "id",
+    "title",
+    "pageTimings"
+  ],
+  "properties": {
+    "startedDateTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "id": {
+      "type": "string",
+      "unique": true
+    },
+    "title": {
+      "type": "string"
+    },
+    "pageTimings": {
+      "$ref": "#pageTimings"
+    },
+    "comment": {
+      "type": "string"
+    }
+  }
+}

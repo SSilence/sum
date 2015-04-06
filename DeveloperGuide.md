@@ -3,7 +3,7 @@ SUM Developement Guide
 
 This is a short introduction in the architecture of SUM. This guide is for all who plan to enhance or change SUM.
 
-SUM uses node-webkit as environment, jquery for the frontend, node for the backend. Ensure that you understand the basics of this frameworks.
+SUM uses nw.js as environment, jquery for the frontend, node for the backend. Ensure that you understand the basics of this frameworks.
 
 
 BASIC SETUP
@@ -12,7 +12,7 @@ BASIC SETUP
 For running SUM in development mode, building SUM executable or building setup, you have to install following tools:
 
  1. install [node.js](http://nodejs.org/)
- 2. ```npm install nodewebkit -g``` installs node webkit which is a webkit browser with build in node
+ 2. ```npm install nw -g``` installs node webkit which is a webkit browser with build in node
  3. ```npm install grunt-cli -g``` installs the build tool grunt
  4. ```npm install``` in SUM folder install all development dependencies
  5. if you plan to build a setup then install [InnoSetup](http://www.jrsoftware.org/isinfo.php) and add it to your path environment variable
@@ -24,7 +24,7 @@ RUN, BUILD, TEST SUM
 
 After doing basic setup you can run, build and test SUM. Open your command line and change into the SUM directory.
 
- - ```nodewebkit``` starts SUM
+ - ```nw``` starts SUM
  - ```grunt build``` compiles SUM executable
  - ```grunt check``` runs tests and jshint
  - ```grunt version --newversion=1.2.3``` updates the version information in package.json, setup.iss and readme.md

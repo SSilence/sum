@@ -14,17 +14,17 @@
     "width": 900,
     "height": 600,
     "frame": true,
-    "min_width": 800,
+    "min_width": 860,
     "min_height": 580
   },
   "dependencies": {
-    "nw": "~0.12",
     "lockfile": "~1.0",
     "node-rsa": "0.1.54",
     "ini": "~1.3",
     "base64-stream": "~0.1",
     "crypto-js": "~3.1",
-    "request": "~2"
+    "request": "~2",
+    "emojify.js": "~1.0"
   },
   "devDependencies": {
     "grunt": "~0.4",
