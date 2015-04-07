@@ -163,7 +163,7 @@ define('sum-backend', Class.extend({
         this.initEmojis();
 
         // set welcome message
-        this.renderSystemMessage(config.welcome_text.replace(/\\n/g, '<br />').replace(/%s/g, this.version), config.room_all);
+        this.renderSystemMessage(config.welcome_text.replace(/%s/g, this.version), config.room_all, false);
 
         // load rooms where user was in on last logout
         this.roomlist = this.backendStorage.loadRoomlist();
@@ -863,18 +863,22 @@ define('sum-backend', Class.extend({
      * render system message
      * @param text (string) message
      * @param conversation (string) target conversation
+     * @param escape (boolean) escape given text
      */
-    renderSystemMessage: function(text, conversation) {
+    renderSystemMessage: function(text, conversation, escape) {
         // get conversation
         if (typeof this.conversations[conversation] == 'undefined')
             this.conversations[conversation] = [];
         var con = this.conversations[conversation];
 
+        if (typeof escape === 'undefined' || escape !== false)
+            text = text.escape().replace(/\&lt;br \/\&gt;/g, '<br />');
+
         // add system message
         con[con.length] = {
             id: this.backendHelpers.genereateGUID(),
             type: 'system',
-            text: text.escape().replace(/\&lt;br \/\&gt;/g, '<br />')
+            text: text
         };
         this.getConversation(conversation);
     },
