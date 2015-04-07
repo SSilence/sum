@@ -101,8 +101,8 @@ define('sum-frontend-events', Class.extend({
                 $('#key-menue-dropdown').hide();
             }
             
-            // no click inside messages menue: close it
-            if ($(event.target).parents('#open-conversations-menue-dropdown').length===0 && event.target.id != 'open-conversations-menue' && $(event.target).parent('#open-conversations-menue').length===0 && $('#open-conversations-menue .unread').html().trim().length === 0) {
+            // no click inside conversation menue: close it
+            if ($(event.target).parents('#open-conversations-menue-dropdown').length===0 && event.target.id != 'open-conversations-menue' && $(event.target).parent('#open-conversations-menue').length===0 && $('#open-conversations-menue .unread').is(':visible') === false) {
                 $('#open-conversations-menue-dropdown').hide();
             }
 

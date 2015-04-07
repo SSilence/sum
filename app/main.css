@@ -822,6 +822,7 @@ input.remove,
             margin-left:-314px;
             margin-top:16px;
             height:150px;
+            z-index:29;
         }
 
             #open-conversations-menue-dropdown ul {

@@ -169,7 +169,7 @@ define('sum-backend-server', Class.extend({
                 conversationId = request.receiver;
 
             // only accept message if user is still in this room
-            if (this.backend.isUserInRoom(conversationId) === true || this.backend.getUser(conversationId) === true ) {
+            if (this.backend.isUserInRoom(conversationId) === true || this.backend.getUser(conversationId) !== false ) {
                 // add current timestamp
                 var message = $.extend(request, { datetime: new Date().getTime()});
 
