@@ -13,7 +13,7 @@
   ],
   "properties": {
     "status": {
-      "type": "number"
+      "type": "integer"
     },
     "statusText": {
       "type": "string"
@@ -40,10 +40,10 @@
       "type": "string"
     },
     "headersSize": {
-      "type": "number"
+      "type": "integer"
     },
     "bodySize": {
-      "type": "number"
+      "type": "integer"
     },
     "comment": {
       "type": "string"

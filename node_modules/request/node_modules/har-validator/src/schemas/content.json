@@ -6,10 +6,10 @@
   ],
   "properties": {
     "size": {
-      "type": "number"
+      "type": "integer"
     },
     "compression": {
-      "type": "number"
+      "type": "integer"
     },
     "mimeType": {
       "type": "string"

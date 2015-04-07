@@ -16,7 +16,7 @@
       "type": "string"
     },
     "hitCount": {
-      "type": "number"
+      "type": "integer"
     },
     "comment": {
       "type": "string"

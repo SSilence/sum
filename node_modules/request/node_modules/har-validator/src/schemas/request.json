@@ -43,10 +43,10 @@
       "$ref": "#postData"
     },
     "headersSize": {
-      "type": "number"
+      "type": "integer"
     },
     "bodySize": {
-      "type": "number"
+      "type": "integer"
     },
     "comment": {
       "type": "string"

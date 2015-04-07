@@ -1,3 +1,23 @@
+var sources = [
+    'test/init-mocks.js',
+    'app/lang/en.js',
+    'app/libs/injector.js',
+    'app/libs/string-escape.js',
+    'app/sum-backend-client.js',
+    'app/sum-backend-helpers.js',
+    'app/sum-backend-server.js',
+    'app/sum-backend-userlist-file.js',
+    'app/sum-backend-userlist-web.js',
+    'app/sum-backend-storage.js',
+    'app/sum-backend-crypto.js',
+    'app/sum-backend-filesystem.js',
+    'app/sum-backend.js',
+    'app/sum-emoticons.js',
+    'app/sum-frontend-events.js',
+    'app/sum-frontend-helpers.js',
+    'app/sum-frontend-command.js',
+    'app/sum-frontend.js'];
+
 module.exports = function(grunt) {
 
     grunt.initConfig({
@@ -19,26 +39,7 @@ module.exports = function(grunt) {
 
         /* jasmine unit tests */
         jasmine : {
-            src: [
-                'test/init-mocks.js',
-                'app/lang/en.js',
-                'app/libs/injector.js',
-                'app/libs/string-escape.js',
-                'app/sum-backend-client.js',
-                'app/sum-backend-helpers.js',
-                'app/sum-backend-server.js',
-                'app/sum-backend-userlist-file.js',
-                'app/sum-backend-userlist-web.js',
-                'app/sum-backend-storage.js',
-                'app/sum-backend-crypto.js',
-                'app/sum-backend-filesystem.js',
-                'app/sum-backend.js',
-                'app/sum-emoticons.js',
-                'app/sum-frontend-events.js',
-                'app/sum-frontend-helpers.js',
-                'app/sum-frontend-command.js',
-                'app/sum-frontend.js'
-            ],
+            src: sources,
             options: {
                 specs: 'test/*.js',
                 vendor: [
@@ -50,28 +51,12 @@ module.exports = function(grunt) {
                     'app/libs/jcrop/jquery.Jcrop.min.js', 
                     'app/libs/selectize/selectize.js',
                     'app/libs/highlight/highlight.pack.js', 
-                    'app/libs/jquery.waitforimages/jquery.waitforimages.js'
+                    'app/libs/jquery.waitforimages/jquery.waitforimages.js',
+                    'app/libs/draggabilly.pkgd.min.js'
                 ]
             },
             coverage: {
-                src: [
-                    'test/init-mocks.js',
-                    'app/lang/en.js',
-                    'app/libs/injector.js',
-                    'app/libs/string-escape.js',
-                    'app/sum-backend-client.js',
-                    'app/sum-backend-helpers.js',
-                    'app/sum-backend-server.js',
-                    'app/sum-backend-userlist.js',
-                    'app/sum-backend-storage.js',
-                    'app/sum-backend-crypto.js',
-                    'app/sum-backend-filesystem.js',
-                    'app/sum-backend.js',
-                    'app/sum-emoticons.js',
-                    'app/sum-frontend-events.js',
-                    'app/sum-frontend-helpers.js',
-                    'app/sum-frontend.js'
-                ],
+                src: sources,
                 options: {
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
@@ -107,6 +92,7 @@ module.exports = function(grunt) {
                       './node_modules/node-rsa/**', 
                       './node_modules/base64-stream/**',
                       './node_modules/request/**',
+                      './node_modules/emojify.js/**',
                       './node_modules/crypto-js/**'
                 ]
             },

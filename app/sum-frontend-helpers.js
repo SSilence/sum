@@ -52,7 +52,7 @@ define('sum-frontend-helpers', Class.extend({
             });
             if (emoji === false)
                 return all;
-            return '<img class="emoticons" src="'+ emoji +'" title="' + shortcut + '"/>'
+            return '<img class="emoticons" src="'+ emoji +'" title="' + shortcut + '"/>';
         });
 
         return text;
