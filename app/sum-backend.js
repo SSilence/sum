@@ -163,7 +163,7 @@ define('sum-backend', Class.extend({
         this.initEmojis();
 
         // set welcome message
-        this.renderSystemMessage(config.welcome_text.replace(/\\n/g, '<br />'), config.room_all);
+        this.renderSystemMessage(config.welcome_text.replace(/\\n/g, '<br />').replace(/%s/g, this.version), config.room_all);
 
         // load rooms where user was in on last logout
         this.roomlist = this.backendStorage.loadRoomlist();
