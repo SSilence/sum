@@ -235,7 +235,7 @@ input.remove,
 }
 
     #login > div {
-        width:200px;
+        width:230px;
         height:150px;
         position:absolute;
         left:50%;
@@ -261,6 +261,10 @@ input.remove,
         font-size:0.7em;
         color:#bbbbbb;
         cursor:pointer;
+    }
+
+    #login .error {
+        font-size: 1em;
     }
     
     #login input[type="password"] {
