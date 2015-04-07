@@ -199,6 +199,17 @@ input.remove,
 }
 
 
+#nav-dragger {
+    position:absolute;
+    height:100%;
+    z-index:100;
+    width:20px;
+    left:25%;
+    cursor:w-resize;
+}
+
+
+
 /**********/
 /* splash */
 /**********/
@@ -292,6 +303,14 @@ input.remove,
         font-family: sans-serif;
         margin-top: -15px;
         z-index:100;
+    }
+
+    #nav #rooms-dragger {
+        position:absolute;
+        width:100%;
+        height:20px;
+        cursor:n-resize;
+        z-index: 100;
     }
 
 
@@ -864,6 +883,11 @@ input.remove,
             #open-conversations-menue-dropdown li.active {
                 box-shadow: none;
                 border-top:0;
+            }
+
+            #open-conversations-menue-dropdown .room .rooms-invite,
+            #open-conversations-menue-dropdown .room .rooms-leave {
+                display:none;
             }
 
 

@@ -98,6 +98,7 @@ Following configuration parameters are available in config.ini:
 * ``lock_retry_maximum``: retry in maximum random ms when file is locked
 * ``notification_reminder``: timeout for notification about unread messages reminder in ms
 * ``excluded_ips``: ips which will be ignored on creating server
+* ``conversation_items``: amount of chat messages until "show more" will be shown
 * ``about_url``: url for menue entry 'about sum'
 * ``highlight_languages_value``: supported highlight.js languages in code input selection (replace value by language key)
 * ``welcome_text``: welcome text which will be shown on startup
@@ -129,6 +130,7 @@ Special thanks to the great programmers of this libraries which will be used in 
 * jquery custom content scroller: http://manos.malihu.gr/jquery-custom-content-scroller/
 * jCrop: http://deepliquid.com/content/Jcrop.html
 * selectize.js: http://brianreavis.github.io/selectize.js/
+* draggabilly: http://draggabilly.desandro.com/
 * highlight.js: http://highlightjs.org/
 * Simple Class Creation and Inheritance: http://ejohn.org/blog/simple-javascript-inheritance/
 * grunt: http://gruntjs.com/

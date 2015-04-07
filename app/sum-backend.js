@@ -384,6 +384,38 @@ define('sum-backend', Class.extend({
     // functions for frontend //
     ////////////////////////////
 
+
+    // window size
+
+    /**
+     * loads size of the rooms and contacts
+     * @returns (object) {roomsHeight: 123, contactsWidth: 456}
+     */
+    getRoomsHeightAndContactsWidth: function() {
+        return {
+            roomHeight: this.backendStorage.loadRoomHeight(),
+            contactsWidth: this.backendStorage.loadContactsWidth()
+        };
+    },
+
+
+    /**
+     * save height of the rooms
+     * @param height new height
+     */
+    saveRoomsHeight: function(height) {
+        this.backendStorage.saveRoomHeight(height);
+    },
+
+
+    /**
+     * save width of contacts
+     * @param width new width
+     */
+    saveContactsWidth: function(width) {
+        this.backendStorage.saveContactsWidth(width);
+    },
+
     
     // notification handling
     

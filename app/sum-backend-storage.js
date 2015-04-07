@@ -72,6 +72,46 @@ define('sum-backend-storage', Class.extend({
 
 
     /**
+     * load saved room size
+     * @returns (int|boolean) size or false
+     */
+    loadRoomHeight: function() {
+        if (typeof localStorage.roomheight != 'undefined' && localStorage.roomheight !== null)
+            return localStorage.roomheight;
+        return false;
+    },
+
+
+    /**
+     * save height of rooms
+     * @param height new height
+     */
+    saveRoomHeight: function(height) {
+        localStorage.roomheight = height;
+    },
+
+
+    /**
+     * load saved contacts size
+     * @returns (int|boolean) size or false
+     */
+    loadContactsWidth: function() {
+        if (typeof localStorage.contactswidth != 'undefined' && localStorage.contactswidth !== null)
+            return localStorage.contactswidth;
+        return false;
+    },
+
+
+    /**
+     * save size of contacts
+     * @param width new width
+     */
+    saveContactsWidth: function(width) {
+        localStorage.contactswidth = width;
+    },
+
+
+    /**
      * load window position
      * @return (object) {x: 123, y: 456}
      */

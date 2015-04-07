@@ -46,13 +46,7 @@ define('sum-frontend-events', Class.extend({
      * cursor in history
      */
     historyCursor: 0,
-    
-    
-    /**
-     * window height before last resize event
-     */
-    lastWindowHeight: $(window).height(),
-    
+
     
     /**
      * initialize events (clicks, ...)
@@ -65,6 +59,7 @@ define('sum-frontend-events', Class.extend({
         this.initMessageMenue();
         this.initMessageInput();
         this.initNavigation();
+        this.initDraggables();
     },
     
     
@@ -950,6 +945,79 @@ define('sum-frontend-events', Class.extend({
 
 
     /**
+     * initialize draggable areas
+     */
+    initDraggables: function() {
+        var that = this;
+
+        // load initial room height
+        var sizes = this.backend.getRoomsHeightAndContactsWidth();
+        if (sizes.roomHeight !== false) {
+            $('#rooms').css('height', sizes.roomHeight + 'px');
+            that.resetRoomsDraggerTop();
+        }
+
+        // load initial contacts/nav width
+        if (sizes.contactsWidth !== false) {
+            that.setContactsWidth(sizes.contactsWidth);
+            $("#nav-dragger").css('left', $('#nav').css('width'));
+        }
+
+
+        // draggable rooms
+        $("#rooms-dragger").draggabilly({
+            axis: 'y',
+            containment: '#nav'
+        });
+
+        var roomHeight;
+
+        $("#rooms-dragger").on('dragStart', function(event, pointer) {
+            $("#rooms-dragger").addClass('dragging');
+            roomHeight = parseInt($('#rooms').css('height'));
+        });
+
+        $("#rooms-dragger").on('dragMove', function(event, pointer, moveVector) {
+            if (roomHeight - moveVector.y > $(window).height() * 0.7 || roomHeight - moveVector.y < $(window).height() * 0.2)
+                return;
+            $('#rooms').css('height', (roomHeight - moveVector.y) + "px");
+            that.resize();
+        });
+
+        $("#rooms-dragger").on('dragEnd', function(event, pointer) {
+            $("#rooms-dragger").removeClass('dragging');
+            that.backend.saveRoomsHeight(parseInt($('#rooms').css('height')));
+            that.resetRoomsDraggerTop();
+        });
+
+
+        // draggable contacts/nav
+        $("#nav-dragger").draggabilly({
+            axis: 'x',
+            containment: 'body'
+        });
+
+        var contactsWidth;
+
+        $("#nav-dragger").on('dragStart', function(event, pointer) {
+            contactsWidth = parseInt($('#nav').css('width'));
+        });
+
+        $("#nav-dragger").on('dragMove', function(event, pointer, moveVector) {
+            if (contactsWidth + moveVector.x > $(window).width() * 0.7 || contactsWidth + moveVector.x < 210) {
+                return;
+            }
+            that.setContactsWidth(contactsWidth + moveVector.x);
+        });
+
+        $("#nav-dragger").on('dragEnd', function(event, pointer) {
+            that.backend.saveContactsWidth(parseInt($('#nav').css('width')));
+            $("#nav-dragger").css('left', $('#nav').css('width'));
+        });
+    },
+
+
+    /**
      * select new avatar
      */
     selectAvatar: function() {
@@ -1111,11 +1179,46 @@ define('sum-frontend-events', Class.extend({
 
         $('#content-wrapper').height(windowHeight - headerHeight - messageHeight - padding);
 
+        // set rooms popup height
+        if ($('#rooms').height() > $(window).height() * 0.7)
+            $('#rooms').css('height', ($(window).height() * 0.7) + "px");
+
+        // set height of rooms listing
+        var roomsHeadingHeight = parseInt($('#rooms h1').height()) + parseInt($('#rooms h1').css('marginTop')) + parseInt($('#rooms h1').css('marginBottom'));
+        $('#rooms-wrapper').css('height', (roomsHeight - roomsHeadingHeight) + 'px');
+        $("#rooms-wrapper").mCustomScrollbar("update");
+
+        // reset dragger
+        this.resetRoomsDraggerTop();
+
+        // reset message input width
+        $('#message').css('width', ($(window).width() - parseInt($('#nav').css('width'))) + "px");
+
         // set new position for rooms popups
-        var diff = windowHeight - this.lastWindowHeight;
-        this.lastWindowHeight = windowHeight;
-        $('.rooms-popup').each(function(index, item) {
-            $(item).css('top', parseInt($(item).css('top')) + diff);
-        });
+        $('.rooms-popup').css('top', $('#rooms-add').position().top + 'px');
+    },
+
+
+    /**
+     * reset position of room resize dragger to top of rooms
+     */
+    resetRoomsDraggerTop: function() {
+        if ($("#rooms-dragger").hasClass('dragging'))
+            return;
+        var roomHeight = parseInt($('#rooms').css('height'));
+        var windowHeight = $(window).height();
+        $("#rooms-dragger").css('top', (windowHeight-roomHeight) + 'px');
+    },
+
+
+    /**
+     * set width of contacts
+     * @param width new width
+     */
+    setContactsWidth: function(width) {
+        $('#nav').css('width', width + "px");
+        $('#main').css('marginLeft', width + "px");
+        $('#message').css('left', width + "px");
+        $('#message').css('width', ($(window).width() - width) + "px");
     }
 }));
