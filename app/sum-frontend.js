@@ -43,6 +43,12 @@ define('sum-frontend', Class.extend({
 
 
     /**
+     * show all items of a conversation or only the last 20
+     */
+    showAll: false,
+
+
+    /**
      * initialize frontend
      */
     initialize: function() {
@@ -521,26 +527,21 @@ define('sum-frontend', Class.extend({
         
         // show messages
         var that = this;
-        var onlyAppendNewMessages = false;
         var html = '';
-        $.each(messages, function(index, message) {
-            // message already in list?
-            var id = $('#content .entry:nth-child(' + (index+1) + ')').attr('id');
-            if(message.id == id) {
-                onlyAppendNewMessages = true;
-                return true;
-            }
 
-            // render message
-            html += that.frontendMessages.renderMessage(message);
-        });
+        // show more link
+        var startIndex = 0;
+        if (this.showAll === false && messages.length > config.conversation_items) {
+            html += '<div class="show-all">' + lang.frontend_messages_show_all.replace(/\%d/, messages.length) + '</div>';
+            startIndex = messages.length - config.conversation_items;
+        }
 
-        // remove old messages if complete messages stream was changed
-        if (onlyAppendNewMessages === false)
-            $('#content').html('');
+        // render messages
+        for(var i = startIndex; i < messages.length; i++)
+            html += that.frontendMessages.renderMessage(messages[i]);
 
         // add (new) messages
-        $('#content').append(html);
+        $('#content').html(html);
 
         // scroll 2 bottom
         $("#content").waitForImages(function() {

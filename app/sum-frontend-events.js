@@ -61,7 +61,6 @@ define('sum-frontend-events', Class.extend({
         this.initGeneral();
         this.initMenue();
         this.initKeyMenue();
-        this.initMessagesMenue();
         this.initMessages();
         this.initMessageMenue();
         this.initMessageInput();
@@ -144,7 +143,12 @@ define('sum-frontend-events', Class.extend({
      */
     initMenue: function() {
         var that = this;
-    
+
+        // conversation menue: toggle
+        $('#open-conversations-menue').click(function() {
+            $('#open-conversations-menue-dropdown').toggle();
+        });
+
         // menue: toggle
         $('#main-menue').click(function() {
             $('#main-menue-dropdown').toggle();
@@ -213,7 +217,7 @@ define('sum-frontend-events', Class.extend({
             $('#main-menue-dropdown').hide();
         });
 
-        // menue: clos window
+        // menue: close window
         $('#main-close').click(function() {
             that.backend.close();
         });
@@ -476,27 +480,19 @@ define('sum-frontend-events', Class.extend({
     },
     
     
-    /**
-     * initialize top messages menue events
-     */
-    initMessagesMenue: function() {
-        var that = this;
-    
-        // menue: toggle
-        $('#open-conversations-menue').click(function() {
-            $('#open-conversations-menue-dropdown').toggle();
-        });
-        
-    },
-    
-    
     
     /**
      * initialize events inside messages
      */
     initMessages: function() {
         var that = this;
-        
+
+        // show all link
+        $('body').delegate(".show-all", "click", function(e) {
+            that.frontend.showAll = true;
+            that.backend.getConversation(that.frontend.currentConversation);
+        });
+
         // cancel file invitation
         $('body').delegate(".entry-file-cancel", "click", function(e) {
             var messageId = $(this).parents('.entry').attr('id');
@@ -836,6 +832,7 @@ define('sum-frontend-events', Class.extend({
             var user = $(this).find('.contacts-name').html();
             $('.rooms li, .contacts li').removeClass('active');
             that.frontend.currentConversation = user;
+            that.frontend.showAll = false;
             delete that.frontend.unreadMessagesCounter[that.frontend.currentConversation];
             that.backend.updateUserlist(that.frontend.currentConversation);
             that.backend.updateOpenConversationList();
@@ -853,6 +850,7 @@ define('sum-frontend-events', Class.extend({
             var room = $(this).find('.name').html();
             $('.rooms li, .contacts li').removeClass('active');
             that.frontend.currentConversation = room;
+            that.frontend.showAll = false;
             delete that.frontend.unreadMessagesCounter[that.frontend.currentConversation];
             that.backend.updateRoomlist();
             that.backend.updateOpenConversationList();

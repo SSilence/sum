@@ -878,6 +878,15 @@ input.remove,
         padding-top:0;
     }
 
+    #content .show-all {
+        width:100%;
+        text-align:center;
+        color:#54728c;
+        font-size:0.9em;
+        cursor:pointer;
+        margin:5px;
+    }
+
     .entry {
         margin-bottom:10px;
         font-size:0.8em;

@@ -140,6 +140,7 @@ var lang = {
     frontend_events_avatar_removed: 'avatar removed',
     frontend_events_key_reset_success: 'key successfully resetted',
 
+    frontend_messages_show_all: 'show all %d messages',
     frontend_messages_new_download: 'New Download:',
     frontend_messages_downloaded_by: 'Downloaded from: ',
     frontend_messages_download_canceled: 'File was withdrawn',
