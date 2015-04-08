@@ -105,7 +105,7 @@ var lang = {
     frontend_command_versions_of_users: 'versions of users',
     frontend_command_reload: 'Userlist reloaded',
     frontend_command_unknown: 'unknown command',
-    frontend_command_help: 'following commands are available: <br /><br /> /versions show version of sum clients <br /> /version show own SUM version <br /> /reload reload userlist <br /> /restart restart SUM <br /> /exit or /quit quit SUM <br /> /gamez show games delivered with SUM <br /> /gamez <i>gamename</i> start game',
+    frontend_command_help: 'following commands are available: <br /><br /> /versions show version of sum clients <br /> /version show own SUM version <br /> /reload reload userlist <br /> /restart restart SUM <br /> /exit or /quit quit SUM <br /> /gamez show games delivered with SUM <br /> /gamez <i>gamename</i> start game  <br /> /nerdmode on greeeen <br /> /nerdmode off boooring',
 
     frontend_events_save_avatar_no_selection: 'Please select a visible area',
     frontend_events_validate_passwords_missing_field: 'Please enter all password fields',

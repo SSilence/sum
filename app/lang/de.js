@@ -105,7 +105,7 @@ var lang = {
     frontend_command_versions_of_users: 'versions of users',
     frontend_command_reload: 'Benutzerliste wurde neu geladen',
     frontend_command_unknown: 'unbekanntes Kommando',
-    frontend_command_help: 'Folgende Kommandos stehen zur Verf&uuml;gung: <br /><br /> /versions Versionen der Benutzer anzeigen <br /> /version eigene SUM Version anzeigen <br /> /reload Benutzerliste neu laden <br /> /restart SUM neu starten <br /> /exit oder /quit SUM beenden <br /> /gamez mitgelieferte Spiele anzeigen <br /> /gamez <i>gamename</i> Spiel starten',
+    frontend_command_help: 'Folgende Kommandos stehen zur Verf&uuml;gung: <br /><br /> /versions Versionen der Benutzer anzeigen <br /> /version eigene SUM Version anzeigen <br /> /reload Benutzerliste neu laden <br /> /restart SUM neu starten <br /> /exit oder /quit SUM beenden <br /> /gamez mitgelieferte Spiele anzeigen <br /> /gamez <i>gamename</i> Spiel starten <br /> /nerdmode on greeeen <br /> /nerdmode off boooring',
 
     frontend_events_save_avatar_no_selection: 'Bitte einen sichtbaren Bereich w&auml;hlen',
     frontend_events_validate_passwords_missing_field: 'Bitte alle Passwort Felder ausf&uuml;llen',

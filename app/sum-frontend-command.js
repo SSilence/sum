@@ -92,9 +92,21 @@ define('sum-frontend-command', Class.extend({
         } else if(command == '/exit' || command == '/quit') {
             gui.App.quit();
 
+
+        // /nerdmode on
+        } else if(command == '/nerdmode on') {
+            $('body').addClass('nerd');
+
+
+        // /nerdmode off
+        } else if(command == '/nerdmode off') {
+            $('body').removeClass('nerd');
+
+
         // /help
         } else if(command == '/help') {
             this.backend.renderSystemMessage(lang.frontend_command_help, conversation, false);
+
         
         // unknown
         } else {

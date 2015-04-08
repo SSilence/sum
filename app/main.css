@@ -1381,3 +1381,102 @@ input.remove,
             border-bottom-right-radius: 4px;
             border-top-right-radius: 4px;
         }
+
+
+
+
+/* nerdmode */
+
+
+.nerd #message-add-code-box,
+.nerd #message-add-poll-box,
+.nerd #message-emoticons .emoticons-tabs,
+.nerd #message-emoticons,
+.nerd #login .reset,
+.nerd .fullscreen,
+.nerd #main-header,
+.nerd #message-input,
+.nerd #message,
+.nerd #main,
+.nerd #nav,
+.nerd #nav .heading {
+    color: #00ff00;
+    background: #000;
+}
+
+.nerd .mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar,
+.nerd .mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar {
+    background:#ccc;
+}
+
+.nerd .mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{
+    background:#ccc;
+}
+
+.nerd .room,
+.nerd .contact {
+    background:#000;
+    border-top:1px solid #292929;
+    border-bottom:0;
+}
+
+.nerd .room.active,
+.nerd .contact.active {
+    background:#333;
+    border-bottom:1px solid #292929;
+    border-top:1px solid #292929;
+    box-shadow: 0px 5px 7px -4px #292929;
+}
+
+.nerd #message-emoticons .emoticons-tab.active {
+    background:#333;
+}
+
+.nerd .room .rooms-name,
+.nerd .contacts-name {
+    color: #00ff00;
+}
+
+.nerd #message-add-menue-dropdown,
+.nerd #open-conversations-menue-dropdown,
+.nerd #key-menue-dropdown,
+.nerd #main-menue-dropdown,
+.nerd .rooms-popup {
+    background: #000;
+    border: 1px solid #ccc;
+    color:#00ff00;
+}
+
+.nerd #message,
+.nerd #rooms {
+    border-top: 1px solid #292929;
+}
+
+.nerd .entry {
+    color:#00ff00;
+    border-bottom: 1px solid #292929;
+}
+
+.nerd #message-add-menue,
+.nerd #message-toggleemots,
+.nerd #message-send,
+.nerd #message-input-textfield {
+    border: 1px solid #292929;
+}
+
+.nerd #message-input-textfield {
+    color:#00ff00;
+    background: #333;
+}
+
+.nerd #message-input-textfield::-webkit-input-placeholder {
+    color: #1b6619;
+}
+
+.nerd #message-add-menue-dropdown li:hover,
+.nerd #open-conversations-menue-dropdown li:hover,
+.nerd #key-menue-dropdown li:hover,
+.nerd #main-menue-dropdown li:hover,
+.nerd #message-toggleemots {
+    background-color:#333;
+}
