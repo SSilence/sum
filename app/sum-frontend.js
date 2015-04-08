@@ -204,6 +204,7 @@ define('sum-frontend', Class.extend({
         // backend has update for userlist
         this.backend.onHasUserlistUpdate(function() {
             that.backend.updateUserlist(that.currentConversation);
+            that.backend.updateOpenConversationList();
             that.updateConversationState();
         });
         
