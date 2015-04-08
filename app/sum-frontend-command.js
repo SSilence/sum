@@ -94,7 +94,7 @@ define('sum-frontend-command', Class.extend({
 
         // /help
         } else if(command == '/help') {
-            this.backend.renderSystemMessage(lang.frontend_command_help.replace(/\\n/g, '<br />'), conversation);
+            this.backend.renderSystemMessage(lang.frontend_command_help, conversation, false);
         
         // unknown
         } else {
