@@ -148,7 +148,7 @@ module.exports = function(grunt) {
                     archive: 'bin/sum-<%= pkg.version %>.zip'
                 },
                 files: [
-                    { expand: true, cwd: 'bin/SUM/win/', src: ['**'], dest: '/', filter: 'isFile'},
+                    { expand: true, cwd: 'bin/SUM/win32', src: ['**'], dest: '/', filter: 'isFile'},
                     { src: ['backend.php'], dest: '' },
                     { src: ['README.md'], dest: '' }
                 ]
