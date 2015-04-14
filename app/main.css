@@ -1379,6 +1379,9 @@ input.remove,
 
 /* nerdmode */
 
+body.nerd {
+    background:#000;
+}
 
 .nerd #message-add-code-box,
 .nerd #message-add-poll-box,
@@ -1441,7 +1444,8 @@ input.remove,
 
 .nerd #message,
 .nerd #rooms {
-    border-top: 1px solid #292929;
+    border-top: 3px solid #292929;
+    border-bottom:0;
 }
 
 .nerd .entry {
@@ -1449,12 +1453,6 @@ input.remove,
     border-bottom: 1px solid #292929;
 }
 
-.nerd #message-add-menue,
-.nerd #message-toggleemots,
-.nerd #message-send,
-.nerd #message-input-textfield {
-    border: 1px solid #292929;
-}
 
 .nerd #message-input-textfield {
     color:#00ff00;
@@ -1468,7 +1466,6 @@ input.remove,
 .nerd #message-add-menue-dropdown li:hover,
 .nerd #open-conversations-menue-dropdown li:hover,
 .nerd #key-menue-dropdown li:hover,
-.nerd #main-menue-dropdown li:hover,
-.nerd #message-toggleemots {
+.nerd #main-menue-dropdown li:hover {
     background-color:#333;
 }
