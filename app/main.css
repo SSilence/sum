@@ -1276,12 +1276,10 @@ input.remove,
 
     #message-emoticons {
         display:none;
-        border: 1px solid #dadada;
+        border-top: 1px solid #dadada;
         position:absolute;
         background:#f7f7f7;
-        width:650px;
-        left:100%;
-        margin-left:-690px;
+        width:100%;
         z-index:29;
     }
 
