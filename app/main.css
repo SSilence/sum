@@ -95,6 +95,7 @@ body {
     width:75%;
     z-index:9;
     border-top:3px solid #dadada;
+    border-bottom: 1px solid #E0E0E0;
 }
 
 
@@ -1325,6 +1326,7 @@ input.remove,
     }
 
         #message-input-textfield {
+            font-family: 'Open Sans';
             -webkit-box-flex: 1;
             box-flex: 1;
             flex:1;
