@@ -1199,6 +1199,10 @@ define('sum-frontend-events', Class.extend({
 
         // set new position for rooms popups
         $('.rooms-popup').css('top', $('#rooms-add').position().top + 'px');
+        
+        // fix emoticons popup position
+        var emoticonsPopup = $('#message-emoticons');
+        emoticonsPopup.css('marginTop', -1 * emoticonsPopup.height() - parseInt(emoticonsPopup.css('padding')));
     },
 
 
