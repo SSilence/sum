@@ -35,30 +35,6 @@ button green border: #519339
 /*********/
 
 @font-face {
-    font-family: 'oswaldbold';
-    src: url('fonts/oswald-bold-webfont.eot');
-    src: url('fonts/oswald-bold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('fonts/oswald-bold-webfont.woff') format('woff'),
-         url('fonts/oswald-bold-webfont.ttf') format('truetype'),
-         url('fonts/oswald-bold-webfont.svg#oswaldbold') format('svg');
-    font-weight: normal;
-    font-style: normal;
-
-}
-
-@font-face {
-    font-family: 'oswaldlight';
-    src: url('fonts/oswald-light-webfont.eot');
-    src: url('fonts/oswald-light-webfont.eot?#iefix') format('embedded-opentype'),
-         url('fonts/oswald-light-webfont.woff') format('woff'),
-         url('fonts/oswald-light-webfont.ttf') format('truetype'),
-         url('fonts/oswald-light-webfont.svg#oswaldlight') format('svg');
-    font-weight: normal;
-    font-style: normal;
-
-}
-
-@font-face {
     font-family: 'oswaldbook';
     src: url('fonts/oswald-regular-webfont.eot');
     src: url('fonts/oswald-regular-webfont.eot?#iefix') format('embedded-opentype'),
@@ -67,21 +43,26 @@ button green border: #519339
          url('fonts/oswald-regular-webfont.svg#oswaldbook') format('svg');
     font-weight: normal;
     font-style: normal;
-
 }
 
 @font-face {
-    font-family: 'oswald_stencilregular';
-    src: url('fonts/oswald-stencil-webfont.eot');
-    src: url('fonts/oswald-stencil-webfont.eot?#iefix') format('embedded-opentype'),
-         url('fonts/oswald-stencil-webfont.woff') format('woff'),
-         url('fonts/oswald-stencil-webfont.ttf') format('truetype'),
-         url('fonts/oswald-stencil-webfont.svg#oswald_stencilregular') format('svg');
+    font-family: 'Open Sans';
+    src: url("fonts/OpenSans-Regular.eot?v=1.1.0");
+    src: url("fonts/OpenSans-Regular.eot?#iefix&v=1.1.0") format("embedded-opentype"), url("fonts/OpenSans-Regular.woff2?v=1.1.0") format("woff2"), url("fonts/OpenSans-Regular.woff?v=1.1.0") format("woff"), url("fonts/OpenSans-Regular.ttf?v=1.1.0") format("truetype"), url("fonts/OpenSans-Regular.svg?v=1.1.0#Regular") format("svg");
     font-weight: normal;
-    font-style: normal;
-
+    font-style: normal; 
 }
 
+@font-face {
+    font-family: 'Open Sans';
+    src: url("fonts/OpenSans-Semibold.eot?v=1.1.0");
+    src: url("fonts/OpenSans-Semibold.eot?#iefix&v=1.1.0") format("embedded-opentype"), url("fonts/OpenSans-Semibold.woff2?v=1.1.0") format("woff2"), url("fonts/OpenSans-Semibold.woff?v=1.1.0") format("woff"), url("fonts/OpenSans-Semibold.ttf?v=1.1.0") format("truetype"), url("fonts/OpenSans-Semibold.svg?v=1.1.0#Semibold") format("svg");
+    font-weight: 600;
+    font-style: normal; 
+}
+  
+  
+  
 
 /**********/
 /* layout */
@@ -110,11 +91,10 @@ body {
     position:absolute;
     top:100%;
     left:25%;
-    height:20px;
-    margin-top:-70px;
+    margin-top: -60px;
     width:75%;
     z-index:9;
-    border-top:1px solid #dadada;
+    border-top:3px solid #dadada;
 }
 
 
@@ -126,9 +106,9 @@ body {
 .online,
 .offline,
 .notavailable {
-    border-radius:3px;
-    width:6px;
-    height:6px;
+    border-radius:5px;
+    width:10px;
+    height:10px;
     display:inline-block;
 }
 
@@ -146,7 +126,7 @@ body {
 
 
 .avatar {
-    border-radius: 3px;
+    border-radius: 16px;
     width:32px;
     height:32px;
 }
@@ -359,7 +339,7 @@ input.remove,
 
 .contact {
     position:relative;
-    height:50px;
+    height:38px;
     cursor:pointer;
     background:#f1f1f1;
     border-top:1px solid #f1f1f1;
@@ -384,7 +364,9 @@ input.remove,
     }
 
     .contacts-state {
-        margin:0 5px 0 5px;
+        position:absolute;
+        left:25px;
+        top:20px;
     }
     
     .contacts-validkey,
@@ -398,7 +380,10 @@ input.remove,
     }
 
     .contacts-avatar {
-        margin-right:5px;
+        width:22px;
+        height:22px;
+        margin-right:10px;
+        margin-left:10px;
     }
 
     .contacts-name {
@@ -646,6 +631,7 @@ input.remove,
             display: flex;
             align-items: center;
             margin-left:20px;
+            position:relative;
         }
 
             #main-metadata > * {
@@ -654,6 +640,16 @@ input.remove,
             
             #main-metadata .invalidkey {
                 color:#ff0000;
+            }
+
+            #conversationState {
+                position: absolute;
+                left: 24px;
+                top: 24px;
+            }
+
+            #conversationState.isroom {
+                display:none;
             }
 
         #open-conversations-menue,
@@ -702,7 +698,7 @@ input.remove,
         #main-menue-dropdown {
             display:none;
             position: absolute;
-            background: #f7f7f7;
+            background: #F9F9F9;
             border: 1px solid #dadada;
             color:#5d5d5d;
             padding:0;
@@ -710,7 +706,6 @@ input.remove,
             top:40px;
             width:230px;
             margin-left:-235px;
-            border-radius: 3px;
             z-index:30;
             -webkit-app-region: no-drag;
         }
@@ -732,7 +727,7 @@ input.remove,
             #key-menue-dropdown:after,
             #main-menue-dropdown:after {
                 border-color: rgba(241, 241, 241, 0);
-                border-bottom-color: #f7f7f7;
+                border-bottom-color: #f1f1f1;
                 border-width: 15px;
                 margin-left: -15px;
             }
@@ -866,12 +861,13 @@ input.remove,
             }
 
             #open-conversations-menue-dropdown .contacts-state {
-                margin: 0 5px 0 0;
+                left: 20px;
             }
 
             #open-conversations-menue-dropdown .contacts-avatar {
                 width: 16px;
                 height: 16px;
+                margin-left:0;
             }
 
             #open-conversations-menue-dropdown .contact {
@@ -916,11 +912,11 @@ input.remove,
     }
 
     .entry {
-        margin-bottom:10px;
-        font-size:0.8em;
+        font-family: 'Open Sans';
+        margin-bottom:5px;
         color:#666;
+        font-size:0.8em;
         padding-bottom:10px;
-        border-bottom:1px solid #dadada;
         display: flex;
     }
 
@@ -929,8 +925,7 @@ input.remove,
         }
 
         .entry-sender {
-            font-size:0.9em;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         .entry-datetime {
@@ -941,7 +936,7 @@ input.remove,
 
         .entry-content {
             line-height: 135%;
-            padding-top: 5px;
+            padding-top: 3px;
         }
 
         .entry-content img.emoticons {
@@ -990,6 +985,7 @@ input.remove,
 
         .entry-avatar {
             width:40px;
+            margin-top:5px;
         }
 
         .entry-contentarea {
@@ -1092,22 +1088,18 @@ input.remove,
 /**********************/
 
 #message {
-    background:#f1f1f1;
-    padding-top:10px;
-    height: 59px;
+
 }
 
     #message-add-menue {
         cursor:pointer;
-        background-color:#68b54d;
-        border: 1px solid #ccc;
         margin:0;
         margin-top:2px;
         margin-bottom:2px;
         padding-left: 17px;
         padding-right:14px;
         font-size:1.9em;
-        color:#fff;
+        color:#999;
         border-bottom-left-radius: 4px;
         border-top-left-radius: 4px;
     }
@@ -1288,7 +1280,7 @@ input.remove,
         background:#f7f7f7;
         width:650px;
         left:100%;
-        margin-left:-730px;
+        margin-left:-690px;
         z-index:29;
     }
 
@@ -1323,14 +1315,13 @@ input.remove,
 
         #message-emoticons .emoticons-tab.active {
             border-top:0;
-            background:#f9f9f9
+            background:#E5E5E5;
         }
 
     #message-input {
         display: -webkit-flex;
         display: flex;
         padding:5px;
-        background:#f1f1f1;
     }
 
         #message-input-textfield {
@@ -1338,13 +1329,13 @@ input.remove,
             box-flex: 1;
             flex:1;
             padding:5px;
-            border: 1px solid #ccc;
             margin-right:0;
             margin-left: 0;
             margin-top:2px;
             height:30px;
             border-left: 0;
             outline: none;
+            border:0;
         }
 
         #message-toggleemots {
@@ -1352,24 +1343,23 @@ input.remove,
             margin:0;
             margin-top:2px;
             margin-bottom:2px;
-            background:url(emoticons/smile.png) no-repeat center center #eee;
             width:30px;
             height:30px;
-            border: 1px solid #ccc;
             border-left:0;
             border-right:0;
             cursor:pointer;
+            color:#999;
             height:40px;
+            font-size:1.4em;
+            text-align: center;
         }
 
-            #message-toggleemots.active {
-                background-color:#e45857;
+            #message-toggleemots:before {
+                padding-top:9px;
             }
 
         #message-send {
             cursor:pointer;
-            background-color:#68b54d;
-            border: 1px solid #ccc;
             margin:0;
             margin-top:2px;
             margin-bottom:2px;
@@ -1377,7 +1367,7 @@ input.remove,
             padding-left:20px;
             padding-right:20px;
             font-size:1.5em;
-            color:#fff;
+            color:#999;
             border-bottom-right-radius: 4px;
             border-top-right-radius: 4px;
         }

@@ -560,8 +560,11 @@ define('sum-frontend', Class.extend({
     updateConversationHeader: function(){
         // set metadata: avatar
         var avatar = 'group.png';
-        if($('.contacts .active').length > 0)
+        var roomClass = "isroom";
+        if($('.contacts .active').length > 0) {
             avatar = $('.contacts .active .avatar').attr('src');
+            roomClass = "";
+        }
         avatar = '<img src="' + avatar + '" class="avatar" />';
 
         // set metadata: state
@@ -580,7 +583,7 @@ define('sum-frontend', Class.extend({
             invalidkey = '<span class="invalidkey">' + lang.frontend_invalid_key + '</span>';
 
         // write metadata
-        $('#main-metadata').html(avatar + '<span>' + this.currentConversation.escape() + '</span><span id="conversationState" class="' + state + '"></span>' + invalidkey);
+        $('#main-metadata').html(avatar + '<span>' + this.currentConversation.escape() + '</span><span id="conversationState" class="' + roomClass + " " + state + '"></span>' + invalidkey);
     },
 
 

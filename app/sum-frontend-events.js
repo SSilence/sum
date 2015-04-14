@@ -721,11 +721,14 @@ define('sum-frontend-events', Class.extend({
         // toggle emoticons
         $('#message-toggleemots').click(function() {
             var emoticonsPopup = $('#message-emoticons');
-            $(this).toggleClass('active');
-            if($(this).hasClass('active')) {
+            if($(this).hasClass('ion-happy-outline')) {
+                $(this).removeClass('ion-happy-outline');
+                $(this).addClass('ion-happy');
                 emoticonsPopup.css('marginTop', -1 * emoticonsPopup.height() - parseInt(emoticonsPopup.css('padding')));
                 emoticonsPopup.show();
             } else  {
+                $(this).addClass('ion-happy-outline');
+                $(this).removeClass('ion-happy');
                 emoticonsPopup.hide();
             }
         });
