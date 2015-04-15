@@ -602,7 +602,9 @@ define('sum-frontend', Class.extend({
             }
         }
 
-        $('#conversationState').removeClass();
+        $('#conversationState').removeClass('online');
+        $('#conversationState').removeClass('offline');
+        $('#conversationState').removeClass('notavailable');
         $('#conversationState').addClass(state);
     }
 }));
