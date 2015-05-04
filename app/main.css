@@ -913,6 +913,11 @@ input.remove,
                 display:none;
             }
 
+            #open-conversations-menue-dropdown .contact:hover .contacts-state,
+            #open-conversations-menue-dropdown .contact.active .contacts-state {
+                top:20px;
+            }
+
 
     #content {
         padding:20px;
