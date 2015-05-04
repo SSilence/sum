@@ -6,7 +6,10 @@ var lang = {
     login_reset_key: 'Schl&uuml;ssel zur&uuml;cksetzen',
     
     nav_rooms: 'R&auml;ume',
-    
+
+    tray_quit: 'Beenden',
+    tray_reset_window: 'Fenster zur\u00fccksetzen',
+
     menue_show_status_messages: 'Statusmeldungen anzeigen',
     menue_set_new_avatar: 'neuen Avatar setzen',
     menue_remove_avatar: 'Avatar entfernen',

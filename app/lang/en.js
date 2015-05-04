@@ -6,7 +6,10 @@ var lang = {
     login_reset_key: 'reset key',
     
     nav_rooms: 'Rooms',
-    
+
+    tray_quit: 'exit',
+    tray_reset_window: 'reset window position',
+
     menue_show_status_messages: 'show status notifications',
     menue_set_new_avatar: 'set new avatar',
     menue_remove_avatar: 'remove avatar',
