@@ -94,11 +94,12 @@ $(document).ready(function() {
     // initialize window position and size
     var position = backend.backendStorage.loadWindowPosition();
     var size = backend.backendStorage.loadWindowSize();
+    /*
     if (position !== false)
         gui.Window.get().moveTo(position.x, position.y);
     if (size !== false)
         gui.Window.get().resizeTo(size.width, size.height);
-    
+    */
     
     
     // login
