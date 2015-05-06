@@ -1,7 +1,7 @@
 {
   "name": "SUM",
   "description": "S Ultimate Messenger",
-  "version": "2.2.0-SNAPSHOT",
+  "version": "2.2.0",
   "main": "app/index.html",
   "repository": {
     "type": "git",
@@ -11,8 +11,8 @@
   "window": {
     "icon": "app/favicon.png",
     "toolbar": false,
-    "width": 900,
-    "height": 600,
+    "width": 1200,
+    "height": 800,
     "frame": false,
     "min_width": 860,
     "min_height": 580

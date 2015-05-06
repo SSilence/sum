@@ -1022,7 +1022,8 @@ input.remove,
             flex:1;
         }
 
-        .entry-status {
+        .entry-status,
+        .entry-status a {
             color:#B8B8B8;
         }
         
