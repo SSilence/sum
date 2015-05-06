@@ -1,7 +1,7 @@
 {
   "name": "SUM",
   "description": "S Ultimate Messenger",
-  "version": "2.2.0",
+  "version": "2.3.0-SNAPSHOT",
   "main": "app/index.html",
   "repository": {
     "type": "git",
