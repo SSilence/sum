@@ -199,12 +199,12 @@ define('sum-backend', Class.extend({
         } }));
 
         // reset window position and size
-        menu.append(new gui.MenuItem({ type: 'normal', label: lang.tray_reset_window, click: function() {
+        /*menu.append(new gui.MenuItem({ type: 'normal', label: lang.tray_reset_window, click: function() {
             gui.Window.get().moveTo(0, 0);
             that.backendStorage.saveWindowPosition(0, 0);
             gui.Window.get().resizeTo(900, 600);
             that.backendStorage.saveWindowSize(900, 600);
-        } }));
+        } }));*/
 
         // quit app
         menu.append(new gui.MenuItem({ type: 'normal', label: lang.tray_quit, click: function() {
