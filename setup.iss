@@ -7,7 +7,7 @@
 #define CreateDesktopIcon "Wollen Sie einen Shortcut auf dem Desktop erstellen?"
 
 [Setup]
-AppId={{F3E30478-2D70-4CBC-AB4F-0B7A0A4D44AB}
+AppId={F3E30478-2D70-4CBC-AB4F-0B7A0A4D44AB}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
