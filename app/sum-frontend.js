@@ -102,9 +102,6 @@ define('sum-frontend', Class.extend({
         
         // initialize timer for unread messages
         this.initNotificationReminder();
-        
-        // check whether new version is available
-        this.checkVersion();
     },
 
 
@@ -337,22 +334,6 @@ define('sum-frontend', Class.extend({
         $.each(publicKeys, function(index, publicKey) {
             el.append('<option value="' + publicKey.username.escape() + '">' + publicKey.username.escape() + '</option>');
         });
-    },
-    
-
-    /**
-     * checks for new sum version
-     */
-    checkVersion: function() {
-        this.backend.isNewerVersionAvailable(function(version) {
-            $('#newversion').show();
-            $('#newversion').html(lang.frontend_new_version.replace(/\%s/, version.escape()));
-            $('#newversion').data('url', config.version_update.replace(/\?/, version.escape()));
-        });
-        var that = this;
-        window.setTimeout(function() {
-            that.checkVersion();
-        }, config.version_update_intervall);
     },
 
 

@@ -1,7 +1,7 @@
 {
   "name": "SUM",
   "description": "S Ultimate Messenger",
-  "version": "2.3.0-SNAPSHOT",
+  "version": "2.3.0",
   "main": "app/index.html",
   "repository": {
     "type": "git",
@@ -25,18 +25,5 @@
     "crypto-js": "~3.1",
     "request": "~2",
     "emojify.js": "~1.0"
-  },
-  "devDependencies": {
-    "grunt": "~0.4",
-    "grunt-contrib-compress": "~0.13",
-    "grunt-contrib-jasmine": "~0.8",
-    "grunt-contrib-jshint": "~0.11",
-    "grunt-node-webkit-builder": "~1.0",
-    "grunt-shell": "~1.1",
-    "grunt-template-jasmine-istanbul": "~0.3",
-    "grunt-text-replace": "~0.4"
-  },
-  "scripts": {
-    "test": "grunt check"
   }
 }

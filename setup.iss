@@ -1,5 +1,5 @@
 #define MyAppName "Secure Ultimate Messenger"
-#define MyAppVersion "2.3.0-SNAPSHOT"
+#define MyAppVersion "2.3.0"
 #define MyAppPublisher "Tobias Zeising"
 #define MyAppURL "http://www.sum-messenger.org"
 #define LaunchProgram "Starte Secure Ultimate Messenger nach der Installation"
@@ -7,7 +7,7 @@
 #define CreateDesktopIcon "Wollen Sie einen Shortcut auf dem Desktop erstellen?"
 
 [Setup]
-AppId={F3E30478-2D70-4CBC-AB4F-0B7A0A4D44AB}
+AppId={{F3E30478-2D70-4CBC-AB4F-0B7A0A4D44AB}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
@@ -32,9 +32,9 @@ Source: "app/favicon.ico"; DestDir: "{app}"; DestName: "icon.ico"; Flags: ignore
 Name: "desktopicon"; Description: "{#CreateDesktopIcon}"; GroupDescription: "{#DesktopIcon}"
 
 [Icons]
-Name: "{group}\Secure Ultimate Messenger"; Filename: "{app}\SUM.exe"; WorkingDir: "{app}"; IconFilename: "{app}/icon.ico"
-Name: "{userstartup}\Secure Ultimate Messenger"; Filename: "{app}\SUM.exe"; WorkingDir: "{app}"; IconFilename: "{app}/icon.ico"
-Name: "{userdesktop}\Secure Ultimate Messenger"; Filename: "{app}\SUM.exe"; WorkingDir: "{app}"; IconFilename: "{app}/icon.ico"; Tasks: desktopicon
+Name: "{group}\Secure Ultimate Messenger"; Filename: "{app}\nw.exe"; WorkingDir: "{app}"; IconFilename: "{app}/icon.ico"
+Name: "{userstartup}\Secure Ultimate Messenger"; Filename: "{app}\nw.exe"; WorkingDir: "{app}"; IconFilename: "{app}/icon.ico"
+Name: "{userdesktop}\Secure Ultimate Messenger"; Filename: "{app}\nw.exe"; WorkingDir: "{app}"; IconFilename: "{app}/icon.ico"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\SUM.exe"; WorkingDir: "{app}"; Description: {#LaunchProgram}; Flags: postinstall shellexec
+Filename: "{app}\nw.exe"; WorkingDir: "{app}"; Description: {#LaunchProgram}; Flags: postinstall shellexec
