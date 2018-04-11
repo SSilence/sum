@@ -447,13 +447,15 @@ define('sum-backend', Class.extend({
             if (image.indexOf('data:') === -1)
                 image = '../../' + image;
             
-            window.LOCAL_NW.desktopNotifications.notify(image, title, text, function() {
+            var notify = new Notification(title, {body: text, icon: image});
+            notify.onclick = function() {
                 gui.Window.get().show();
                 gui.Window.get().focus();
                 if (typeof conversation != 'undefined') {
                     that.switchConversation(conversation);
                 }
-            });
+            };
+            setTimeout(notify.close.bind(notify), 5000);
         }
     },
     

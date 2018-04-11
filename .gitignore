@@ -1,9 +1,7 @@
 .idea
 sum-setup-*.exe
 bin
-node_modules/grunt*
-node_modules/nw*
-node_modules/.bin*
+node_modules
 *config*.ini
 gamez
 userlist.db

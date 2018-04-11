@@ -1,5 +1,5 @@
 #define MyAppName "Secure Ultimate Messenger"
-#define MyAppVersion "2.3.0"
+#define MyAppVersion "2.3.1"
 #define MyAppPublisher "Tobias Zeising"
 #define MyAppURL "http://www.sum-messenger.org"
 #define LaunchProgram "Starte Secure Ultimate Messenger nach der Installation"
